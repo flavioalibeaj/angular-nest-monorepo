@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SidenavService } from '../../services/sidenav.service';
 import { MatMenuModule } from '@angular/material/menu';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -46,7 +47,7 @@ import { MatMenuModule } from '@angular/material/menu';
         <mat-icon>settings</mat-icon>
         Settings
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="authService.logout()">
         <mat-icon>logout</mat-icon>
         Log out
       </button>
@@ -55,4 +56,5 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class ToolbarComponent {
   readonly sidenavService = inject(SidenavService);
+  readonly authService = inject(AuthService);
 }
