@@ -3,11 +3,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SidenavService } from '../../services/sidenav.service';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule],
   styles: [
     `
       .example-spacer {
@@ -27,10 +28,29 @@ import { SidenavService } from '../../services/sidenav.service';
       </button>
       <span>My App</span>
       <span class="example-spacer"></span>
-      <button mat-icon-button aria-label="Icon-button with person icon">
-        <mat-icon>person</mat-icon>
+      <button
+        [matMenuTriggerFor]="actionsMenu"
+        mat-icon-button
+        aria-label="Icon-button with three vertical dots icon"
+      >
+        <mat-icon>more_vert</mat-icon>
       </button>
     </mat-toolbar>
+
+    <mat-menu #actionsMenu>
+      <button mat-menu-item>
+        <mat-icon>person</mat-icon>
+        Profile
+      </button>
+      <button mat-menu-item>
+        <mat-icon>settings</mat-icon>
+        Settings
+      </button>
+      <button mat-menu-item>
+        <mat-icon>logout</mat-icon>
+        Log out
+      </button>
+    </mat-menu>
   `,
 })
 export class ToolbarComponent {
