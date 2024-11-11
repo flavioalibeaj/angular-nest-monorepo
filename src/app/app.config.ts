@@ -4,11 +4,13 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { appInterceptor } from './shared/interceptors/app.interceptor';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([appInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
@@ -18,12 +20,12 @@ export const appConfig: ApplicationConfig = {
         appearance: 'outline',
       },
     },
-    // {
-    //   provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-    //   useValue: {
-    //     duration: '4000',
-    //   },
-    // },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {
+        duration: '4000',
+      },
+    },
     // {
     //   provide: MAT_DIALOG_DEFAULT_OPTIONS,
     //   useValue: {
