@@ -6,9 +6,36 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
   selector: 'app-home',
   standalone: true,
   imports: [ToolbarComponent, SidenavComponent],
+  styles: [
+    `
+      .main-div {
+        // display: flex;
+        // flex-direction: column;
+        height: 100%;
+        // height: 100vh;
+        overflow: hidden;
+      }
+
+      /*
+      app-toolbar {
+        flex: 0 0 auto;
+      }
+      */
+
+      // app-sidenav {
+      //   /*
+      //   flex: 1 1 auto;
+      //   */
+      //   flex: auto;
+      //   overflow: auto;
+      // }
+    `,
+  ],
   template: `
-    <app-toolbar />
-    <app-sidenav />
+    <div class="main-div">
+      <app-toolbar />
+      <app-sidenav />
+    </div>
   `,
 })
 export class HomeComponent {}

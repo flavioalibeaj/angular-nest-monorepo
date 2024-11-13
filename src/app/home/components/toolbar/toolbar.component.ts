@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SidenavService } from '../../services/sidenav.service';
 import { MatMenuModule } from '@angular/material/menu';
-import { AuthService } from '../../../shared/services/auth.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,7 +21,6 @@ import { AuthService } from '../../../shared/services/auth.service';
     <mat-toolbar color="primary">
       <button
         mat-icon-button
-        class="example-icon"
         aria-label="Icon-button with menu icon"
         (click)="sidenavService.toggleSidenav()"
       >
