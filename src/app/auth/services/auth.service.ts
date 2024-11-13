@@ -18,10 +18,19 @@ export class AuthService {
 
   readonly #token = signal<string | null>(localStorage.getItem('access_token'));
   readonly token = this.#token.asReadonly();
-  readonly isLoggedIn = computed(() => !!this.#token());
+
+  readonly #user = signal<IRegisterResponse | null>(
+    localStorage.getItem('current_user')
+      ? JSON.parse(localStorage.getItem('current_user')!)
+      : null
+  );
+  readonly user = this.#user.asReadonly();
+
+  readonly isLoggedIn = computed(() => !!this.#token() && !!this.user());
 
   logout() {
     this.#setToken(null);
+    this.#setUser(null);
     this.#router.navigate(['auth']);
   }
 
@@ -34,16 +43,20 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.#setToken(response.data?.accessToken ?? null);
+          this.#setUser(
+            response.data
+              ? {
+                  id: response.data?.id,
+                  username: response.data.username,
+                  profileId: response.data.profileId,
+                }
+              : null
+          );
 
-          const route = response.data?.profileId ? '' : 'profile/create';
+          const route = response.data?.profileId ? '' : 'create-profile';
           this.#router.navigate([route]);
         })
       );
-  }
-
-  #setToken(token: string | null): void {
-    this.#token.set(token);
-    token ? localStorage.setItem('access_token', token) : localStorage.clear();
   }
 
   register({ confirmPassword, password, username }: IRegisterRequest) {
@@ -56,5 +69,19 @@ export class AuthService {
         username,
       })
       .pipe(tap(() => this.#router.navigate(['auth/login'])));
+  }
+
+  #setToken(token: string | null): void {
+    this.#token.set(token);
+    token
+      ? localStorage.setItem('access_token', token)
+      : localStorage.removeItem('access_token');
+  }
+
+  #setUser(user: IRegisterResponse | null) {
+    this.#user.set(user);
+    user
+      ? localStorage.setItem('current_user', JSON.stringify(user))
+      : localStorage.removeItem('current_user');
   }
 }
