@@ -8,8 +8,6 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadComponent: () =>
-      import('./home/home.component').then((c) => c.HomeComponent),
     canActivate: [authGuard],
     loadChildren: () => import('./home/home.routes').then((r) => r.homeRoutes),
   },
