@@ -5,6 +5,7 @@ import { ILoginRequest } from '../model/i-login-request.interface';
 import { ILoginResponse } from '../model/i-login-response.interface';
 import { Observable, tap } from 'rxjs';
 import { IApiResponse } from '../../shared/model/i-api-response.interface';
+import { AUTH_ENDPOINTS } from '../../shared/endpoints/endpoints';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,10 @@ export class AuthService {
 
   login(body: ILoginRequest): Observable<IApiResponse<ILoginResponse>> {
     return this.#httpService
-      .post<ILoginRequest, IApiResponse<ILoginResponse>>('auth/login', body)
+      .post<ILoginRequest, IApiResponse<ILoginResponse>>(
+        AUTH_ENDPOINTS.login,
+        body
+      )
       .pipe(
         tap((response) => {
           if (!response.isSuccessful) return;
