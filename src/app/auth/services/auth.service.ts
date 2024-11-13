@@ -6,6 +6,8 @@ import { ILoginResponse } from '../model/i-login-response.interface';
 import { Observable, tap } from 'rxjs';
 import { IApiResponse } from '../../shared/model/i-api-response.interface';
 import { AUTH_ENDPOINTS } from '../../shared/endpoints/endpoints';
+import { IRegisterRequest } from '../model/i-register-request.interface';
+import { IRegisterResponse } from '../model/i-register-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +33,6 @@ export class AuthService {
       )
       .pipe(
         tap((response) => {
-          if (!response.isSuccessful) return;
-
           this.#setToken(response.data?.accessToken ?? null);
 
           const route = response.data?.profileId ? '' : 'profile/create';
@@ -46,5 +46,15 @@ export class AuthService {
     token ? localStorage.setItem('access_token', token) : localStorage.clear();
   }
 
-  register() {}
+  register({ confirmPassword, password, username }: IRegisterRequest) {
+    if (confirmPassword !== password) return;
+    // TODO add global error handler to handle client side errors
+
+    return this.#httpService
+      .post<ILoginRequest, IRegisterResponse>(AUTH_ENDPOINTS.register, {
+        password,
+        username,
+      })
+      .pipe(tap(() => this.#router.navigate(['auth/login'])));
+  }
 }

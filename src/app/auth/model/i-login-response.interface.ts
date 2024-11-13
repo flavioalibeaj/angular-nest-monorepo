@@ -1,6 +1,5 @@
-export interface ILoginResponse {
+import { IRegisterResponse } from './i-register-response.interface';
+
+export interface ILoginResponse extends IRegisterResponse {
   accessToken: string;
-  id: string;
-  username: string;
-  profileId?: string;
 }
