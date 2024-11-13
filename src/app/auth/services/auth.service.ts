@@ -14,6 +14,7 @@ export class AuthService {
   readonly #httpService = inject(HttpService);
 
   readonly #token = signal<string | null>(localStorage.getItem('access_token'));
+  readonly token = this.#token.asReadonly();
   readonly isLoggedIn = computed(() => !!this.#token());
 
   logout() {
