@@ -4,7 +4,7 @@ import { AuthService } from '../../auth/services/auth.service';
 import { catchError, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-export const appInterceptor: HttpInterceptorFn = (req, next) => {
+export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const snackbar = inject(MatSnackBar);
 
