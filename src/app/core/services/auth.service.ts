@@ -67,8 +67,8 @@ export class AuthService {
   }
 
   register({ confirmPassword, password, username }: IRegisterRequest) {
-    if (confirmPassword !== password) return;
-    // TODO add global error handler to handle client side errors
+    if (confirmPassword !== password)
+      throw new Error('Confirm password must match password');
 
     return this.#httpService
       .post<ILoginRequest, IViewUser>(AUTH_ENDPOINTS.register, {

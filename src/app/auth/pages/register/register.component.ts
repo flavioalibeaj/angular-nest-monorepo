@@ -44,11 +44,11 @@ export class RegisterComponent {
     username: new FormControl<string | null>(null, Validators.required),
     password: new FormControl<string | null>(null, [
       Validators.required,
-      Validators.min(8),
+      Validators.minLength(8),
     ]),
     confirmPassword: new FormControl<string | null>(null, [
       Validators.required,
-      Validators.min(8),
+      Validators.minLength(8),
     ]),
   });
 
