@@ -19,10 +19,8 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   return next(clonedRequest).pipe(
-    catchError((err) => {
-      if (err instanceof HttpErrorResponse) {
-        snackbar.open(err.error.error.message, 'Close');
-      }
+    catchError((err: HttpErrorResponse) => {
+      snackbar.open(err.error.error.message, 'Close');
       return throwError(() => err);
     }),
     finalize(() => spinnerService.hide())
