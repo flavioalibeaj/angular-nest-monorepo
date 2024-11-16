@@ -12,13 +12,17 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   spinnerService.show();
 
-  const clonedRequest = req.clone();
+  const setHeaders: { [key: string]: string } = {};
 
   if (authService.isLoggedIn()) {
-    clonedRequest.headers.set('Authorization', authService.token() ?? '');
+    setHeaders['Authorization'] = `Bearer ${authService.token() ?? ''}`;
   }
 
-  return next(clonedRequest).pipe(
+  return next(
+    req.clone({
+      setHeaders,
+    })
+  ).pipe(
     catchError((err: HttpErrorResponse) => {
       snackbar.open(err.error.error.message, 'Close');
       return throwError(() => err);
