@@ -18,10 +18,8 @@ export const createProfileGuard: CanActivateFn = ({ data }) => {
     return false;
   }
 
-  if (profileId) {
-    router.navigate(['']);
-    return false;
-  }
+  if (!profileId) return true;
 
-  return true;
+  router.navigate(['']);
+  return false;
 };
