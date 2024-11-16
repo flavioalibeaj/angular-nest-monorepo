@@ -10,7 +10,6 @@ export const createProfileGuard: CanActivateFn = ({ data }) => {
     .openWithProfileId;
 
   const profileId = authService.user()?.profileId;
-  authService.user()?.profileId;
 
   if (openWithProfileId) {
     if (profileId) return true;
