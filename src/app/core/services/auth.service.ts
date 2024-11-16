@@ -1,13 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/http.service';
-import { ILoginRequest } from '../model/i-login-request.interface';
-import { ILoginResponse } from '../model/i-login-response.interface';
 import { Observable, tap } from 'rxjs';
 import { IApiResponse } from '../../shared/model/i-api-response.interface';
 import { AUTH_ENDPOINTS } from '../../shared/endpoints/endpoints';
-import { IRegisterRequest } from '../model/i-register-request.interface';
-import { IRegisterResponse } from '../model/i-register-response.interface';
+import { IRegisterResponse } from '../../auth/model/i-register-response.interface';
+import { ILoginResponse } from '../../auth/model/i-login-response.interface';
+import { ILoginRequest } from '../../auth/model/i-login-request.interface';
+import { IRegisterRequest } from '../../auth/model/i-register-request.interface';
 
 @Injectable({
   providedIn: 'root',
