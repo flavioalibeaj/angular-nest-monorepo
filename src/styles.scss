@@ -8,3 +8,12 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.snackbar-error {
+  .mdc-snackbar__surface {
+    background: #922b21 !important;
+  }
+  .mdc-button__label {
+    color: white;
+  }
+}
