@@ -1,5 +1,5 @@
-import { IRegisterResponse } from './i-register-response.interface';
+import { IViewUser } from '../../core/model/i-view-user.interface';
 
-export interface ILoginResponse extends IRegisterResponse {
+export interface ILoginResponse extends IViewUser {
   accessToken: string;
 }

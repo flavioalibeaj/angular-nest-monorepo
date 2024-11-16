@@ -1,4 +1,4 @@
-export interface IRegisterResponse {
+export interface IViewUser {
   id: string;
   username: string;
   profileId?: string;
