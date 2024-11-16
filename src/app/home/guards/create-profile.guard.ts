@@ -1,15 +1,15 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { UserService } from '../../core/services/user.service';
 
 export const createProfileGuard: CanActivateFn = ({ data }) => {
-  const authService = inject(AuthService);
+  const userService = inject(UserService);
   const router = inject(Router);
 
   const openWithProfileId: boolean = (data as { openWithProfileId: boolean })
     .openWithProfileId;
 
-  const profileId = authService.user()?.profileId;
+  const profileId = userService.user()?.profileId;
 
   if (openWithProfileId) {
     if (profileId) return true;
