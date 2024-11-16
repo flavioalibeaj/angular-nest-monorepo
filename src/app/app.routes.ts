@@ -4,10 +4,13 @@ import { authGuard } from './shared/guards/auth.guard';
 export const routes: Routes = [
   {
     path: 'auth',
+    data: { openWhenAuthenticated: false },
+    canActivate: [authGuard],
     loadChildren: () => import('./auth/auth.routes').then((r) => r.authRoutes),
   },
   {
     path: '',
+    data: { openWhenAuthenticated: true },
     canActivate: [authGuard],
     loadChildren: () => import('./home/home.routes').then((r) => r.homeRoutes),
   },
