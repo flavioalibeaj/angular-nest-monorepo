@@ -10,6 +10,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
   handleError(error: Error): void {
     if (error instanceof HttpErrorResponse) return;
+    console.log(error);
 
     this.#snackbar.open(error.message, 'Close');
   }
