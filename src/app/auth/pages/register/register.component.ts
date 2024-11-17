@@ -53,7 +53,8 @@ export class RegisterComponent {
   });
 
   register() {
-    if (!this.registerForm.valid) return;
+    if (!this.registerForm.valid)
+      throw new Error('Fill form with valid values');
 
     const { confirmPassword, password, username } =
       this.registerForm.getRawValue();

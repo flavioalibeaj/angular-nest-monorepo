@@ -50,7 +50,8 @@ export class LoginComponent {
   });
 
   login() {
-    if (!this.loginForm.valid) return;
+    if (!this.loginForm.valid) throw new Error('Fill form with valid values');
+
     const { password, username } = this.loginForm.getRawValue();
 
     this.#authService
