@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   logout() {
-    this.#setToken(null);
+    this.setToken(null);
     this.#userService.setUser(null);
     this.#router.navigate(['auth']);
   }
@@ -51,17 +51,14 @@ export class AuthService {
           if (!data) return;
           const { accessToken, id, username, profileId } = data;
 
-          this.#setToken(accessToken);
+          this.setToken(accessToken);
           this.#userService.setUser({
             id,
             username,
             profileId,
           });
-          profileId
-            ? this.#router.navigate([''])
-            : this.#router.navigate(['create-profile'], {
-                queryParams: { userId: id },
-              });
+
+          this.#router.navigate([profileId ? '' : 'create-profile']);
         })
       );
   }
@@ -78,7 +75,7 @@ export class AuthService {
       .pipe(tap(() => this.#router.navigate(['auth/login'])));
   }
 
-  #setToken(token: string | null): void {
+  setToken(token: string | null): void {
     this.#token.set(token);
   }
 }

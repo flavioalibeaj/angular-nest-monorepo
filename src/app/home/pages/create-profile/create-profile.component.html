@@ -1,1 +1,52 @@
-<p>create-profile works!</p>
+@if (user | async; as user) {
+<div class="h-100 p-5 d-flex justify-content-center align-items-center">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title> Hello {{user.username}} </mat-card-title>
+      <mat-card-subtitle> Create your profile </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="createProfileFG">
+        <div class="row">
+          <mat-form-field class="col-md-6">
+            <mat-label>First name</mat-label>
+            <input type="text" matInput formControlName="firstName">
+          </mat-form-field>
+          <mat-form-field class="col-md-6">
+            <mat-label>Last name</mat-label>
+            <input type="text" matInput formControlName="lastName">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <!-- TODO fix input height -->
+          <mat-form-field class="col">
+            <mat-label>Phone number</mat-label>
+            <span matTextPrefix>+355 &nbsp;</span>
+            <input type="tel" matInput formControlName="phoneNumber">
+          </mat-form-field>
+          <!-- <mat-form-field class="col">
+            <mat-label>Profile photo</mat-label>
+            <input matInput formControlName="profilePicture" />
+            <button mat-icon-button matSuffix (click)="fileInput.click()">
+              <mat-icon>add_photo_alternate</mat-icon>
+            </button>
+          </mat-form-field>
+          <input type="file" #fileInput style="display: none" (change)="onFileChange($event)" /> -->
+        </div>
+        <div class="row">
+          <mat-form-field>
+            <mat-label>Biography</mat-label>
+            <textarea type="text" matInput formControlName="bio"></textarea>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" [disabled]="!createProfileFG.valid" (click)="createProfile()">
+        <mat-icon>check</mat-icon>
+        Submit
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+}
