@@ -9,6 +9,8 @@ import { ILoginRequest } from '../../auth/model/i-login-request.interface';
 import { IRegisterRequest } from '../../auth/model/i-register-request.interface';
 import { UserService } from './user.service';
 import { IViewUser } from '../model/i-view-user.interface';
+import { jwtDecode } from 'jwt-decode';
+import { ITokenPayload } from '../model/i-token-payload.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +24,8 @@ export class AuthService {
   readonly token = this.#token.asReadonly();
 
   readonly isLoggedIn = computed(
-    () => !!this.#token() && !!this.#userService.user()
+    () =>
+      !!this.#token() && !this.#isTokenExpired() && !!this.#userService.user()
   );
 
   constructor() {
@@ -77,5 +80,25 @@ export class AuthService {
 
   setToken(token: string | null): void {
     this.#token.set(token);
+  }
+
+  #isTokenExpired() {
+    const parsedToken = this.#parseToken();
+
+    if (!parsedToken) throw new Error('Token is missing');
+
+    const msInASecond = 1000;
+    const expiryDate = new Date(parsedToken.exp * msInASecond);
+    const currentDate = new Date();
+
+    return currentDate > expiryDate;
+  }
+
+  #parseToken(): ITokenPayload | null {
+    const token = this.token();
+
+    if (!token) return null;
+
+    return jwtDecode<ITokenPayload>(token);
   }
 }
