@@ -15,7 +15,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const setHeaders: { [key: string]: string } = {};
 
   if (authService.isLoggedIn()) {
-    setHeaders['Authorization'] = `Bearer ${authService.token() ?? ''}`;
+    setHeaders['Authorization'] = `Bearer ${authService.token()}`;
   }
 
   return next(
