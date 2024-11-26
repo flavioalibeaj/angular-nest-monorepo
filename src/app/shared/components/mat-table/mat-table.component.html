@@ -5,13 +5,13 @@
 
       @if (selectable()) {
       <ng-container matColumnDef="checkboxSelection">
-        <th mat-header-cell *matHeaderCellDef>
+        <th class="border-dotted" mat-header-cell *matHeaderCellDef>
           <mat-checkbox (change)="$event ? masterToggle() : null"
             [checked]="selectionModel()?.hasValue() && isAllSelected()"
             [indeterminate]="selectionModel()?.hasValue() && !isAllSelected()">
           </mat-checkbox>
         </th>
-        <td mat-cell *matCellDef="let row">
+        <td class="border-dotted" mat-cell *matCellDef="let row">
           <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionModel()?.toggle(row) : null"
             [checked]="selectionModel()?.isSelected(row)">
           </mat-checkbox>
