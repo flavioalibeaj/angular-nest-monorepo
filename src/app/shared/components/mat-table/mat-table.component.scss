@@ -1,0 +1,16 @@
+.border-dotted {
+  border-bottom: 2px dotted #d5d8dc;
+}
+
+.half-opacity {
+  opacity: 0.6;
+}
+
+.mat-mdc-card-content:last-child {
+  padding-bottom: 0;
+}
+
+.no-data {
+  // display: flex;
+  margin-top: 2rem;
+}

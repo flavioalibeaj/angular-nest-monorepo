@@ -1,0 +1,89 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <table mat-table matSort fixedLayout="true" [dataSource]="dataSource.data.length ? dataSource : emptyData"
+      [trackBy]="trackByFn" (matSortChange)="onSortChange($event)">
+
+      @for (column of columns(); track column) {
+      <ng-container [matColumnDef]="column.key">
+        <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple mat-sort-header> {{
+          column.header }} </th>
+
+        @if (!column.actions) {
+        <td class="border-dotted" mat-cell matRipple *matCellDef="let element">
+          @if (!column.cell && !column.custom) {
+          {{ element[column.key] ?? '--' }}
+          } @else if(column.cell) {
+          {{ column.cell(element) }}
+          } @else if(column.custom) { @switch (column.template) {
+          @default { No template available }
+          <!-- @case ('custom-template') {
+          <ng-template [ngTemplateOutlet]="customTemplate" [ngTemplateOutletContext]="{ $implicit: element }" />
+          } -->
+          } }
+        </td>
+        } @else {`
+        <td class="border-dotted" mat-cell *matCellDef="let element">
+          @if (column.actions.isMenu) {
+          <button mat-mini-fab matTooltip="Actions" [color]="column.actions.menuButtonColor" [matMenuTriggerFor]="menu"
+            [matMenuTriggerData]="{buttons: column.actions.buttons, element}">
+            <mat-icon [color]="column.actions.menuIconColor">menu</mat-icon>
+          </button>
+          } @else {
+          <div style="display: flex; gap: 1rem;">
+            @for (button of column.actions.buttons; track button) {
+            @if(!button.hide?.(element)){
+            @switch (button.type) {
+            @case ('icon') {
+            <button mat-icon-button #tooltip="matTooltip" [color]="button.color" [matTooltip]="button.tooltip"
+              [matTooltipPosition]="button.tooltipPosition ?? 'before'" [class]="button.class"
+              [disabled]="isButtonDisabled(button, element)" (click)="onButtonClick(button, element)">
+              @if (button.icon) {<mat-icon [color]="button.iconColor">{{button.icon}}</mat-icon>}
+            </button>
+            }
+            @case ('mini-fab') {
+            <button [color]="button.color" mat-mini-fab #tooltip="matTooltip" [matTooltip]="button.tooltip"
+              [matTooltipPosition]="button.tooltipPosition ?? 'before'" [class]="button.class"
+              [disabled]="isButtonDisabled(button, element)" (click)="onButtonClick(button, element)">
+              @if (button.icon) {<mat-icon [color]="button.iconColor">{{button.icon}}</mat-icon>}
+            </button>
+            }
+            }
+            }
+            }
+          </div>
+          }
+        </td>
+        }
+      </ng-container>
+      }
+
+      <ng-container matColumnDef="empty-row">
+        <mat-cell class="no-data" *matCellDef="let element">No Data</mat-cell>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <tr mat-row *matRowDef="
+        let row;
+        columns: dataSource.data.length ? displayedColumns() : ['empty-row']
+      "></tr>
+    </table>
+
+    <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="paginationParams().pageSize" [pageIndex]="paginationParams().pageIndex"
+      [length]="paginationParams().totalCount" (page)="onPageChange($event)" />
+  </mat-card-content>
+</mat-card>
+
+<mat-menu #menu="matMenu" xPosition="before">
+  <ng-template matMenuContent let-buttons="buttons" let-element="element">
+    @for (btn of buttons; track btn) {
+    <button mat-menu-item [class]="btn.class" [disabled]="isButtonDisabled(btn, element)"
+      (click)="onButtonClick(btn, element)">
+      @if (btn.icon) {<mat-icon [color]="btn.iconColor">{{btn.icon}}</mat-icon>}
+      {{btn.text}}
+    </button>
+    }
+  </ng-template>
+</mat-menu>
+
+<!-- <ng-template #customTemplate let-element></ng-template> -->
