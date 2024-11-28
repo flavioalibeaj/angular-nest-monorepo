@@ -1,18 +1,23 @@
 <mat-card appearance="outlined">
   <mat-card-content>
+    @if (loading()) {
+    <mat-progress-bar style="margin-top: -4px;" mode="query" />
+    }
+
     <table mat-table matSort fixedLayout="true" [dataSource]="dataSource.data.length ? dataSource : emptyData"
       [trackBy]="trackByFn" (matSortChange)="onSortChange($event)">
 
-      @if (selectable()) {
+      @if (isSelectable()) {
       <ng-container matColumnDef="checkboxSelection">
-        <th class="border-dotted" mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? masterToggle() : null"
-            [checked]="selectionModel()?.hasValue() && isAllSelected()"
+        <th class="border-dotted" matRipple mat-header-cell *matHeaderCellDef>
+          @if (multiSelect() && dataSource.data.length) {
+          <mat-checkbox (change)="toggleAll()" [checked]="selectionModel()?.hasValue() && isAllSelected()"
             [indeterminate]="selectionModel()?.hasValue() && !isAllSelected()">
           </mat-checkbox>
+          }
         </th>
-        <td class="border-dotted" mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionModel()?.toggle(row) : null"
+        <td class="border-dotted" matRipple mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleRow(row)"
             [checked]="selectionModel()?.isSelected(row)">
           </mat-checkbox>
         </td>
@@ -21,7 +26,7 @@
 
       @for (column of columns(); track column) {
       <ng-container [matColumnDef]="column.key">
-        <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple mat-sort-header> {{
+        <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple mat-sort-header>{{
           column.header }} </th>
 
         @if (!column.actions) {
@@ -37,11 +42,11 @@
           } -->
           } }
         </td>
-        } @else {`
-        <td class="border-dotted" mat-cell *matCellDef="let element">
+        } @else {
+        <td (click)="$event.stopPropagation()" class="border-dotted" mat-cell *matCellDef="let element">
           @if (column.actions.isMenu) {
           <button mat-mini-fab matTooltip="Actions" [color]="column.actions.menuButtonColor" [matMenuTriggerFor]="menu"
-            [matMenuTriggerData]="{buttons: column.actions.buttons, element}">
+            [matMenuTriggerData]="{buttons: column.actions.buttons, element}" (click)="$event.stopPropagation()">
             <mat-icon [color]="column.actions.menuIconColor">menu</mat-icon>
           </button>
           } @else {

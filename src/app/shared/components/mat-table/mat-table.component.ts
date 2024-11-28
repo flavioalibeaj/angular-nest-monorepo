@@ -2,10 +2,9 @@ import {
   AfterViewInit,
   Component,
   computed,
-  EventEmitter,
   input,
   Input,
-  Output,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -27,6 +26,7 @@ import { IRowButton } from '../../model/i-row-button.interface';
 import { IMatTableColumn } from '../../model/i-mat-table-column';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-mat-table',
@@ -42,6 +42,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatCardModule,
     MatMenuModule,
     MatCheckboxModule,
+    MatProgressBarModule,
   ],
   templateUrl: './mat-table.component.html',
   styleUrl: './mat-table.component.scss',
@@ -50,13 +51,14 @@ export class MatTableComponent<T> implements AfterViewInit {
   readonly columns = input.required<IMatTableColumn<T>[]>();
   readonly displayedColumns = computed(() => {
     const columns = this.columns().map((c) => c.key);
-    const isSelectable = this.selectable();
+    if (this.isSelectable() && this.dataSource.data.length)
+      columns.unshift('checkboxSelection');
 
-    if (isSelectable) columns.unshift('checkboxSelection');
     return columns;
   });
   readonly paginationParams = input.required<PaginationParams>();
-  readonly selectable = input<boolean>(false);
+  readonly loading = input<boolean>(false);
+  readonly isSelectable = input<boolean>(false);
   readonly multiSelect = input<boolean>(true);
   readonly initiallySelectedValues = input<T[]>([]);
   readonly paginator = viewChild<MatPaginator>(MatPaginator);
@@ -71,18 +73,19 @@ export class MatTableComponent<T> implements AfterViewInit {
   }
 
   readonly selectionModel = computed(() => {
-    const isSelectable = this.selectable();
-    return isSelectable
+    return this.isSelectable()
       ? new SelectionModel<T>(
           this.multiSelect(),
-          this.initiallySelectedValues()
+          this.initiallySelectedValues() ?? []
         )
       : undefined;
   });
 
-  readonly emptyData = new MatTableDataSource<T>([{ empty: 'row' } as T]);
+  pageChange = output<PageEvent>();
+  sortChange = output<Sort>();
+  toggleChange = output<T[]>();
 
-  @Output() pageChange = new EventEmitter<PageEvent>();
+  readonly emptyData = new MatTableDataSource<T>([{ empty: 'row' } as T]);
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator() ?? null;
@@ -109,7 +112,7 @@ export class MatTableComponent<T> implements AfterViewInit {
 
   // TODO
   onSortChange(sort: Sort) {
-    console.log(sort);
+    this.sortChange.emit(sort);
   }
 
   isButtonDisabled(button: IRowButton<T>, element: T): boolean | undefined {
@@ -127,11 +130,19 @@ export class MatTableComponent<T> implements AfterViewInit {
     return numSelected === numRows;
   }
 
-  masterToggle() {
+  toggleAll() {
     this.isAllSelected()
       ? this.selectionModel()?.clear()
       : this.dataSource.data.forEach((row) =>
           this.selectionModel()?.select(row)
         );
+
+    this.toggleChange.emit(this.selectionModel()?.selected ?? []);
+  }
+
+  toggleRow(row: T) {
+    this.selectionModel()?.toggle(row);
+
+    this.toggleChange.emit(this.selectionModel()?.selected ?? []);
   }
 }
