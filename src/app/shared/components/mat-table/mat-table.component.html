@@ -1,4 +1,22 @@
 <mat-card appearance="outlined">
+  <mat-card-header>
+    <div class="d-flex gap-1">
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput type="text" [formControl]="searchFilterCtrl">
+      </mat-form-field>
+      <button mat-icon-button matTooltip="Filter" color="primary" [disabled]="!searchFilterCtrl.value"
+        (click)="filterData()">
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+    </div>
+    @if (printAndExport()) {
+    <button mat-icon-button matTooltip="Actions" color="primary" [matMenuTriggerFor]="tableActions">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <!-- TODO export to excel -->
+    }
+  </mat-card-header>
   <mat-card-content>
     @if (loading()) {
     <mat-progress-bar style="margin-top: -4px;" mode="query" />
@@ -75,8 +93,9 @@
         } @else {
         <td (click)="$event.stopPropagation()" class="border-dotted" mat-cell *matCellDef="let element">
           @if (column.actions.isMenu) {
-          <button mat-mini-fab matTooltip="Actions" [color]="column.actions.menuButtonColor" [matMenuTriggerFor]="menu"
-            [matMenuTriggerData]="{buttons: column.actions.buttons, element}" (click)="$event.stopPropagation()">
+          <button mat-mini-fab matTooltip="Actions" [color]="column.actions.menuButtonColor"
+            [matMenuTriggerFor]="rowActions" [matMenuTriggerData]="{buttons: column.actions.buttons, element}"
+            (click)="$event.stopPropagation()">
             <mat-icon [color]="column.actions.menuIconColor">menu</mat-icon>
           </button>
           } @else {
@@ -108,6 +127,14 @@
       </ng-container>
       }
 
+      <!-- TODO custom header -->
+      <!-- <ng-container matColumnDef="header-row-first-group">
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns().length">
+          Custom header
+        </th>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['header-row-first-group']"></tr> -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
       <tr mat-row *matRowDef="let element; columns: displayedColumns()" (click)="toggleRowExpansion(element)"
         class="example-element-row"></tr>
@@ -131,7 +158,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-menu #menu="matMenu" xPosition="before">
+<mat-menu #rowActions="matMenu" xPosition="before">
   <ng-template matMenuContent let-buttons="buttons" let-element="element">
     @for (btn of buttons; track btn) {
     <button mat-menu-item [class]="btn.class" [disabled]="isButtonDisabled(btn, element)"
@@ -143,5 +170,12 @@
   </ng-template>
 </mat-menu>
 
-<ng-template #customColumnTemplate let-element>{{element.username}}</ng-template>
+<mat-menu #tableActions="matMenu" xPosition="after">
+  <button mat-menu-item (click)="print()">
+    <mat-icon color="primary">print</mat-icon>
+    Print
+  </button>
+</mat-menu>
+
+<ng-template #customColumnTemplate let-element>{{element.username ?? 'flaviooooo'}}</ng-template>
 <ng-template #customExpandedRowTpl let-element="element">{{ element?.username}}</ng-template>
