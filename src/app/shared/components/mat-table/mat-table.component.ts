@@ -27,6 +27,14 @@ import { IMatTableColumn } from '../../model/i-mat-table-column';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-mat-table',
@@ -43,9 +51,20 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatMenuModule,
     MatCheckboxModule,
     MatProgressBarModule,
+    NgTemplateOutlet,
   ],
   templateUrl: './mat-table.component.html',
   styleUrl: './mat-table.component.scss',
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('350ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+    ]),
+  ],
 })
 export class MatTableComponent<T> implements AfterViewInit {
   readonly columns = input.required<IMatTableColumn<T>[]>();
@@ -61,8 +80,17 @@ export class MatTableComponent<T> implements AfterViewInit {
   readonly isSelectable = input<boolean>(false);
   readonly multiSelect = input<boolean>(true);
   readonly initiallySelectedValues = input<T[]>([]);
-  readonly paginator = viewChild<MatPaginator>(MatPaginator);
-  readonly sort = viewChild<MatSort>(MatSort);
+  readonly selectionModel = computed(() => {
+    return this.isSelectable()
+      ? new SelectionModel<T>(
+          this.multiSelect(),
+          this.initiallySelectedValues() ?? []
+        )
+      : undefined;
+  });
+  readonly isExpandable = input<boolean>(false);
+  readonly expandableRowTemplate = input<string>();
+  expandedElement?: T;
 
   readonly #dataSource = signal<T[]>([]);
   @Input({ required: true }) set dataSource(dataSource: T[]) {
@@ -72,14 +100,8 @@ export class MatTableComponent<T> implements AfterViewInit {
     return new MatTableDataSource<T>(this.#dataSource());
   }
 
-  readonly selectionModel = computed(() => {
-    return this.isSelectable()
-      ? new SelectionModel<T>(
-          this.multiSelect(),
-          this.initiallySelectedValues() ?? []
-        )
-      : undefined;
-  });
+  readonly paginator = viewChild<MatPaginator>(MatPaginator);
+  readonly sort = viewChild<MatSort>(MatSort);
 
   pageChange = output<PageEvent>();
   sortChange = output<Sort>();
@@ -144,5 +166,11 @@ export class MatTableComponent<T> implements AfterViewInit {
     this.selectionModel()?.toggle(row);
 
     this.toggleChange.emit(this.selectionModel()?.selected ?? []);
+  }
+
+  toggleRowExpansion(element: T, event?: Event) {
+    event?.stopPropagation();
+    this.expandedElement =
+      this.expandedElement === element ? undefined : element;
   }
 }
