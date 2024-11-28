@@ -103,11 +103,9 @@ export class MatTableComponent<T> implements AfterViewInit {
   readonly paginator = viewChild<MatPaginator>(MatPaginator);
   readonly sort = viewChild<MatSort>(MatSort);
 
-  pageChange = output<PageEvent>();
-  sortChange = output<Sort>();
-  toggleChange = output<T[]>();
-
-  readonly emptyData = new MatTableDataSource<T>([{ empty: 'row' } as T]);
+  readonly pageChange = output<PageEvent>();
+  readonly sortChange = output<Sort>();
+  readonly toggleChange = output<T[]>();
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator() ?? null;

@@ -4,9 +4,8 @@
     <mat-progress-bar style="margin-top: -4px;" mode="query" />
     }
 
-    <table mat-table matSort fixedLayout="true" [dataSource]="dataSource.data.length ? dataSource : emptyData"
-      [trackBy]="trackByFn" [multiTemplateDataRows]="isExpandable() && expandableRowTemplate()"
-      (matSortChange)="onSortChange($event)">
+    <table mat-table matSort fixedLayout="true" [dataSource]="dataSource" [trackBy]="trackByFn"
+      [multiTemplateDataRows]="isExpandable() && expandableRowTemplate()" (matSortChange)="onSortChange($event)">
 
       @if (isSelectable()) {
       <ng-container matColumnDef="checkboxSelection">
@@ -109,19 +108,21 @@
       </ng-container>
       }
 
-      <ng-container matColumnDef="empty-row">
-        <mat-cell class="no-data" *matCellDef="let element">No Data</mat-cell>
-      </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-      <tr mat-row *matRowDef="
-        let element; columns: dataSource.data.length ? displayedColumns() : ['empty-row']"
-        (click)="toggleRowExpansion(element)" class="example-element-row"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns()" (click)="toggleRowExpansion(element)"
+        class="example-element-row"></tr>
       @if (isExpandable() && expandableRowTemplate()) {<tr mat-row *matRowDef="let row; columns: ['expandedDetail']"
         class="detail-row">
         <!-- [class.d-none]="row !== expandedElement" -->
         <!-- TODO this fixes opening glitch on expandable rows when table renders but ruins the closing animation -->
       </tr>}
+      <tr *matNoDataRow>
+        <td [attr.colspan]="displayedColumns().length">
+          <div class="d-flex justify-content-center p-5">
+            No data
+          </div>
+        </td>
+      </tr>
     </table>
 
     <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions"
