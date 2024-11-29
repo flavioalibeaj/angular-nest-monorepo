@@ -1,35 +1,35 @@
 <div class="h-100 d-flex justify-content-center align-items-center">
   <mat-card appearance="outlined">
     <mat-card-header class="justify-content-center">
-      <mat-card-title>Register</mat-card-title>
+      <mat-card-title>{{"AUTH.REGISTER" | translate}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <form class="mt-3 d-flex flex-column justify-content-center" [formGroup]="registerForm">
         <mat-form-field>
-          <mat-label>Username</mat-label>
+          <mat-label>{{"AUTH.USERNAME" | translate}}</mat-label>
           <input matInput formControlName="username" type="text">
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Password</mat-label>
+          <mat-label>{{"AUTH.PASSWORD" | translate}}</mat-label>
           <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
-          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hidePassword">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'AUTH.HIDE_PASSWORD' | translate" [attr.aria-pressed]="hidePassword">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Confirm Password</mat-label>
+          <mat-label>{{"AUTH.CONFIRM_PASSWORD" | translate}}</mat-label>
           <input matInput type="password" formControlName="confirmPassword">
         </mat-form-field>
       </form>
     </mat-card-content>
     <mat-card-actions class="flex-column gap-3">
       <span class="text-danger" role="button" routerLink="../login">
-        <a>Already have an account? Log in <b class="text-decoration-underline">here</b></a>
+        <a>{{"AUTH.ACC_LOGIN" | translate}} <b class="text-decoration-underline">{{"AUTH.HERE" | translate}}</b></a>
       </span>
       <button type="submit" (click)="register()" mat-raised-button color="primary" class="w-100"
         [disabled]="registerForm.invalid">
-        Register
+        {{"AUTH.REGISTER" | translate}}
       </button>
     </mat-card-actions>
   </mat-card>

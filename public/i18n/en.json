@@ -1,8 +1,39 @@
 {
   "AUTH": {
-    "LOGIN": "Log in"
+    "LOGIN": "Log in",
+    "REGISTER": "Register",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm password",
+    "HIDE_PASSWORD": "Hide password",
+    "CONFIRM_PASSWORD_MATCH": "Passwords must match",
+    "HERE": "here",
+    "NO_ACC_REGISTER": "Don't have an account? Register",
+    "ACC_LOGIN": "Already have an account? Log in"
   },
-  "ERROR": {
-    "INVALID_FORM": "Fill form with valid values"
+  "FORM": {
+    "FILL_VALID_VALUES": "Fill form with valid values",
+    "SUBMIT": "Submit"
+  },
+  "TOOLBAR": {
+    "PROFILE": "Profile",
+    "SETTINGS": "Settings",
+    "LOG_OUT": "Log out",
+    "CHANGE_LANG": "Change language",
+    "ACTIONS": "Actions"
+  },
+  "PROFILE": {
+    "HELLO": "Hello",
+    "CREATE": "Create your profile",
+    "FIRST_NAME": "First name",
+    "LAST_NAME": "Last name",
+    "PHONE_NUMBER": "Phone number",
+    "BIOGRAPHY": "Biography"
+  },
+  "TABLE": {
+    "PRINT": "Print",
+    "NO_DATA": "No data",
+    "TEMPLATE_NOT_FOUND": "Template not found",
+    "FILTER": "Filter"
   }
 }

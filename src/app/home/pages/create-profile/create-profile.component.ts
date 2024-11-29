@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap, take } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ProfileService } from '../profile/services/profile.service';
 import {
@@ -14,21 +14,23 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-create-profile',
-    imports: [
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        AsyncPipe,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-    ],
-    templateUrl: './create-profile.component.html',
-    styles: [
-        `
+  selector: 'app-create-profile',
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    AsyncPipe,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
+  templateUrl: './create-profile.component.html',
+  styles: [
+    `
       mat-card-header {
         padding: 1rem;
       }
@@ -42,11 +44,12 @@ import { MatInputModule } from '@angular/material/input';
         }
       }
     `,
-    ]
+  ],
 })
 export class CreateProfileComponent implements OnInit {
   readonly #userService = inject(UserService);
   readonly #profileService = inject(ProfileService);
+  readonly #translateService = inject(TranslateService);
 
   readonly #getUserSubject = new BehaviorSubject<void>(undefined);
   readonly user = this.#getUserSubject
@@ -72,8 +75,18 @@ export class CreateProfileComponent implements OnInit {
   }
 
   createProfile() {
-    if (!this.createProfileFG.valid)
-      throw new Error('Fill form with valid values');
+    if (!this.createProfileFG.valid) {
+      this.#translateService
+        .stream('FORM.FILL_VALID_VALUES')
+        .pipe(take(1))
+        .subscribe({
+          next: (msg) => {
+            throw new Error(msg);
+          },
+        });
+
+      return;
+    }
 
     const { bio, firstName, lastName, phoneNumber } =
       this.createProfileFG.getRawValue();

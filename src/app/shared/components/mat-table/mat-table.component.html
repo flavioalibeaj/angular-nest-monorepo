@@ -2,7 +2,7 @@
   <mat-card-header>
     <div class="d-flex gap-1">
       <mat-form-field>
-        <mat-label>Filter</mat-label>
+        <mat-label>{{"TABLE.FILTER" | translate}}</mat-label>
         <input matInput type="text" [formControl]="searchFilterCtrl">
       </mat-form-field>
       <button mat-icon-button matTooltip="Filter" color="primary" [disabled]="!searchFilterCtrl.value"
@@ -49,7 +49,7 @@
           <div class="d-flex overflow-hidden" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
             <div class="p-3">
               @switch (expandableRowTemplate()) {
-              @default { Template not found }
+              @default { {{"TABLE.TEMPLATE_NOT_FOUND" | translate}} }
               @case ('customRow') {
               <ng-container [ngTemplateOutlet]="customExpandedRowTpl" [ngTemplateOutletContext]="{element}" />
               }
@@ -83,7 +83,7 @@
             } @else if(column.cell) {
             {{ column.cell(element) }}
             } @else if(column.custom) { @switch (column.template) {
-            @default { Template not found }
+            @default { {{"TABLE.TEMPLATE_NOT_FOUND" | translate}} }
             @case ('custom-template') {
             <ng-template [ngTemplateOutlet]="customColumnTemplate" [ngTemplateOutletContext]="{ $implicit: element }" />
             }
@@ -146,7 +146,7 @@
       <tr *matNoDataRow>
         <td [attr.colspan]="displayedColumns().length">
           <div class="d-flex justify-content-center p-5">
-            No data
+            {{"TABLE.NO_DATA" | translate}}
           </div>
         </td>
       </tr>
@@ -173,7 +173,7 @@
 <mat-menu #tableActions="matMenu" xPosition="after">
   <button mat-menu-item (click)="print()">
     <mat-icon color="primary">print</mat-icon>
-    Print
+    {{"TABLE.PRINT" | translate}}
   </button>
 </mat-menu>
 

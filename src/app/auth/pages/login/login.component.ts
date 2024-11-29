@@ -12,23 +12,24 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { take } from 'rxjs';
 
 @Component({
-    selector: 'app-login',
-    imports: [
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        RouterLink,
-        TranslatePipe,
-    ],
-    templateUrl: './login.component.html',
-    styles: [
-        `
+  selector: 'app-login',
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    RouterLink,
+    TranslatePipe,
+  ],
+  templateUrl: './login.component.html',
+  styles: [
+    `
       mat-card {
         height: 350px;
         width: 350px;
@@ -36,10 +37,11 @@ import { TranslatePipe } from '@ngx-translate/core';
         justify-content: space-between;
       }
     `,
-    ]
+  ],
 })
 export class LoginComponent {
   readonly #authService = inject(AuthService);
+  readonly #translateService = inject(TranslateService);
 
   hidePassword: boolean = true;
   readonly loginForm = new FormGroup({
@@ -51,7 +53,18 @@ export class LoginComponent {
   });
 
   login() {
-    if (!this.loginForm.valid) throw new Error('Fill form with valid values');
+    if (!this.loginForm.valid) {
+      this.#translateService
+        .stream('FORM.FILL_VALID_VALUES')
+        .pipe(take(1))
+        .subscribe({
+          next: (msg) => {
+            throw new Error(msg);
+          },
+        });
+
+      return;
+    }
 
     const { password, username } = this.loginForm.getRawValue();
 

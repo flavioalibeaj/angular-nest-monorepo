@@ -12,31 +12,35 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { take } from 'rxjs';
 
 @Component({
-    selector: 'app-register',
-    imports: [
-        MatCardModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatButtonModule,
-        RouterLink,
-    ],
-    templateUrl: './register.component.html',
-    styles: [
-        `
+  selector: 'app-register',
+  imports: [
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterLink,
+    TranslatePipe,
+  ],
+  templateUrl: './register.component.html',
+  styles: [
+    `
       mat-card {
         width: 350px;
         max-width: 350px;
         justify-content: space-between;
       }
     `,
-    ]
+  ],
 })
 export class RegisterComponent {
   readonly #authService = inject(AuthService);
+  readonly #translateService = inject(TranslateService);
 
   hidePassword: boolean = true;
   readonly registerForm = new FormGroup({
@@ -52,8 +56,18 @@ export class RegisterComponent {
   });
 
   register() {
-    if (!this.registerForm.valid)
-      throw new Error('Fill form with valid values');
+    if (!this.registerForm.valid) {
+      this.#translateService
+        .stream('FORM.FILL_VALID_VALUES')
+        .pipe(take(1))
+        .subscribe({
+          next: (msg) => {
+            throw new Error(msg);
+          },
+        });
+
+      return;
+    }
 
     const { confirmPassword, password, username } =
       this.registerForm.getRawValue();

@@ -1,7 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/http.service';
-import { Observable, tap } from 'rxjs';
+import { Observable, take, tap } from 'rxjs';
 import { IApiResponse } from '../../shared/model/i-api-response.interface';
 import { AUTH_ENDPOINTS } from '../../shared/endpoints/endpoints';
 import { ILoginResponse } from '../../auth/model/i-login-response.interface';
@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 import { IViewUser } from '../model/i-view-user.interface';
 import { jwtDecode } from 'jwt-decode';
 import { ITokenPayload } from '../model/i-token-payload.interface';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ export class AuthService {
   readonly #router = inject(Router);
   readonly #httpService = inject(HttpService);
   readonly #userService = inject(UserService);
+  readonly #translateService = inject(TranslateService);
 
   readonly #token = signal<string | null>(localStorage.getItem('access_token'));
   readonly token = this.#token.asReadonly();
@@ -67,8 +69,18 @@ export class AuthService {
   }
 
   register({ confirmPassword, password, username }: IRegisterRequest) {
-    if (confirmPassword !== password)
-      throw new Error('Confirm password must match password');
+    if (confirmPassword !== password) {
+      this.#translateService
+        .stream('AUTH.CONFIRM_PASSWORD_MATCH')
+        .pipe(take(1))
+        .subscribe({
+          next: (msg) => {
+            throw new Error(msg);
+          },
+          complete: () => console.log('completed'),
+        });
+      return;
+    }
 
     return this.#httpService
       .post<ILoginRequest, IViewUser>(AUTH_ENDPOINTS.register, {
@@ -84,8 +96,7 @@ export class AuthService {
 
   #isTokenExpired() {
     const parsedToken = this.#parseToken();
-
-    if (!parsedToken) throw new Error('Token is missing');
+    if (!parsedToken) return true;
 
     const msInASecond = 1000;
     const expiryDate = new Date(parsedToken.exp * msInASecond);

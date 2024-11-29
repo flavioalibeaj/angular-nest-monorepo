@@ -1,8 +1,39 @@
 {
   "AUTH": {
-    "LOGIN": "Identifikohu"
+    "LOGIN": "Identifikohu",
+    "REGISTER": "Rregjistrohu",
+    "USERNAME": "Emri i përdoruesit",
+    "PASSWORD": "Fjalëkalimi",
+    "CONFIRM_PASSWORD": "Konfirmo fjalëkalimin",
+    "HIDE_PASSWORD": "Fshih fjalëkalimin",
+    "CONFIRM_PASSWORD_MATCH": "Fjalëkalimet duhet të jenë të njëjtë",
+    "HERE": "këtu",
+    "NO_ACC_REGISTER": "Nuk keni një llogari? Rregjistrohu",
+    "ACC_LOGIN": "Keni një llogari? Identifikohu"
   },
-  "ERROR": {
-    "INVALID_FORM": "Fill form with valid values"
+  "FORM": {
+    "FILL_VALID_VALUES": "Plotësoni formularin me vlera të vlefshme",
+    "SUBMIT": "Dërgo"
+  },
+  "TOOLBAR": {
+    "PROFILE": "Profili",
+    "SETTINGS": "Cilësimet",
+    "LOG_OUT": "Dilni",
+    "CHANGE_LANG": "Ndrysho gjuhën",
+    "ACTIONS": "Veprime"
+  },
+  "PROFILE": {
+    "HELLO": "Përshëndetje",
+    "CREATE": "Krijoni profilin tuaj",
+    "FIRST_NAME": "Emri",
+    "LAST_NAME": "Mbiemri",
+    "PHONE_NUMBER": "Numri i telefonit",
+    "BIOGRAPHY": "Biografia"
+  },
+  "TABLE": {
+    "PRINT": "Printo",
+    "NO_DATA": "Nuk ka të dhëna",
+    "TEMPLATE_NOT_FOUND": "Modeli nuk u gjet",
+    "FILTER": "Filtro"
   }
 }
