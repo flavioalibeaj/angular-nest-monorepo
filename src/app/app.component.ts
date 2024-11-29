@@ -9,11 +9,12 @@ import { filter, Subject, takeUntil, tap } from 'rxjs';
 import { SpinnerService } from './shared/services/spinner.service';
 import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AsyncPipe, MatProgressSpinnerModule],
+  imports: [RouterOutlet, AsyncPipe, MatProgressSpinnerModule, TranslateModule],
   styles: [
     `
       .spinner-container {
@@ -41,11 +42,22 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly #router = inject(Router);
+  readonly #translateService = inject(TranslateService);
   readonly spinnerService = inject(SpinnerService);
 
   readonly #unSub = new Subject<void>();
 
   ngOnInit(): void {
+    this.#listenToRouteEvents();
+    this.#setUpAppLanguage();
+  }
+
+  ngOnDestroy(): void {
+    this.#unSub.next();
+    this.#unSub.complete();
+  }
+
+  #listenToRouteEvents() {
     this.#router.events
       .pipe(
         filter(
@@ -62,8 +74,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  ngOnDestroy(): void {
-    this.#unSub.next();
-    this.#unSub.complete();
+  #setUpAppLanguage() {
+    this.#translateService.addLangs(['en', 'al']);
+
+    const lang = localStorage.getItem('language') ?? 'en';
+    this.#translateService.setDefaultLang(lang);
+    this.#translateService.use(lang);
   }
 }

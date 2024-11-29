@@ -8,10 +8,20 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { httpInterceptor } from './core/interceptors/http.interceptor';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { GlobalErrorHandlerService } from './core/error-handler/global-error-handler.service';
+import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
+  http: HttpClient
+) => new TranslateHttpLoader(http, './i18n/', '.json');
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +30,13 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     // importProvidersFrom(NgxSpinnerModule.forRoot({ type: 'ball-pulse' })),
     provideAnimationsAsync(),
+    provideTranslateService({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
     { provide: ErrorHandler, useClass: GlobalErrorHandlerService },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
