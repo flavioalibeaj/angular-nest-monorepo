@@ -7,17 +7,16 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-toolbar',
-  standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule],
-  styles: [
-    `
+    selector: 'app-toolbar',
+    imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule],
+    styles: [
+        `
       .example-spacer {
         flex: 1 1 auto;
       }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <mat-toolbar color="primary">
       <button
         mat-icon-button
@@ -51,7 +50,7 @@ import { AuthService } from '../../../core/services/auth.service';
         Log out
       </button>
     </mat-menu>
-  `,
+  `
 })
 export class ToolbarComponent {
   readonly sidenavService = inject(SidenavService);

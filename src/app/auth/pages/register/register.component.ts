@@ -14,27 +14,26 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    RouterLink,
-  ],
-  templateUrl: './register.component.html',
-  styles: [
-    `
+    selector: 'app-register',
+    imports: [
+        MatCardModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        RouterLink,
+    ],
+    templateUrl: './register.component.html',
+    styles: [
+        `
       mat-card {
         width: 350px;
         max-width: 350px;
         justify-content: space-between;
       }
     `,
-  ],
+    ]
 })
 export class RegisterComponent {
   readonly #authService = inject(AuthService);

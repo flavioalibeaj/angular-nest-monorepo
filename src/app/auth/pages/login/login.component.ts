@@ -15,21 +15,20 @@ import { AuthService } from '../../../core/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    RouterLink,
-    TranslatePipe,
-  ],
-  templateUrl: './login.component.html',
-  styles: [
-    `
+    selector: 'app-login',
+    imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        RouterLink,
+        TranslatePipe,
+    ],
+    templateUrl: './login.component.html',
+    styles: [
+        `
       mat-card {
         height: 350px;
         width: 350px;
@@ -37,7 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         justify-content: space-between;
       }
     `,
-  ],
+    ]
 })
 export class LoginComponent {
   readonly #authService = inject(AuthService);

@@ -16,20 +16,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-create-profile',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    AsyncPipe,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-  ],
-  templateUrl: './create-profile.component.html',
-  styles: [
-    `
+    selector: 'app-create-profile',
+    imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        AsyncPipe,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+    ],
+    templateUrl: './create-profile.component.html',
+    styles: [
+        `
       mat-card-header {
         padding: 1rem;
       }
@@ -43,7 +42,7 @@ import { MatInputModule } from '@angular/material/input';
         }
       }
     `,
-  ],
+    ]
 })
 export class CreateProfileComponent implements OnInit {
   readonly #userService = inject(UserService);

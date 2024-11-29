@@ -3,11 +3,10 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [ToolbarComponent, SidenavComponent],
-  styles: [
-    `
+    selector: 'app-home',
+    imports: [ToolbarComponent, SidenavComponent],
+    styles: [
+        `
       .main-div {
         // display: flex;
         // flex-direction: column;
@@ -30,12 +29,12 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
       //   overflow: auto;
       // }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <div class="main-div">
       <app-toolbar />
       <app-sidenav />
     </div>
-  `,
+  `
 })
 export class HomeComponent {}

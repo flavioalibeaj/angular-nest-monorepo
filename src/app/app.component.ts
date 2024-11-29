@@ -12,11 +12,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, AsyncPipe, MatProgressSpinnerModule, TranslateModule],
-  styles: [
-    `
+    selector: 'app-root',
+    imports: [RouterOutlet, AsyncPipe, MatProgressSpinnerModule, TranslateModule],
+    styles: [
+        `
       .spinner-container {
         position: absolute;
         top: 0;
@@ -30,15 +29,15 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         z-index: 100;
       }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <router-outlet />
     @if(spinnerService.isLoading$ | async; as isLoading){
     <div class="spinner-container">
       <mat-spinner />
     </div>
     }
-  `,
+  `
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly #router = inject(Router);

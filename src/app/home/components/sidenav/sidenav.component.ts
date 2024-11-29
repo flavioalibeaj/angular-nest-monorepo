@@ -5,17 +5,16 @@ import { Subject, takeUntil, tap } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-sidenav',
-  standalone: true,
-  imports: [MatSidenavModule, RouterOutlet],
-  styles: [
-    `
+    selector: 'app-sidenav',
+    imports: [MatSidenavModule, RouterOutlet],
+    styles: [
+        `
       mat-sidenav {
         width: 16rem;
       }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <mat-sidenav-container class="w-auto h-100">
       <mat-sidenav #sidenav mode="over">
         <!-- autoFocus="false" -->
@@ -25,7 +24,7 @@ import { RouterOutlet } from '@angular/router';
         <router-outlet />
       </mat-sidenav-content>
     </mat-sidenav-container>
-  `,
+  `
 })
 export class SidenavComponent implements OnInit, OnDestroy {
   readonly #sidenavService = inject(SidenavService);
