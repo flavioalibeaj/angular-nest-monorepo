@@ -4,7 +4,6 @@ import {
   computed,
   input,
   Input,
-  OnInit,
   output,
   signal,
   viewChild,
@@ -75,8 +74,28 @@ import { TranslatePipe } from '@ngx-translate/core';
     ]),
   ],
 })
-export class MatTableComponent<T> implements OnInit, AfterViewInit {
+export class MatTableComponent<T> implements AfterViewInit {
   readonly columns = input.required<IMatTableColumn<T>[]>();
+  readonly paginationParams = input.required<PaginationParams>();
+  readonly loading = input<boolean>(false);
+  readonly isSelectable = input<boolean>(false);
+  readonly multiSelect = input<boolean>(true);
+  readonly initiallySelectedValues = input<T[]>([]);
+  readonly isExpandable = input<boolean>(false);
+  readonly expandableRowTemplate = input<string>();
+  readonly showFilter = input<boolean>();
+  readonly advancedFilter = input<boolean>(); // TODO add
+  readonly filterOnFront = input<boolean>();
+  readonly printAndExport = input<boolean>();
+  readonly printAndExportTitle = input<string>();
+
+  @Input({ required: true }) set dataSource(dataSource: T[]) {
+    this.#dataSource.set(dataSource);
+  }
+  get dataSource(): MatTableDataSource<T> {
+    return new MatTableDataSource<T>(this.#dataSource());
+  }
+
   readonly displayedColumns = computed(() => {
     const columns = this.columns().map((c) => c.key);
     if (this.isSelectable() && this.dataSource.data.length)
@@ -84,11 +103,6 @@ export class MatTableComponent<T> implements OnInit, AfterViewInit {
 
     return columns;
   });
-  readonly paginationParams = input.required<PaginationParams>();
-  readonly loading = input<boolean>(false);
-  readonly isSelectable = input<boolean>(false);
-  readonly multiSelect = input<boolean>(true);
-  readonly initiallySelectedValues = input<T[]>([]);
   readonly selectionModel = computed(() => {
     return this.isSelectable()
       ? new SelectionModel<T>(
@@ -97,50 +111,18 @@ export class MatTableComponent<T> implements OnInit, AfterViewInit {
         )
       : undefined;
   });
-  readonly isExpandable = input<boolean>(false);
-  readonly expandableRowTemplate = input<string>();
-  expandedElement?: T;
-
   readonly #dataSource = signal<T[]>([]);
-  @Input({ required: true }) set dataSource(dataSource: T[]) {
-    this.#dataSource.set(dataSource);
-  }
-  get dataSource(): MatTableDataSource<T> {
-    return new MatTableDataSource<T>(this.#dataSource());
-  }
-
-  readonly showFilter = input<boolean>();
-  readonly advancedFilter = input<boolean>(); // TODO add
-  readonly filterOnFront = input<boolean>();
-  readonly printAndExport = input<boolean>();
-  readonly printAndExportTitle = input<string>();
 
   readonly paginator = viewChild<MatPaginator>(MatPaginator);
   readonly sort = viewChild<MatSort>(MatSort);
 
   readonly pageChange = output<PageEvent>();
   readonly sortChange = output<Sort>();
-  readonly toggleChange = output<T[]>();
+  readonly selectionChange = output<T[]>();
   readonly searchFilter = output<string>();
 
   readonly searchFilterCtrl = new FormControl<string>('');
-
-  ngOnInit() {
-    const customCols = this.columns().filter((c) => c.custom);
-    if (customCols.some((c) => !c.template?.trim()))
-      throw new Error('Custom rows must have template'); // TODO translate
-
-    if (this.isExpandable()) {
-      if (this.isSelectable())
-        throw new Error('Row cannot be both selectable and expandable'); // TODO translate
-
-      if (!this.expandableRowTemplate()?.trim())
-        throw new Error('Expandable row template should be named'); // TODO translate
-    }
-
-    if (this.printAndExport() && !this.printAndExportTitle()?.trim())
-      throw new Error('Title should be named');
-  }
+  expandedElement?: T;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator() ?? null;
@@ -192,13 +174,13 @@ export class MatTableComponent<T> implements OnInit, AfterViewInit {
           this.selectionModel()?.select(row)
         );
 
-    this.toggleChange.emit(this.selectionModel()?.selected ?? []);
+    this.selectionChange.emit(this.selectionModel()?.selected ?? []);
   }
 
   toggleRow(row: T) {
     this.selectionModel()?.toggle(row);
 
-    this.toggleChange.emit(this.selectionModel()?.selected ?? []);
+    this.selectionChange.emit(this.selectionModel()?.selected ?? []);
   }
 
   toggleRowExpansion(element: T, event?: Event) {

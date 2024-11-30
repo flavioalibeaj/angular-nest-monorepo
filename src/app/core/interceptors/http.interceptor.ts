@@ -1,13 +1,11 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, finalize, throwError } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SpinnerService } from '../../shared/services/spinner.service';
 import { AuthService } from '../services/auth.service';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const snackbar = inject(MatSnackBar);
   const spinnerService = inject(SpinnerService);
 
   spinnerService.show();
@@ -23,10 +21,12 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
       setHeaders,
     })
   ).pipe(
-    catchError((err: HttpErrorResponse) => {
-      snackbar.open(err.error.error.message, 'Close');
-      return throwError(() => err);
-    }),
+    catchError(({ error }: HttpErrorResponse) =>
+      throwError(() => {
+        if (!navigator.onLine) throw new Error('No access to the internet');
+        throw new Error(error.error.message);
+      })
+    ),
     finalize(() => spinnerService.hide())
   );
 };
