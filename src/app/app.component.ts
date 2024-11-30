@@ -1,6 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   NavigationEnd,
+  NavigationError,
   NavigationStart,
   Router,
   RouterOutlet,
@@ -61,12 +62,20 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(
         filter(
           (event) =>
-            event instanceof NavigationStart || event instanceof NavigationEnd
+            event instanceof NavigationStart ||
+            event instanceof NavigationEnd ||
+            event instanceof NavigationError
         ),
         tap((event) => {
-          event instanceof NavigationStart
-            ? this.spinnerService.show()
-            : this.spinnerService.hide();
+          if (event instanceof NavigationStart) this.spinnerService.show();
+          if (event instanceof NavigationEnd) this.spinnerService.hide();
+          if (
+            event instanceof NavigationError &&
+            event.error instanceof Error &&
+            event.error.name === 'ChunkLoadError'
+          ) {
+            window.location.assign(event.url);
+          }
         }),
         takeUntil(this.#unSub)
       )
