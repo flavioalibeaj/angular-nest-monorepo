@@ -1,5 +1,7 @@
 <mat-card appearance="outlined">
-  <mat-card-header>
+  <!-- TODO export to excel -->
+  <!-- TODO add filter on custom header -->
+  <!-- <mat-card-header>
     <div class="d-flex gap-1">
       <mat-form-field>
         <mat-label>{{"TABLE.FILTER" | translate}}</mat-label>
@@ -10,13 +12,12 @@
         <mat-icon>filter_alt</mat-icon>
       </button>
     </div>
-    @if (printAndExport()) {
+    @if (tableConfig().printAndExport) {
     <button mat-icon-button matTooltip="Actions" color="primary" [matMenuTriggerFor]="tableActions">
       <mat-icon>more_vert</mat-icon>
     </button>
-    <!-- TODO export to excel -->
     }
-  </mat-card-header>
+  </mat-card-header> -->
   <mat-card-content>
     @if (loading()) {
     <mat-progress-bar style="margin-top: -4px;" mode="query" />
@@ -27,14 +28,14 @@
 
       @if (isSelectable()) {
       <ng-container matColumnDef="checkboxSelection">
-        <th class="border-dotted" matRipple mat-header-cell *matHeaderCellDef>
+        <th style="width: 40px;" class="border-dotted" matRipple mat-header-cell *matHeaderCellDef>
           @if (multiSelect() && dataSource.data.length) {
           <mat-checkbox (change)="toggleAll()" [checked]="selectionModel()?.hasValue() && isAllSelected()"
             [indeterminate]="selectionModel()?.hasValue() && !isAllSelected()">
           </mat-checkbox>
           }
         </th>
-        <td class="border-dotted" matRipple mat-cell *matCellDef="let row">
+        <td style="width: 40px;" class="border-dotted" matRipple mat-cell *matCellDef="let row">
           <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleRow(row)"
             [checked]="selectionModel()?.isSelected(row)">
           </mat-checkbox>

@@ -4,6 +4,7 @@ import {
   computed,
   input,
   Input,
+  OnInit,
   output,
   signal,
   viewChild,
@@ -74,7 +75,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     ]),
   ],
 })
-export class MatTableComponent<T> implements AfterViewInit {
+export class MatTableComponent<T> implements OnInit, AfterViewInit {
   readonly columns = input.required<IMatTableColumn<T>[]>();
   readonly displayedColumns = computed(() => {
     const columns = this.columns().map((c) => c.key);
@@ -123,6 +124,23 @@ export class MatTableComponent<T> implements AfterViewInit {
   readonly searchFilter = output<string>();
 
   readonly searchFilterCtrl = new FormControl<string>('');
+
+  ngOnInit() {
+    const customCols = this.columns().filter((c) => c.custom);
+    if (customCols.some((c) => !c.template?.trim()))
+      throw new Error('Custom rows must have template'); // TODO translate
+
+    if (this.isExpandable()) {
+      if (this.isSelectable())
+        throw new Error('Row cannot be both selectable and expandable'); // TODO translate
+
+      if (!this.expandableRowTemplate()?.trim())
+        throw new Error('Expandable row template should be named'); // TODO translate
+    }
+
+    if (this.printAndExport() && !this.printAndExportTitle()?.trim())
+      throw new Error('Title should be named');
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator() ?? null;
