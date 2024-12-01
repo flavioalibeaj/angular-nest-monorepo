@@ -6,44 +6,35 @@ import {
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { filter, Subject, takeUntil, tap } from 'rxjs';
-import { SpinnerService } from './shared/services/spinner.service';
-import { AsyncPipe } from '@angular/common';
+import { EMPTY, filter, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AsyncPipe, MatProgressSpinnerModule, TranslateModule],
-  styles: [
-    `
-      .spinner-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 100;
-      }
-    `,
+  imports: [
+    RouterOutlet,
+    MatProgressSpinnerModule,
+    TranslateModule,
+    NgxSpinnerComponent,
   ],
   template: `
     <router-outlet />
-    @if(spinnerService.isLoading$ | async; as isLoading){
-    <div class="spinner-container">
-      <mat-spinner />
-    </div>
-    }
+    <ngx-spinner
+      bdColor="rgba(0, 0, 0, 0.8)"
+      size="medium"
+      color="#fff"
+      type="ball-triangle-path"
+      [fullScreen]="true"
+      ><p style="color: white">Loading...</p></ngx-spinner
+    >
   `,
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly #router = inject(Router);
   readonly #translateService = inject(TranslateService);
-  readonly spinnerService = inject(SpinnerService);
+  readonly #spinnerService = inject(NgxSpinnerService);
 
   readonly #unSub = new Subject<void>();
 
@@ -67,8 +58,8 @@ export class AppComponent implements OnInit, OnDestroy {
             event instanceof NavigationError
         ),
         tap((event) => {
-          if (event instanceof NavigationStart) this.spinnerService.show();
-          if (event instanceof NavigationEnd) this.spinnerService.hide();
+          if (event instanceof NavigationStart) this.#spinnerService.show();
+
           if (
             event instanceof NavigationError &&
             event.error instanceof Error &&
@@ -76,6 +67,11 @@ export class AppComponent implements OnInit, OnDestroy {
           ) {
             window.location.assign(event.url);
           }
+        }),
+        switchMap((event) => {
+          return event instanceof NavigationEnd
+            ? timer(600).pipe(tap(() => this.#spinnerService.hide()))
+            : EMPTY;
         }),
         takeUntil(this.#unSub)
       )

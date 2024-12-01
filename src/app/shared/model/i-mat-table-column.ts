@@ -1,7 +1,7 @@
 import { IRowActions } from './i-row-actions.interface';
 
 // TODO fix configuration organization
-export interface IMatTableColumn<T> {
+export interface IMatTableColumn<T = unknown> {
   key: string;
   header: string; // TODO Observable<string>
   actions?: IRowActions<T>;

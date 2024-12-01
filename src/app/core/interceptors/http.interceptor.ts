@@ -1,12 +1,12 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, finalize, throwError } from 'rxjs';
-import { SpinnerService } from '../../shared/services/spinner.service';
 import { AuthService } from '../services/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const spinnerService = inject(SpinnerService);
+  const spinnerService = inject(NgxSpinnerService);
 
   spinnerService.show();
 
