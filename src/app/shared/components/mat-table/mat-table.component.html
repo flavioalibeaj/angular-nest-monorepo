@@ -155,7 +155,7 @@
 
     <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions"
       [pageSize]="paginationParams().pageSize" [pageIndex]="paginationParams().pageIndex"
-      [length]="paginationParams().totalCount" (page)="onPageChange($event)" />
+      [length]="paginationParams().totalCount" (page)="pageChange.emit($event)" />
   </mat-card-content>
 </mat-card>
 
@@ -178,5 +178,5 @@
   </button>
 </mat-menu>
 
-<ng-template #customColumnTemplate let-element>{{element.username ?? 'flaviooooo'}}</ng-template>
-<ng-template #customExpandedRowTpl let-element="element">{{ element?.username}}</ng-template>
+<ng-template #customColumnTemplate let-element>{{element.username ?? '--'}}</ng-template>
+<ng-template #customExpandedRowTpl let-element="element">{{ element?.username ?? '--'}}</ng-template>
