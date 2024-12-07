@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { take } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -39,11 +39,10 @@ import { take } from 'rxjs';
     `,
   ],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   readonly #authService = inject(AuthService);
   readonly #translateService = inject(TranslateService);
 
-  hidePassword: boolean = true;
   readonly loginForm = new FormGroup({
     username: new FormControl<string | null>(null, Validators.required),
     password: new FormControl<string | null>(null, [
@@ -51,6 +50,16 @@ export class LoginComponent {
       Validators.minLength(8),
     ]),
   });
+  readonly hidePassword = signal<boolean>(true);
+
+  ngOnInit(): void {
+    this.#authService
+      .getUsernameFromCache()
+      .pipe(take(1))
+      .subscribe((username) =>
+        this.loginForm.controls['username'].setValue(username)
+      );
+  }
 
   login() {
     if (!this.loginForm.valid) {
@@ -70,6 +79,12 @@ export class LoginComponent {
 
     this.#authService
       .login({ password: password!, username: username! })
+      .pipe(switchMap(() => this.#authService.setUsernameInCache(username!)))
       .subscribe();
+  }
+
+  toggleVisibility(event: MouseEvent) {
+    event.stopPropagation();
+    this.hidePassword.update((hide) => !hide);
   }
 }

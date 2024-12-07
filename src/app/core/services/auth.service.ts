@@ -1,7 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/http.service';
-import { Observable, take, tap } from 'rxjs';
+import { EMPTY, from, Observable, switchMap, take, tap } from 'rxjs';
 import { IApiResponse } from '../../shared/model/i-api-response.interface';
 import { AUTH_ENDPOINTS } from '../../shared/endpoints/endpoints';
 import { ILoginResponse } from '../../auth/model/i-login-response.interface';
@@ -111,5 +111,18 @@ export class AuthService {
     if (!token) return null;
 
     return jwtDecode<ITokenPayload>(token);
+  }
+
+  setUsernameInCache(username: string): Observable<void> {
+    return from(caches.open('login-username')).pipe(
+      switchMap((cache) => cache.put('username', new Response(username)))
+    );
+  }
+
+  getUsernameFromCache() {
+    return from(caches.open('login-username')).pipe(
+      switchMap((cache) => from(cache.match('username'))),
+      switchMap((username) => (username ? username.text() : EMPTY))
+    );
   }
 }

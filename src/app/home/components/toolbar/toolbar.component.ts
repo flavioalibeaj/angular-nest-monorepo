@@ -76,7 +76,7 @@ import { LowerCasePipe } from '@angular/common';
       <button mat-menu-item class="pe-0" (click)="setLanguage(lang.code)">
         <div class="d-flex flex-row align-items-center gap-3">
           <span class="fi fi-{{ lang.img | lowercase }}"></span>
-          {{ lang.label }}
+          {{ lang.label | translate }}
           @if (translateService.currentLang == lang.code) {
           <mat-icon color="primary">done</mat-icon>
           }
@@ -93,12 +93,12 @@ export class ToolbarComponent {
 
   readonly languages = [
     {
-      label: 'Shqip',
+      label: 'LANGUAGES.ALBANIAN',
       code: 'al',
       img: 'AL',
     },
     {
-      label: 'English',
+      label: 'LANGUAGES.ENGLISH',
       code: 'en',
       img: 'GB',
     },

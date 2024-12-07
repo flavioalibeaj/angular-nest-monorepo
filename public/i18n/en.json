@@ -35,5 +35,9 @@
     "NO_DATA": "No data",
     "TEMPLATE_NOT_FOUND": "Template not found",
     "FILTER": "Filter"
+  },
+  "LANGUAGES": {
+    "ALBANIAN": "Albanian",
+    "ENGLISH": "English"
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -42,7 +42,6 @@ export class RegisterComponent {
   readonly #authService = inject(AuthService);
   readonly #translateService = inject(TranslateService);
 
-  hidePassword: boolean = true;
   readonly registerForm = new FormGroup({
     username: new FormControl<string | null>(null, Validators.required),
     password: new FormControl<string | null>(null, [
@@ -54,6 +53,7 @@ export class RegisterComponent {
       Validators.minLength(8),
     ]),
   });
+  readonly hidePassword = signal<boolean>(true);
 
   register() {
     if (!this.registerForm.valid) {
@@ -79,5 +79,10 @@ export class RegisterComponent {
         username: username!,
       })
       ?.subscribe();
+  }
+
+  toggleVisibility(event: MouseEvent) {
+    event.stopPropagation();
+    this.hidePassword.update((hide) => !hide);
   }
 }

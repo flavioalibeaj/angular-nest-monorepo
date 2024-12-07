@@ -11,10 +11,10 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>{{'AUTH.PASSWORD' | translate}}</mat-label>
-          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
-          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-            [attr.aria-label]="'AUTH.HIDE_PASSWORD' | translate" [attr.aria-pressed]="hidePassword">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <input matInput formControlName="password" [type]="hidePassword() ? 'password' : 'text'">
+          <button mat-icon-button matSuffix (click)="toggleVisibility($event)"
+            [attr.aria-label]="'AUTH.HIDE_PASSWORD' | translate" [attr.aria-pressed]="hidePassword()">
+            <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button> </mat-form-field>
       </form>
     </mat-card-content>
