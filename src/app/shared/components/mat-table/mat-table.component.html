@@ -79,16 +79,18 @@
             </button>
             }
 
-            @if (!column.cell && !column.custom) {
-            {{ element[column.key] ?? '--' }}
-            } @else if(column.cell) {
+            @if (column.cell) {
             {{ column.cell(element) }}
-            } @else if(column.custom) { @switch (column.template) {
+            } @else if (column.customTemplate) {
+            @switch (column.customTemplate) {
             @default { {{"TABLE.TEMPLATE_NOT_FOUND" | translate}} }
             @case ('custom-template') {
             <ng-template [ngTemplateOutlet]="customColumnTemplate" [ngTemplateOutletContext]="{ $implicit: element }" />
             }
-            } }
+            }
+            } @else {
+            {{ element[column.key] ?? '--' }}
+            }
           </div>
         </td>
         } @else {
@@ -153,6 +155,7 @@
       </tr>
     </table>
 
+    <!-- TODO translate paginator -->
     <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions"
       [pageSize]="paginationParams().pageSize" [pageIndex]="paginationParams().pageIndex"
       [length]="paginationParams().totalCount" (page)="pageChange.emit($event)" />

@@ -7,7 +7,7 @@ export interface IMatTableColumn<T = unknown> {
   actions?: IRowActions<T>;
   cell?: (element: T) => string;
   custom?: boolean;
-  template?: string;
+  customTemplate?: string;
   // hoverCss?: string; // TODO add
   // sticky?: boolean; // TODO add
   // pinned?: 'left' | 'right' // TODO add
