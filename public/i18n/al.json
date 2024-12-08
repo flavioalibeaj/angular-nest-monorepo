@@ -35,5 +35,8 @@
     "NO_DATA": "Nuk ka të dhëna",
     "TEMPLATE_NOT_FOUND": "Modeli nuk u gjet",
     "FILTER": "Filtro"
+  },
+  "GENERAL": {
+    "CLOSE": "Mbyll"
   }
 }
