@@ -23,13 +23,13 @@
     <mat-progress-bar style="margin-top: -4px;" mode="query" />
     }
 
-    <table mat-table matSort fixedLayout="true" [dataSource]="dataSource" [trackBy]="trackByFn"
+    <table mat-table matSort fixedLayout="true" [dataSource]="dataSource()" [trackBy]="trackByFn"
       [multiTemplateDataRows]="isExpandable() && expandableRowTemplate()" (matSortChange)="onSortChange($event)">
 
       @if (isSelectable()) {
       <ng-container matColumnDef="checkboxSelection">
         <th style="width: 40px;" class="border-dotted" matRipple mat-header-cell *matHeaderCellDef>
-          @if (multiSelect() && dataSource.data.length) {
+          @if (multiSelect() && dataSource().data.length) {
           <mat-checkbox (change)="toggleAll()" [checked]="selectionModel()?.hasValue() && isAllSelected()"
             [indeterminate]="selectionModel()?.hasValue() && !isAllSelected()">
           </mat-checkbox>

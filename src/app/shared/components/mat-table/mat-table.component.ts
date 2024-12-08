@@ -77,6 +77,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class MatTableComponent<T> implements AfterViewInit {
   readonly columns = input.required<IMatTableColumn<T>[]>();
   readonly paginationParams = input.required<PaginationParams>();
+  readonly dataSourceInput = input.required<T[]>({ alias: 'dataSource' });
   readonly loading = input<boolean>(false);
   readonly isSelectable = input<boolean>(false);
   readonly multiSelect = input<boolean>(true);
@@ -88,17 +89,12 @@ export class MatTableComponent<T> implements AfterViewInit {
   readonly filterOnFront = input<boolean>();
   readonly printAndExport = input<boolean>();
   readonly printAndExportTitle = input<string>();
-
-  @Input({ required: true }) set dataSource(dataSource: T[]) {
-    this.#dataSource.set(dataSource);
-  }
-  get dataSource(): MatTableDataSource<T> {
-    return new MatTableDataSource<T>(this.#dataSource());
-  }
-
+  readonly dataSource = computed<MatTableDataSource<T>>(
+    () => new MatTableDataSource(this.dataSourceInput())
+  );
   readonly displayedColumns = computed(() => {
     const columns = this.columns().map((c) => c.key);
-    if (this.isSelectable() && this.dataSource.data.length)
+    if (this.isSelectable() && this.dataSource().data.length)
       columns.unshift('checkboxSelection');
 
     return columns;
@@ -111,7 +107,6 @@ export class MatTableComponent<T> implements AfterViewInit {
         )
       : undefined;
   });
-  readonly #dataSource = signal<T[]>([]);
 
   readonly paginator = viewChild<MatPaginator>(MatPaginator);
   readonly sort = viewChild<MatSort>(MatSort);
@@ -125,15 +120,15 @@ export class MatTableComponent<T> implements AfterViewInit {
   expandedElement?: T;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator() ?? null;
-    this.dataSource.sort = this.sort() ?? null;
+    this.dataSource().paginator = this.paginator() ?? null;
+    this.dataSource().sort = this.sort() ?? null;
   }
 
   trackByFn = (index: number, item: T) => item;
 
   get pageSizeOptions(): number[] {
     const defaultOptions = [5, 10, 25, 50, 100];
-    const dataLength: number = this.dataSource.data.length;
+    const dataLength: number = this.dataSource().data.length;
 
     if (!defaultOptions.includes(dataLength)) defaultOptions.push(dataLength);
 
@@ -163,14 +158,14 @@ export class MatTableComponent<T> implements AfterViewInit {
 
   isAllSelected() {
     const numSelected = this.selectionModel()?.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.dataSource().data.length;
     return numSelected === numRows;
   }
 
   toggleAll() {
     this.isAllSelected()
       ? this.selectionModel()?.clear()
-      : this.dataSource.data.forEach((row) =>
+      : this.dataSource().data.forEach((row) =>
           this.selectionModel()?.select(row)
         );
 
@@ -209,7 +204,7 @@ export class MatTableComponent<T> implements AfterViewInit {
 
     let tableRows: string = '';
 
-    this.dataSource.data.forEach((item: any) => {
+    this.dataSource().data.forEach((item: any) => {
       const row = `
       <tr>
         ${filteredColumns
