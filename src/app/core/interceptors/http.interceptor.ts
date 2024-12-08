@@ -10,7 +10,10 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   spinnerService.show();
 
-  const setHeaders: { [key: string]: string } = {};
+  const setHeaders: { [key: string]: string } = {
+    'Accept-Language': localStorage.getItem('language') ?? 'en',
+    Timezone: JSON.stringify(new Date().getTimezoneOffset() / -60),
+  };
 
   if (authService.isLoggedIn()) {
     setHeaders['Authorization'] = `Bearer ${authService.token()}`;
