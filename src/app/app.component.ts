@@ -60,12 +60,15 @@ export class AppComponent implements OnInit, OnDestroy {
         tap((event) => {
           if (event instanceof NavigationStart) this.#spinnerService.show();
 
-          if (
-            event instanceof NavigationError &&
-            event.error instanceof Error &&
-            event.error.name === 'ChunkLoadError'
-          ) {
-            window.location.assign(event.url);
+          // TODO handle navigation errors
+          if (event instanceof NavigationError) {
+            if (
+              event.error instanceof Error &&
+              event.error.name === 'ChunkLoadError'
+            ) {
+              window.location.assign(event.url);
+            }
+            throw new Error(event.error);
           }
         }),
         switchMap((event) => {
