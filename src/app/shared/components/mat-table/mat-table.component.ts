@@ -104,9 +104,6 @@ export class MatTableComponent<T extends { id: number | string }>
   // Expandable row template
   readonly expandableRowTemplate = input<string>();
 
-  // Sort data on front
-  readonly sortOnFront = input<boolean>(true);
-
   // Adds filter to template
   readonly showFilter = input<boolean>(); // TODO add
 
@@ -175,7 +172,9 @@ export class MatTableComponent<T extends { id: number | string }>
   }
 
   onSortChange({ active, direction }: Sort): void {
-    if (this.sortOnFront()) return;
+    const lastSortedColumn = this.columns().find((c) => c.key === active);
+
+    if (!lastSortedColumn?.sortOptions?.sortOnBack) return;
 
     this.sortChange.emit({ active, direction });
   }

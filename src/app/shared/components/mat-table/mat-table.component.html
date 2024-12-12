@@ -65,8 +65,7 @@
       <ng-container [matColumnDef]="column.key">
         <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple
           [mat-sort-header]="column.sortOptions?.sortable ? column.key : ''" [disabled]="!column.sortOptions?.sortable">
-          {{
-          column.header }} </th>
+          {{ column.header }} </th>
 
         @if (!column.actions) {
         <td class="border-dotted" mat-cell matRipple *matCellDef="let element">
