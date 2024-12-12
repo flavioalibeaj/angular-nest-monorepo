@@ -77,19 +77,49 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class MatTableComponent<T extends { id: number | string }>
   implements AfterViewInit
 {
+  // Table columns
   readonly columns = input.required<IMatTableColumn<T>[]>();
+
+  // Pagination params
   readonly paginationParams = input.required<PaginationParams>();
+
+  // Data shown on the table
   readonly dataSourceInput = input.required<T[]>({ alias: 'dataSource' });
+
+  // Loading bar
   readonly loading = input<boolean>(false);
+
+  // Adds checkbox for row selection
   readonly isSelectable = input<boolean>(false);
+
+  // Makes selection model
   readonly multiSelect = input<boolean>(true);
+
+  // Selection model's initially selected values
   readonly initiallySelectedValues = input<T[]>([]);
+
+  // Adds collapsable sub-row
   readonly isExpandable = input<boolean>(false);
+
+  // Expandable row template
   readonly expandableRowTemplate = input<string>();
-  readonly showFilter = input<boolean>();
+
+  // Sort data on front
+  readonly sortOnFront = input<boolean>(true);
+
+  // Adds filter to template
+  readonly showFilter = input<boolean>(); // TODO add
+
+  // Filter data based on data fields
   readonly advancedFilter = input<boolean>(); // TODO add
-  readonly filterOnFront = input<boolean>();
-  readonly printAndExport = input<boolean>();
+
+  // Filter data on the client side only
+  readonly filterOnFront = input<boolean>(); // TODO add
+
+  // Adds printing and excel ability
+  readonly printAndExport = input<boolean>(); // TODO add excel downloading
+
+  // Print title
   readonly printAndExportTitle = input<string>();
 
   readonly dataSource = computed<MatTableDataSource<T>>(
@@ -121,12 +151,12 @@ export class MatTableComponent<T extends { id: number | string }>
     });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.dataSource().paginator = this.paginator() ?? null;
     this.dataSource().sort = this.sort() ?? null;
   }
 
-  trackByFn = (index: number, item: T) => item;
+  trackByFn = (index: number, item: T): T => item;
 
   get pageSizeOptions(): number[] {
     const defaultOptions = [5, 10, 25, 50, 100];
@@ -140,13 +170,14 @@ export class MatTableComponent<T extends { id: number | string }>
   }
 
   // TODO
-  onPageChange(pageEvent: PageEvent) {
+  onPageChange(pageEvent: PageEvent): void {
     this.pageChange.emit(pageEvent);
   }
 
-  // TODO
-  onSortChange(sort: Sort) {
-    this.sortChange.emit(sort);
+  onSortChange({ active, direction }: Sort): void {
+    if (this.sortOnFront()) return;
+
+    this.sortChange.emit({ active, direction });
   }
 
   isButtonDisabled(button: IRowButton<T>, element: T): boolean | undefined {
@@ -164,7 +195,7 @@ export class MatTableComponent<T extends { id: number | string }>
     );
   }
 
-  toggleAll() {
+  toggleAll(): void {
     this.isAllSelected()
       ? this.selectionModel()?.clear()
       : this.dataSource().data.forEach((row) =>
@@ -174,25 +205,25 @@ export class MatTableComponent<T extends { id: number | string }>
     this.selectionChange.emit(this.selectionModel()?.selected ?? []);
   }
 
-  toggleRow(row: T) {
+  toggleRow(row: T): void {
     this.selectionModel()?.toggle(row);
 
     this.selectionChange.emit(this.selectionModel()?.selected ?? []);
   }
 
-  toggleRowExpansion(element: T, event?: Event) {
+  toggleRowExpansion(element: T, event?: Event): void {
     event?.stopPropagation();
     this.expandedElement.update((expandedElement) =>
       expandedElement === element ? undefined : element
     );
   }
 
-  filterData() {
+  filterData(): void {
     const searchValue = this.searchFilterCtrl.value?.toLowerCase() ?? '';
     this.searchFilter.emit(searchValue);
   }
 
-  print() {
+  print(): void {
     // TODO fix css borders
     const printContent = this.#generateRows();
     this.#openWindowPopup(printContent);
@@ -235,7 +266,7 @@ export class MatTableComponent<T extends { id: number | string }>
     return printContent;
   }
 
-  #openWindowPopup(printContent: string) {
+  #openWindowPopup(printContent: string): void {
     const popUpWin = window.open('', 'top=0,left=0,height=100%');
     popUpWin?.document.write(`
       <html lang="en">
