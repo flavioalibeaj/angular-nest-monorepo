@@ -63,7 +63,9 @@
 
       @for (column of columns(); track column; let first = $first) {
       <ng-container [matColumnDef]="column.key">
-        <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple mat-sort-header>{{
+        <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple
+          [mat-sort-header]="column.sortOptions?.sortable ? column.key : ''" [disabled]="!column.sortOptions?.sortable">
+          {{
           column.header }} </th>
 
         @if (!column.actions) {

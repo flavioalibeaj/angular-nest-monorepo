@@ -8,15 +8,15 @@ export interface IMatTableColumn<T = unknown> {
   cell?: (element: T) => string;
   custom?: boolean;
   customTemplate?: string;
+  sortOptions?: SortColumnOptions;
   // hoverCss?: string; // TODO add
   // sticky?: boolean; // TODO add
   // pinned?: 'left' | 'right' // TODO add
-  // sortable?: SortColumn; // TODO add <!-- TODO sort header only if sort field exists on configuration -->
   // width?: string; // TODO add
   // columnResize?: string; /// TODO add
 }
 
-// TODO add
-// interface SortColumn {
-//   sortProp: 'asc' | 'desc';
-// }
+interface SortColumnOptions {
+  sortable?: boolean;
+  sortOnBack?: boolean; // TODO add functionality
+}
