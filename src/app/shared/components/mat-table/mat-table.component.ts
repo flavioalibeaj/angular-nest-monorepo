@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
-  MatPaginator,
+  MatPaginatorIntl,
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
@@ -39,6 +39,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PaginatorI18N } from '../../services/paginator-i18n.service';
 
 @Component({
   selector: 'app-mat-table',
@@ -73,6 +74,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       ),
     ]),
   ],
+  providers: [{ provide: MatPaginatorIntl, useClass: PaginatorI18N }],
 })
 export class MatTableComponent<T extends { id: number | string }>
   implements AfterViewInit
@@ -130,7 +132,6 @@ export class MatTableComponent<T extends { id: number | string }>
     return columns;
   });
 
-  readonly paginator = viewChild<MatPaginator>(MatPaginator);
   readonly sort = viewChild<MatSort>(MatSort);
 
   readonly pageChange = output<PageEvent>();
@@ -149,24 +150,23 @@ export class MatTableComponent<T extends { id: number | string }>
   }
 
   ngAfterViewInit(): void {
-    this.dataSource().paginator = this.paginator() ?? null;
     this.dataSource().sort = this.sort() ?? null;
   }
 
   trackByFn = (index: number, item: T): T => item;
 
-  get pageSizeOptions(): number[] {
+  readonly pageSizeOptions = computed(() => {
     const defaultOptions = [5, 10, 25, 50, 100];
-    const dataLength: number = this.dataSource().data.length;
 
+    const dataLength: number = this.dataSource().data.length;
     if (!defaultOptions.includes(dataLength)) defaultOptions.push(dataLength);
 
-    const options = defaultOptions.filter((o) => o <= dataLength);
+    const totalCount: number = this.paginationParams().totalCount;
+    if (!defaultOptions.includes(totalCount)) defaultOptions.push(totalCount);
 
-    return options;
-  }
+    return defaultOptions.filter((o) => o <= totalCount).sort((a, b) => a - b);
+  });
 
-  // TODO
   onPageChange(pageEvent: PageEvent): void {
     this.pageChange.emit(pageEvent);
   }

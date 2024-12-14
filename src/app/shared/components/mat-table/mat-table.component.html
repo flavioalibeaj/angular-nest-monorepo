@@ -156,7 +156,7 @@
       </tr>
     </table>
 
-    <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions"
+    <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions()"
       [pageSize]="paginationParams().pageSize" [pageIndex]="paginationParams().pageIndex"
       [length]="paginationParams().totalCount" (page)="pageChange.emit($event)" />
   </mat-card-content>
