@@ -1,3 +1,6 @@
+<!-- TODO column reorder, drag drop -->
+<!-- TODO column hiding -->
+<!-- Add info tooltip on element headers -->
 <mat-card appearance="outlined">
   <!-- TODO export to excel -->
   <!-- TODO add filter on custom header -->
@@ -23,13 +26,13 @@
     <mat-progress-bar style="margin-top: -4px;" mode="query" />
     }
 
-    <table mat-table matSort fixedLayout="true" [dataSource]="dataSource" [trackBy]="trackByFn"
+    <table mat-table matSort fixedLayout="true" [dataSource]="dataSource()" [trackBy]="trackByFn"
       [multiTemplateDataRows]="isExpandable() && expandableRowTemplate()" (matSortChange)="onSortChange($event)">
 
       @if (isSelectable()) {
       <ng-container matColumnDef="checkboxSelection">
         <th style="width: 40px;" class="border-dotted" matRipple mat-header-cell *matHeaderCellDef>
-          @if (multiSelect() && dataSource.data.length) {
+          @if (multiSelect() && dataSource().data.length) {
           <mat-checkbox (change)="toggleAll()" [checked]="selectionModel()?.hasValue() && isAllSelected()"
             [indeterminate]="selectionModel()?.hasValue() && !isAllSelected()">
           </mat-checkbox>
@@ -47,7 +50,7 @@
       <ng-container matColumnDef="expandedDetail">
         <td class="border-dotted" mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns().length"
           (click)="toggleRowExpansion(element)">
-          <div class="d-flex overflow-hidden" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <div class="d-flex overflow-hidden" [@detailExpand]="element == expandedElement() ? 'expanded' : 'collapsed'">
             <div class="p-3">
               @switch (expandableRowTemplate()) {
               @default { {{"TABLE.TEMPLATE_NOT_FOUND" | translate}} }
@@ -63,15 +66,16 @@
 
       @for (column of columns(); track column; let first = $first) {
       <ng-container [matColumnDef]="column.key">
-        <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple mat-sort-header>{{
-          column.header }} </th>
+        <th class="border-dotted half-opacity" mat-header-cell *matHeaderCellDef matRipple
+          [mat-sort-header]="column.sortOptions?.sortable ? column.key : ''" [disabled]="!column.sortOptions?.sortable">
+          {{ typeof column.header === 'string' ? column.header : ($any(column.header) | async) }} </th>
 
         @if (!column.actions) {
         <td class="border-dotted" mat-cell matRipple *matCellDef="let element">
           <div class="d-flex align-items-center">
             @if (isExpandable() && expandableRowTemplate() && first) {
             <button mat-icon-button aria-label="expand row" (click)="toggleRowExpansion(element, $event)">
-              @if (expandedElement === element) {
+              @if (expandedElement() === element) {
               <mat-icon>keyboard_arrow_up</mat-icon>
               } @else {
               <mat-icon>keyboard_arrow_down</mat-icon>
@@ -79,16 +83,18 @@
             </button>
             }
 
-            @if (!column.cell && !column.custom) {
-            {{ element[column.key] ?? '--' }}
-            } @else if(column.cell) {
+            @if (column.cell) {
             {{ column.cell(element) }}
-            } @else if(column.custom) { @switch (column.template) {
+            } @else if (column.customTemplate) {
+            @switch (column.customTemplate) {
             @default { {{"TABLE.TEMPLATE_NOT_FOUND" | translate}} }
             @case ('custom-template') {
             <ng-template [ngTemplateOutlet]="customColumnTemplate" [ngTemplateOutletContext]="{ $implicit: element }" />
             }
-            } }
+            }
+            } @else {
+            {{ element[column.key] ?? '--' }}
+            }
           </div>
         </td>
         } @else {
@@ -137,11 +143,12 @@
 
       <tr mat-header-row *matHeaderRowDef="['header-row-first-group']"></tr> -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-      <tr mat-row *matRowDef="let element; columns: displayedColumns()" (click)="toggleRowExpansion(element)"
+      <tr [class.hover]="highlightOnHover()" [class.even]="even && stripedRows()" mat-row
+        *matRowDef="let element;let even = even; columns: displayedColumns()" (click)="toggleRowExpansion(element)"
         class="example-element-row"></tr>
       @if (isExpandable() && expandableRowTemplate()) {<tr mat-row *matRowDef="let row; columns: ['expandedDetail']"
         class="detail-row">
-        <!-- [class.d-none]="row !== expandedElement" -->
+        <!-- [class.d-none]="row !== expandedElement()" -->
         <!-- TODO this fixes opening glitch on expandable rows when table renders but ruins the closing animation -->
       </tr>}
       <tr *matNoDataRow>
@@ -153,9 +160,9 @@
       </tr>
     </table>
 
-    <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions"
+    <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions()"
       [pageSize]="paginationParams().pageSize" [pageIndex]="paginationParams().pageIndex"
-      [length]="paginationParams().totalCount" (page)="onPageChange($event)" />
+      [length]="paginationParams().totalCount" (page)="pageChange.emit($event)" />
   </mat-card-content>
 </mat-card>
 
@@ -178,5 +185,5 @@
   </button>
 </mat-menu>
 
-<ng-template #customColumnTemplate let-element>{{element.username ?? 'flaviooooo'}}</ng-template>
-<ng-template #customExpandedRowTpl let-element="element">{{ element?.username}}</ng-template>
+<ng-template #customColumnTemplate let-element>{{element.username ?? '--'}}</ng-template>
+<ng-template #customExpandedRowTpl let-element="element">{{ element?.username ?? '--'}}</ng-template>

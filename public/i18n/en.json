@@ -39,5 +39,17 @@
   "LANGUAGES": {
     "ALBANIAN": "Albanian",
     "ENGLISH": "English"
+  },
+  "GENERAL": {
+    "CLOSE": "Close"
+  },
+  "PAGINATOR": {
+    "firstPageLabel": "First page",
+    "lastPageLabel": "Last page",
+    "nextPageLabel": "Next page",
+    "previousPageLabel": "Previous page",
+    "itemsPerPageLabel": "Items per page:",
+    "page": "Page",
+    "of": "of"
   }
 }

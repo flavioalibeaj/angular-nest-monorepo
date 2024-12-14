@@ -1,6 +1,7 @@
 import {
   ApplicationConfig,
   ErrorHandler,
+  importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
@@ -18,6 +19,7 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { GlobalErrorHandlerService } from './core/error-handler/global-error-handler.service';
 import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
   http: HttpClient
@@ -28,7 +30,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([httpInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    // importProvidersFrom(NgxSpinnerModule.forRoot({ type: 'ball-pulse' })),
+    importProvidersFrom(
+      NgxSpinnerModule.forRoot({ type: 'ball-triangle-path' })
+    ),
     provideAnimationsAsync(),
     provideTranslateService({
       loader: {
@@ -47,8 +51,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
       useValue: {
-        duration: '4000',
-        panelClass: 'snackbar-error',
+        duration: '10000',
       },
     },
     // {

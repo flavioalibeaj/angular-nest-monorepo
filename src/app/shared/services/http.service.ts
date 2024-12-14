@@ -4,6 +4,8 @@ import { environment } from '../../../environments/environment.development';
 import { Observable } from 'rxjs';
 import { IApiResponse } from '../model/i-api-response.interface';
 
+type ParamType = { [key: string]: string | number | boolean };
+
 @Injectable({
   providedIn: 'root',
 })
@@ -23,21 +25,23 @@ export class HttpService {
 
   get<RT = unknown>(
     url: string,
-    params?: HttpParams
+    params?: ParamType
   ): Observable<IApiResponse<RT>> {
     return this.#httpClient.get<IApiResponse<RT>>(`${this.#apiUrl}/${url}`, {
-      params,
+      params: params ? this.#processHttpParams(params) : undefined,
     });
   }
 
   getById<T = unknown, RT = unknown>(
     url: string,
     id: T,
-    params?: HttpParams
+    params?: ParamType
   ): Observable<IApiResponse<RT>> {
     return this.#httpClient.get<IApiResponse<RT>>(
       `${this.#apiUrl}/${url}/${id}`,
-      { params }
+      {
+        params: params ? this.#processHttpParams(params) : undefined,
+      }
     );
   }
 
@@ -52,5 +56,17 @@ export class HttpService {
     return this.#httpClient.delete<IApiResponse<RT>>(
       `${this.#apiUrl}/${url}/${id}`
     );
+  }
+
+  #processHttpParams(params: ParamType): HttpParams {
+    let httpParams = new HttpParams();
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== null || value !== undefined) {
+        httpParams = httpParams.set(key, value);
+      }
+    });
+
+    return httpParams;
   }
 }

@@ -2,15 +2,15 @@ import {
   AfterViewInit,
   Component,
   computed,
+  effect,
   input,
-  Input,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
-  MatPaginator,
+  MatPaginatorIntl,
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
@@ -34,11 +34,12 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PaginatorI18N } from '../../services/paginator-i18n.service';
 
 @Component({
   selector: 'app-mat-table',
@@ -60,6 +61,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     MatInputModule,
     ReactiveFormsModule,
     TranslatePipe,
+    AsyncPipe,
   ],
   templateUrl: './mat-table.component.html',
   styleUrl: './mat-table.component.scss',
@@ -73,47 +75,68 @@ import { TranslatePipe } from '@ngx-translate/core';
       ),
     ]),
   ],
+  providers: [{ provide: MatPaginatorIntl, useClass: PaginatorI18N }],
 })
-export class MatTableComponent<T> implements AfterViewInit {
+export class MatTableComponent<T extends { id: number | string }>
+  implements AfterViewInit
+{
+  // TODO add filters, pagination, sorting to query params;
+
+  // Table columns
   readonly columns = input.required<IMatTableColumn<T>[]>();
+
+  // Pagination params
   readonly paginationParams = input.required<PaginationParams>();
+
+  // Data shown on the table
+  readonly dataSourceInput = input.required<T[]>({ alias: 'dataSource' });
+
+  // Loading bar
   readonly loading = input<boolean>(false);
+
+  // Adds checkbox for row selection
   readonly isSelectable = input<boolean>(false);
+
+  // Makes selection model
   readonly multiSelect = input<boolean>(true);
+
+  // Selection model's initially selected values
   readonly initiallySelectedValues = input<T[]>([]);
+
+  // Adds collapsable sub-row
   readonly isExpandable = input<boolean>(false);
+
+  // Expandable row template
   readonly expandableRowTemplate = input<string>();
-  readonly showFilter = input<boolean>();
+
+  // Adds filter to template
+  readonly showFilter = input<boolean>(); // TODO add
+
+  // Filter data based on data fields
   readonly advancedFilter = input<boolean>(); // TODO add
-  readonly filterOnFront = input<boolean>();
-  readonly printAndExport = input<boolean>();
+
+  // Filter data on the client side only
+  readonly filterOnFront = input<boolean>(); // TODO add
+
+  // Adds printing and excel ability
+  readonly printAndExport = input<boolean>(); // TODO add excel downloading
+
+  // Print title
   readonly printAndExportTitle = input<string>();
+  readonly highlightOnHover = input<boolean>(true);
+  readonly stripedRows = input<boolean>(false);
 
-  @Input({ required: true }) set dataSource(dataSource: T[]) {
-    this.#dataSource.set(dataSource);
-  }
-  get dataSource(): MatTableDataSource<T> {
-    return new MatTableDataSource<T>(this.#dataSource());
-  }
-
+  readonly dataSource = computed<MatTableDataSource<T>>(
+    () => new MatTableDataSource(this.dataSourceInput())
+  );
   readonly displayedColumns = computed(() => {
     const columns = this.columns().map((c) => c.key);
-    if (this.isSelectable() && this.dataSource.data.length)
+    if (this.isSelectable() && this.dataSource().data.length)
       columns.unshift('checkboxSelection');
 
     return columns;
   });
-  readonly selectionModel = computed(() => {
-    return this.isSelectable()
-      ? new SelectionModel<T>(
-          this.multiSelect(),
-          this.initiallySelectedValues() ?? []
-        )
-      : undefined;
-  });
-  readonly #dataSource = signal<T[]>([]);
 
-  readonly paginator = viewChild<MatPaginator>(MatPaginator);
   readonly sort = viewChild<MatSort>(MatSort);
 
   readonly pageChange = output<PageEvent>();
@@ -121,35 +144,44 @@ export class MatTableComponent<T> implements AfterViewInit {
   readonly selectionChange = output<T[]>();
   readonly searchFilter = output<string>();
 
+  readonly selectionModel = signal<SelectionModel<T> | undefined>(undefined);
+  readonly expandedElement = signal<T | undefined>(undefined);
   readonly searchFilterCtrl = new FormControl<string>('');
-  expandedElement?: T;
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator() ?? null;
-    this.dataSource.sort = this.sort() ?? null;
+  constructor() {
+    effect(() => {
+      if (this.dataSourceInput()) this.#setUpSelectionModel();
+    });
   }
 
-  trackByFn = (index: number, item: T) => item;
+  ngAfterViewInit(): void {
+    this.dataSource().sort = this.sort() ?? null;
+  }
 
-  get pageSizeOptions(): number[] {
+  trackByFn = (index: number, item: T): T => item;
+
+  readonly pageSizeOptions = computed(() => {
     const defaultOptions = [5, 10, 25, 50, 100];
-    const dataLength: number = this.dataSource.data.length;
 
+    const dataLength: number = this.dataSource().data.length;
     if (!defaultOptions.includes(dataLength)) defaultOptions.push(dataLength);
 
-    const options = defaultOptions.filter((o) => o <= dataLength);
+    const totalCount: number = this.paginationParams().totalCount;
+    if (!defaultOptions.includes(totalCount)) defaultOptions.push(totalCount);
 
-    return options;
-  }
+    return defaultOptions.filter((o) => o <= totalCount).sort((a, b) => a - b);
+  });
 
-  // TODO
-  onPageChange(pageEvent: PageEvent) {
+  onPageChange(pageEvent: PageEvent): void {
     this.pageChange.emit(pageEvent);
   }
 
-  // TODO
-  onSortChange(sort: Sort) {
-    this.sortChange.emit(sort);
+  onSortChange({ active, direction }: Sort): void {
+    const lastSortedColumn = this.columns().find((c) => c.key === active);
+
+    if (!lastSortedColumn?.sortOptions?.sortOnBack) return;
+
+    this.sortChange.emit({ active, direction });
   }
 
   isButtonDisabled(button: IRowButton<T>, element: T): boolean | undefined {
@@ -161,40 +193,41 @@ export class MatTableComponent<T> implements AfterViewInit {
     button.clickEvent(element);
   }
 
-  isAllSelected() {
-    const numSelected = this.selectionModel()?.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+  isAllSelected(): boolean {
+    return this.dataSource().data.every((row) =>
+      this.selectionModel()?.isSelected(row)
+    );
   }
 
-  toggleAll() {
+  toggleAll(): void {
     this.isAllSelected()
       ? this.selectionModel()?.clear()
-      : this.dataSource.data.forEach((row) =>
+      : this.dataSource().data.forEach((row) =>
           this.selectionModel()?.select(row)
         );
 
     this.selectionChange.emit(this.selectionModel()?.selected ?? []);
   }
 
-  toggleRow(row: T) {
+  toggleRow(row: T): void {
     this.selectionModel()?.toggle(row);
 
     this.selectionChange.emit(this.selectionModel()?.selected ?? []);
   }
 
-  toggleRowExpansion(element: T, event?: Event) {
+  toggleRowExpansion(element: T, event?: Event): void {
     event?.stopPropagation();
-    this.expandedElement =
-      this.expandedElement === element ? undefined : element;
+    this.expandedElement.update((expandedElement) =>
+      expandedElement === element ? undefined : element
+    );
   }
 
-  filterData() {
+  filterData(): void {
     const searchValue = this.searchFilterCtrl.value?.toLowerCase() ?? '';
     this.searchFilter.emit(searchValue);
   }
 
-  print() {
+  print(): void {
     // TODO fix css borders
     const printContent = this.#generateRows();
     this.#openWindowPopup(printContent);
@@ -209,7 +242,7 @@ export class MatTableComponent<T> implements AfterViewInit {
 
     let tableRows: string = '';
 
-    this.dataSource.data.forEach((item: any) => {
+    this.dataSource().data.forEach((item: any) => {
       const row = `
       <tr>
         ${filteredColumns
@@ -237,7 +270,7 @@ export class MatTableComponent<T> implements AfterViewInit {
     return printContent;
   }
 
-  #openWindowPopup(printContent: string) {
+  #openWindowPopup(printContent: string): void {
     const popUpWin = window.open('', 'top=0,left=0,height=100%');
     popUpWin?.document.write(`
       <html lang="en">
@@ -270,5 +303,25 @@ export class MatTableComponent<T> implements AfterViewInit {
         </body>
       </html>`);
     popUpWin?.document.close();
+  }
+
+  #setUpSelectionModel(): void {
+    if (!this.isSelectable()) {
+      this.selectionModel.set(undefined);
+      return;
+    }
+
+    const initialSelectedValues = this.initiallySelectedValues().filter(
+      (item) => this.dataSourceInput().find((data) => data.id === item.id)
+    );
+
+    this.selectionModel.set(
+      new SelectionModel<T>(
+        this.multiSelect(),
+        this.multiSelect() ? initialSelectedValues : undefined,
+        true,
+        (a, b) => a.id === b.id
+      )
+    );
   }
 }

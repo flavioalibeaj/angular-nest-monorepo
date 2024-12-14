@@ -1,16 +1,19 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, finalize, throwError } from 'rxjs';
-import { SpinnerService } from '../../shared/services/spinner.service';
 import { AuthService } from '../services/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const spinnerService = inject(SpinnerService);
+  const spinnerService = inject(NgxSpinnerService);
 
   spinnerService.show();
 
-  const setHeaders: { [key: string]: string } = {};
+  const setHeaders: { [key: string]: string } = {
+    'Accept-Language': localStorage.getItem('language') ?? 'en',
+    Timezone: JSON.stringify(new Date().getTimezoneOffset() / -60),
+  };
 
   if (authService.isLoggedIn()) {
     setHeaders['Authorization'] = `Bearer ${authService.token()}`;
