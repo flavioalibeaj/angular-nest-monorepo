@@ -24,7 +24,9 @@ export class GlobalErrorHandlerService implements ErrorHandler {
       .stream('GENERAL.CLOSE')
       .pipe(take(1))
       .subscribe((close) => {
-        this.#snackbar.open(message, close);
+        this.#snackbar.open(message, close, {
+          panelClass: 'snackbar-error',
+        });
       });
   }
 }
