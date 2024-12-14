@@ -34,7 +34,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -61,6 +61,7 @@ import { PaginatorI18N } from '../../services/paginator-i18n.service';
     MatInputModule,
     ReactiveFormsModule,
     TranslatePipe,
+    AsyncPipe,
   ],
   templateUrl: './mat-table.component.html',
   styleUrl: './mat-table.component.scss',
@@ -79,6 +80,8 @@ import { PaginatorI18N } from '../../services/paginator-i18n.service';
 export class MatTableComponent<T extends { id: number | string }>
   implements AfterViewInit
 {
+  // TODO add filters, pagination, sorting to query params;
+
   // Table columns
   readonly columns = input.required<IMatTableColumn<T>[]>();
 
@@ -120,6 +123,8 @@ export class MatTableComponent<T extends { id: number | string }>
 
   // Print title
   readonly printAndExportTitle = input<string>();
+  readonly highlightOnHover = input<boolean>(true);
+  readonly stripedRows = input<boolean>(false);
 
   readonly dataSource = computed<MatTableDataSource<T>>(
     () => new MatTableDataSource(this.dataSourceInput())
