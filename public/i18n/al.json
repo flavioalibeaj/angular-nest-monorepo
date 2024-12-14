@@ -38,5 +38,14 @@
   },
   "GENERAL": {
     "CLOSE": "Mbyll"
+  },
+  "PAGINATOR": {
+    "firstPageLabel": "Faqja e parë",
+    "lastPageLabel": "Faqja e fundit",
+    "nextPageLabel": "Faqja tjetër",
+    "previousPageLabel": "Faqja e mëparshme",
+    "itemsPerPageLabel": "Artikuj per faqe:",
+    "page": "Faqja",
+    "of": "nga"
   }
 }

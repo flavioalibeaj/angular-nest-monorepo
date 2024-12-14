@@ -156,7 +156,6 @@
       </tr>
     </table>
 
-    <!-- TODO translate paginator -->
     <mat-paginator aria-label="Select page" showFirstLastButtons [pageSizeOptions]="pageSizeOptions"
       [pageSize]="paginationParams().pageSize" [pageIndex]="paginationParams().pageIndex"
       [length]="paginationParams().totalCount" (page)="pageChange.emit($event)" />
