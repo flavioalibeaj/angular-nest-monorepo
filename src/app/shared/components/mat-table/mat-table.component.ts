@@ -23,7 +23,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { IRowButton } from '../../model/i-row-button.interface';
-import { IMatTableColumn } from '../../model/i-mat-table-column';
+import { IMatTableColumn } from '../../model/i-mat-table-column.interface';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';

@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InformationDialogComponent } from '../../../shared/components/information-dialog/information-dialog.component';
 import { IInformationDialogData } from '../../../shared/model/i-information-dialog-data';
 import { filter, tap } from 'rxjs';
-import { IDialogResponse } from '../../../shared/model/i-dialog-response';
+import { IFormResponse } from '../../../shared/model/i-form-response.interface';
 
 @Component({
   selector: 'app-toolbar',
@@ -124,7 +124,7 @@ export class ToolbarComponent {
       })
       .afterClosed()
       .pipe(
-        filter((res?: IDialogResponse) => !!res?.submitted),
+        filter((res?: IFormResponse) => !!res?.submitted),
         tap(() => this.#authService.logout())
       )
       .subscribe();
