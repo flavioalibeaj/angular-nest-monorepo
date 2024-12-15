@@ -8,6 +8,11 @@ import { AuthService } from '../../../core/services/auth.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LowerCasePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { InformationDialogComponent } from '../../../shared/components/information-dialog/information-dialog.component';
+import { IInformationDialogData } from '../../../shared/model/i-information-dialog-data';
+import { filter, tap } from 'rxjs';
+import { IDialogResponse } from '../../../shared/model/i-dialog-response';
 
 @Component({
   selector: 'app-toolbar',
@@ -20,13 +25,6 @@ import { LowerCasePipe } from '@angular/common';
     MatTooltipModule,
     LowerCasePipe,
   ],
-  styles: [
-    `
-      .example-spacer {
-        flex: 1 1 auto;
-      }
-    `,
-  ],
   template: `
     <mat-toolbar color="primary">
       <button
@@ -37,7 +35,7 @@ import { LowerCasePipe } from '@angular/common';
         <mat-icon>menu</mat-icon>
       </button>
       <span>My App</span>
-      <span class="example-spacer"></span>
+      <span class="spacer"></span>
       <button
         mat-icon-button
         [matMenuTriggerFor]="changeLanguageMenu"
@@ -65,7 +63,7 @@ import { LowerCasePipe } from '@angular/common';
         <mat-icon>settings</mat-icon>
         {{ 'TOOLBAR.SETTINGS' | translate }}
       </button>
-      <button mat-menu-item (click)="authService.logout()">
+      <button mat-menu-item (click)="logout()">
         <mat-icon>logout</mat-icon>
         {{ 'TOOLBAR.LOG_OUT' | translate }}
       </button>
@@ -88,8 +86,9 @@ import { LowerCasePipe } from '@angular/common';
 })
 export class ToolbarComponent {
   readonly sidenavService = inject(SidenavService);
-  readonly authService = inject(AuthService);
   readonly translateService = inject(TranslateService);
+  readonly #authService = inject(AuthService);
+  readonly #matDialog = inject(MatDialog);
 
   readonly languages = [
     {
@@ -107,5 +106,27 @@ export class ToolbarComponent {
   setLanguage(code: string) {
     this.translateService.use(code);
     localStorage.setItem('language', code);
+  }
+
+  logout() {
+    const dialogData: IInformationDialogData = {
+      cardText: this.translateService.stream('AUTH.LOG_OUT_MESSAGE'),
+      cardTitle: this.translateService.stream('TOOLBAR.LOG_OUT'),
+      cardTitleIcon: 'logout',
+      cancelButtonText: this.translateService.stream('GENERAL.CLOSE'),
+      saveButtonText: this.translateService.stream('TOOLBAR.LOG_OUT'),
+      saveButtonIcon: 'logout',
+    };
+
+    this.#matDialog
+      .open(InformationDialogComponent, {
+        data: dialogData,
+      })
+      .afterClosed()
+      .pipe(
+        filter((res?: IDialogResponse) => !!res?.submitted),
+        tap(() => this.#authService.logout())
+      )
+      .subscribe();
   }
 }

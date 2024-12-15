@@ -4,6 +4,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -13,7 +14,12 @@ body {
   .mdc-snackbar__surface {
     background: #922b21 !important;
   }
+
   .mdc-button__label {
     color: white;
   }
+}
+
+.spacer {
+  flex: 1 1 auto;
 }

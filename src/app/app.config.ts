@@ -20,6 +20,7 @@ import { GlobalErrorHandlerService } from './core/error-handler/global-error-han
 import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
   http: HttpClient
@@ -54,14 +55,19 @@ export const appConfig: ApplicationConfig = {
         duration: '10000',
       },
     },
-    // {
-    //   provide: MAT_DIALOG_DEFAULT_OPTIONS,
-    //   useValue: {
-    //     autoFocus: false,
-    //     disableClose: true,
-    //     enterAnimationDuration: 200,
-    //     exitAnimationDuration: 200,
-    //   },
-    // }
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        // autoFocus: false,
+        autoFocus: 'dialog',
+        restoreFocus: true,
+        closeOnNavigation: true,
+        disableClose: true,
+        enterAnimationDuration: 200,
+        exitAnimationDuration: 200,
+        // height: '200px',
+        width: '400px',
+      },
+    },
   ],
 };

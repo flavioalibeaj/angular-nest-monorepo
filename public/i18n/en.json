@@ -9,7 +9,8 @@
     "CONFIRM_PASSWORD_MATCH": "Passwords must match",
     "HERE": "here",
     "NO_ACC_REGISTER": "Don't have an account? Register",
-    "ACC_LOGIN": "Already have an account? Log in"
+    "ACC_LOGIN": "Already have an account? Log in",
+    "LOG_OUT_MESSAGE": "Are you sure you want to logout?"
   },
   "FORM": {
     "FILL_VALID_VALUES": "Fill form with valid values",
@@ -41,7 +42,8 @@
     "ENGLISH": "English"
   },
   "GENERAL": {
-    "CLOSE": "Close"
+    "CLOSE": "Close",
+    "SAVE": "Save"
   },
   "PAGINATOR": {
     "firstPageLabel": "First page",

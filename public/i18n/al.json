@@ -9,7 +9,8 @@
     "CONFIRM_PASSWORD_MATCH": "Fjalëkalimet duhet të jenë të njëjtë",
     "HERE": "këtu",
     "NO_ACC_REGISTER": "Nuk keni një llogari? Rregjistrohu",
-    "ACC_LOGIN": "Keni një llogari? Identifikohu"
+    "ACC_LOGIN": "Keni një llogari? Identifikohu",
+    "LOG_OUT_MESSAGE": "Jeni të sigurt që dëshironi të dilni?"
   },
   "FORM": {
     "FILL_VALID_VALUES": "Plotësoni formularin me vlera të vlefshme",
@@ -41,7 +42,8 @@
     "ENGLISH": "Anglisht"
   },
   "GENERAL": {
-    "CLOSE": "Mbyll"
+    "CLOSE": "Mbyll",
+    "SAVE": "Ruaj"
   },
   "PAGINATOR": {
     "firstPageLabel": "Faqja e parë",
