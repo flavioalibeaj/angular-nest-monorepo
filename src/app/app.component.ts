@@ -37,6 +37,11 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly #spinnerService = inject(NgxSpinnerService);
 
   readonly #unSub = new Subject<void>();
+  // // Listen on document visibility
+  // @HostListener('document:visibilitychange', ['$event'])
+  // appVisibility() {
+  //   console.log(document.hidden);
+  // }
 
   ngOnInit(): void {
     this.#listenToRouteEvents();
@@ -66,7 +71,9 @@ export class AppComponent implements OnInit, OnDestroy {
               event.error instanceof Error &&
               event.error.name === 'ChunkLoadError'
             ) {
-              window.location.assign(event.url);
+              console.warn('Error loading module');
+              window.location.reload();
+              // window.location.assign(event.url);
             }
             throw new Error(event.error);
           }
