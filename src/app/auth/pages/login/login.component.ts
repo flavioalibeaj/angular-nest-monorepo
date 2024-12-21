@@ -1,10 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, OnInit, viewChild } from '@angular/core';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,8 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { switchMap, take } from 'rxjs';
+import { IFormModel } from '../../../shared/model/i-form-model.interface';
+import { MatFormComponent } from '../../../shared/components/mat-form/mat-form.component';
+import { IFormResponse } from '../../../shared/model/i-form-response.interface';
 
 @Component({
   selector: 'app-login',
@@ -26,12 +24,12 @@ import { switchMap, take } from 'rxjs';
     MatInputModule,
     RouterLink,
     TranslatePipe,
+    MatFormComponent,
   ],
   templateUrl: './login.component.html',
   styles: [
     `
       mat-card {
-        height: 350px;
         width: 350px;
         max-width: 350px;
         justify-content: space-between;
@@ -41,50 +39,43 @@ import { switchMap, take } from 'rxjs';
 })
 export class LoginComponent implements OnInit {
   readonly #authService = inject(AuthService);
-  readonly #translateService = inject(TranslateService);
+  readonly matFormComponent = viewChild.required(MatFormComponent);
 
-  readonly loginForm = new FormGroup({
-    username: new FormControl<string | null>(null, Validators.required),
-    password: new FormControl<string | null>(null, [
-      Validators.required,
-      Validators.minLength(8),
-    ]),
-  });
-  readonly hidePassword = signal<boolean>(true);
+  readonly formModel: IFormModel[] = [
+    {
+      fieldType: 'text',
+      fieldName: 'username',
+      label: 'AUTH.USERNAME',
+      inputClass: 'w-100',
+      validators: [Validators.required],
+    },
+    {
+      fieldType: 'password',
+      fieldName: 'password',
+      label: 'AUTH.PASSWORD',
+      inputClass: 'w-100',
+      validators: [Validators.required, Validators.minLength(8)],
+    },
+  ];
 
   ngOnInit(): void {
     this.#authService
       .getUsernameFromCache()
       .pipe(take(1))
-      .subscribe((username) =>
-        this.loginForm.controls['username'].setValue(username)
-      );
+      .subscribe((username) => {
+        this.matFormComponent()
+          .formGroup.get(this.formModel[0].fieldName)
+          ?.setValue(username);
+      });
   }
 
-  login() {
-    if (!this.loginForm.valid) {
-      this.#translateService
-        .stream('FORM.FILL_VALID_VALUES')
-        .pipe(take(1))
-        .subscribe({
-          next: (msg) => {
-            throw new Error(msg);
-          },
-        });
-
-      return;
-    }
-
-    const { password, username } = this.loginForm.getRawValue();
+  login({ formData }: IFormResponse<{ password: string; username: string }>) {
+    if (!formData) return;
+    const { password, username } = formData;
 
     this.#authService
-      .login({ password: password!, username: username! })
-      .pipe(switchMap(() => this.#authService.setUsernameInCache(username!)))
+      .login({ password: password, username: username })
+      .pipe(switchMap(() => this.#authService.setUsernameInCache(username)))
       .subscribe();
-  }
-
-  toggleVisibility(event: MouseEvent) {
-    event.stopPropagation();
-    this.hidePassword.update((hide) => !hide);
   }
 }
