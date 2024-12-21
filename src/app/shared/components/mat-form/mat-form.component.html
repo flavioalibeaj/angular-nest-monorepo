@@ -1,0 +1,56 @@
+<form [formGroup]="formGroup" [class]="formClass()">
+  @for (input of formModel(); track input) {
+  @switch (input.fieldType) {
+  @case ('text') {
+  <ng-container [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ input }" />
+  }
+  @case ('password') {
+  <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input}" />
+  }
+  }
+  }
+
+  <ng-template #text let-input="input">
+    <mat-form-field [class]="input.inputClass">
+      <mat-label> {{input.label ? (input.label | translate) : ''}} </mat-label>
+      <input matInput type="text" [formControlName]="input.fieldName" [readonly]="input.readonly" />
+      @if (input.clearFieldValue && formGroup.get(input.fieldName)?.value) {
+      <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input.fieldName)">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+    </mat-form-field>
+  </ng-template>
+
+  <ng-template #password let-input="input">
+    <mat-form-field [class]="input.inputClass">
+      <mat-label> {{input.label ? (input.label | translate) : ''}} </mat-label>
+      <input matInput [type]="hidePassword ? 'password' : 'text'" [formControlName]="input.fieldName">
+      <button mat-icon-button matSuffix type="button" (click)="toggleVisibility($event)"
+        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+  </ng-template>
+
+  <mat-divider />
+  <div class="d-flex align-items-center my-3 justify-content-end" [class]="actionsClass()">
+    @if(contentProjection()){
+    <ng-content />
+    }
+
+    @if (!hideCancelBtn()) {
+    <button mat-raised-button [disabled]="!formGroup.valid" color="warn">
+      <mat-icon>{{cancelButtonIcon()}}</mat-icon>
+      {{cancelButtonText() | translate}}
+    </button>
+    }
+    @if (!hideSubmitBtn()) {
+    <button mat-raised-button type="submit" color="primary" [disabled]="!formGroup.valid" [class]="submitButtonClass()"
+      (click)="onSubmit()">
+      <mat-icon> {{submitButtonIcon()}} </mat-icon>
+      {{submitButtonText() | translate}}
+    </button>
+    }
+  </div>
+</form>
