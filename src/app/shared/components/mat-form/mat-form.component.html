@@ -2,7 +2,31 @@
   @for (input of formModel(); track input) {
   @switch (input.fieldType) {
   @case ('text') {
-  <ng-container [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{ input }" />
+  <mat-form-field [class]="input.inputClass">
+    <mat-label> {{input.label | translate}} </mat-label>
+    <input matInput type="text" [formControlName]="input.fieldName" [readonly]="input.readonly" />
+    @if (input.clearFieldValue && formGroup.get(input.fieldName)?.value) {
+    <button matSuffix type="button" mat-icon-button aria-label="Clear"
+      (click)="clearInputValue(input.fieldName, $event)">
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+  </mat-form-field>
+  }
+  @case ('number') {
+  <mat-form-field [class]="input.inputClass">
+    <mat-label> {{input.label | translate}} </mat-label>
+    <input matInput type="number" inputmode="numeric" pattern="[0-9]*" [formControlName]="input.fieldName"
+      [readonly]="input.readonly" />
+    @if (input.clearFieldValue && formGroup.get(input.fieldName)?.value) {
+    <button matSuffix type="button" mat-icon-button aria-label="Clear"
+      (click)="clearInputValue(input.fieldName, $event)">
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+  </mat-form-field>
   }
   @case ('password') {
   <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input}" />
@@ -10,26 +34,15 @@
   }
   }
 
-  <ng-template #text let-input="input">
-    <mat-form-field [class]="input.inputClass">
-      <mat-label> {{input.label ? (input.label | translate) : ''}} </mat-label>
-      <input matInput type="text" [formControlName]="input.fieldName" [readonly]="input.readonly" />
-      @if (input.clearFieldValue && formGroup.get(input.fieldName)?.value) {
-      <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input.fieldName)">
-        <mat-icon>close</mat-icon>
-      </button>
-      }
-    </mat-form-field>
-  </ng-template>
-
   <ng-template #password let-input="input">
     <mat-form-field [class]="input.inputClass">
-      <mat-label> {{input.label ? (input.label | translate) : ''}} </mat-label>
+      <mat-label> {{input.label | translate}} </mat-label>
       <input matInput [type]="hidePassword ? 'password' : 'text'" [formControlName]="input.fieldName">
       <button mat-icon-button matSuffix type="button" (click)="toggleVisibility($event)"
         [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
+      <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
     </mat-form-field>
   </ng-template>
 

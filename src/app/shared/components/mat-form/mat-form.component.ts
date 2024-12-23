@@ -8,8 +8,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IFormResponse } from '../../model/i-form-response.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { take } from 'rxjs';
-import { NgTemplateOutlet } from '@angular/common';
+import { Observable, of, take } from 'rxjs';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { validationMessages } from './validators/validation-messages';
 
 @Component({
   selector: 'app-mat-form',
@@ -22,6 +23,7 @@ import { NgTemplateOutlet } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     NgTemplateOutlet,
+    AsyncPipe,
   ],
   templateUrl: './mat-form.component.html',
 })
@@ -48,15 +50,26 @@ export class MatFormComponent<T> implements OnInit {
     this.#setUpForm();
   }
 
-  clearInputValue(fieldName: string): void {
+  clearInputValue(fieldName: string, event?: Event): void {
     this.formGroup.get(fieldName)?.setValue(null);
+    event?.stopPropagation();
   }
 
-  toggleVisibility(event: MouseEvent) {
+  toggleVisibility(event: MouseEvent): void {
     event.stopPropagation();
     this.hidePassword = !this.hidePassword;
+  }
 
-    console.log(this.formGroup.controls);
+  handleErrors(inputName: string): Observable<string> {
+    const control = this.formGroup.get(inputName);
+    if (!control) return of('');
+
+    const error = validationMessages.find((vm) => control.hasError(vm.key));
+    return error
+      ? this.#translateService.stream(error.value, {
+          minPasswordLength: control.errors?.['minlength']?.requiredLength,
+        })
+      : of('');
   }
 
   onSubmit(): void {
@@ -78,7 +91,7 @@ export class MatFormComponent<T> implements OnInit {
     });
   }
 
-  #setUpForm() {
+  #setUpForm(): void {
     this.formModel().forEach(({ fieldName, fieldValue, validators }) => {
       this.formGroup.addControl(
         fieldName,
