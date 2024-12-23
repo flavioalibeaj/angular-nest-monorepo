@@ -8,4 +8,7 @@ export type FieldType =
   | 'datePicker'
   | 'textArea'
   | 'radio'
-  | 'toggle';
+  | 'slideToggle'
+  | 'slider'
+  | 'timePicker'
+  | 'chips';
