@@ -1,4 +1,11 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  OnInit,
+  output,
+} from '@angular/core';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
@@ -11,6 +18,8 @@ import { MatInputModule } from '@angular/material/input';
 import { Observable, of, take } from 'rxjs';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { validationMessages } from './validators/validation-messages';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-mat-form',
@@ -24,8 +33,11 @@ import { validationMessages } from './validators/validation-messages';
     MatInputModule,
     NgTemplateOutlet,
     AsyncPipe,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './mat-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatFormComponent<T> implements OnInit {
   readonly #translateService = inject(TranslateService);
