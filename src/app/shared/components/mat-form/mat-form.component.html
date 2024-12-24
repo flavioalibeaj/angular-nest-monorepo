@@ -5,6 +5,13 @@
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
     <input matInput type="text" [formControlName]="input.fieldName" [readonly]="input.readonly" />
+    @if (input.prefixIcon) {
+    <mat-icon matPrefix>{{input.prefixIcon}}</mat-icon>
+    }
+    @if (input.suffixIcon) {
+    <mat-icon matSuffix>{{input.suffixIcon}}</mat-icon>
+    }
+
     @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
     <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
       <mat-icon>close</mat-icon>
@@ -18,6 +25,12 @@
     <mat-label> {{input.label | translate}} </mat-label>
     <input matInput type="number" inputmode="numeric" pattern="[0-9]*" [formControlName]="input.fieldName"
       [readonly]="input.readonly" />
+    @if (input.prefixIcon) {
+    <mat-icon matPrefix>{{input.prefixIcon}}</mat-icon>
+    }
+    @if (input.suffixIcon) {
+    <mat-icon matSuffix>{{input.suffixIcon}}</mat-icon>
+    }
     @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
     <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
       <mat-icon>close</mat-icon>
@@ -71,6 +84,7 @@
     }
   </mat-radio-group>
   }
+  @case ('textArea') {}
   }
   }
 
