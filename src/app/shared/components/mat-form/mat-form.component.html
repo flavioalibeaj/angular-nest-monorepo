@@ -62,6 +62,15 @@
     <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
   </mat-form-field>
   }
+  @case ('radio') {
+  <label [id]="'radio-group-label'+input.label">{{input.label | translate}}</label>
+  <mat-radio-group [attr.aria-labelledby]="'radio-group-label'+input.label" [class]="input.inputClass"
+    [formControlName]="input.fieldName">
+    @for (opt of input.radioOptions; track opt) {
+    <mat-radio-button [value]="opt.key" [disabled]="input.readonly">{{opt.value}}</mat-radio-button>
+    }
+  </mat-radio-group>
+  }
   }
   }
 

@@ -20,6 +20,7 @@ import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { validationMessages } from './validators/validation-messages';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-mat-form',
@@ -35,6 +36,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     AsyncPipe,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatRadioModule,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
