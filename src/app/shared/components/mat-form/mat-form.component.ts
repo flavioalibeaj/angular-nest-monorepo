@@ -134,6 +134,11 @@ export class MatFormComponent<T> {
     });
   }
 
+  onColorChange(event: Event, fieldName: string): void {
+    const inputValue = (event.target as HTMLInputElement).value;
+    this.formGroup().get(fieldName)?.setValue(inputValue);
+  }
+
   onSubmit(): void {
     if (this.formGroup().invalid) {
       this.#translateService
