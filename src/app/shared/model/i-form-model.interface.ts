@@ -20,4 +20,5 @@ export interface IFormModel {
   options?: IOption[] | Observable<IOption[]>;
   observableOptions?: boolean; // set to true if the options being passed are a stream
   multiSelect?: boolean;
+  radioOptions?: IOption[];
 }
