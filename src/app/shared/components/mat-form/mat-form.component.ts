@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
-  OnInit,
   output,
 } from '@angular/core';
 import { IFormModel } from '../../model/i-form-model.interface';
@@ -39,7 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatFormComponent<T> implements OnInit {
+export class MatFormComponent<T> {
   readonly #translateService = inject(TranslateService);
 
   readonly formModel = input.required<IFormModel[]>();
@@ -55,21 +55,41 @@ export class MatFormComponent<T> implements OnInit {
   readonly contentProjection = input<boolean>();
 
   readonly formSubmit = output<IFormResponse<T>>();
-  readonly formGroup = new FormGroup({});
-  hidePassword: boolean = true;
+  readonly formGroup = computed(() => {
+    const fg = new FormGroup({});
 
-  ngOnInit(): void {
-    this.#setUpForm();
-  }
+    this.formModel().forEach((input) => {
+      if (input.fieldType === 'dateRange') {
+        fg.addControl(
+          input.fieldName,
+          new FormControl(input.fieldValue, input.validators)
+        );
+        fg.addControl(
+          input.dateRangeSecondFieldName ?? '',
+          new FormControl(
+            input.dateRangeSecondFieldValue,
+            input.dateRangeSecondFieldValidators
+          )
+        );
+        return;
+      }
+      fg.addControl(
+        input.fieldName,
+        new FormControl(input.fieldValue, input.validators)
+      );
+    });
+    return fg;
+  });
+  hidePassword: boolean = true;
 
   clearInputValue(
     { fieldName, fieldType, dateRangeSecondFieldName }: IFormModel,
     event?: Event
   ): void {
-    this.formGroup.get(fieldName)?.setValue(null);
+    this.formGroup().get(fieldName)?.setValue(null);
 
     if (fieldType === 'dateRange' && dateRangeSecondFieldName) {
-      this.formGroup.get(dateRangeSecondFieldName)?.setValue(null);
+      this.formGroup().get(dateRangeSecondFieldName)?.setValue(null);
     }
     event?.stopPropagation();
   }
@@ -80,7 +100,7 @@ export class MatFormComponent<T> implements OnInit {
   }
 
   handleErrors(inputName: string): Observable<string> {
-    const control = this.formGroup.get(inputName);
+    const control = this.formGroup().get(inputName);
     if (!control) return of('');
 
     const error = validationMessages.find((vm) => control.hasError(vm.key));
@@ -92,7 +112,7 @@ export class MatFormComponent<T> implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.formGroup.invalid) {
+    if (this.formGroup().invalid) {
       this.#translateService
         .stream('FORM.FILL_VALID_VALUES')
         .pipe(take(1))
@@ -106,30 +126,7 @@ export class MatFormComponent<T> implements OnInit {
 
     this.formSubmit.emit({
       submitted: true,
-      formData: this.formGroup.getRawValue() as T,
-    });
-  }
-
-  #setUpForm(): void {
-    this.formModel().forEach((input) => {
-      if (input.fieldType === 'dateRange') {
-        this.formGroup.addControl(
-          input.fieldName,
-          new FormControl(input.fieldValue, input.validators)
-        );
-        this.formGroup.addControl(
-          input.dateRangeSecondFieldName ?? '',
-          new FormControl(
-            input.dateRangeSecondFieldValue,
-            input.dateRangeSecondFieldValidators
-          )
-        );
-        return;
-      }
-      this.formGroup.addControl(
-        input.fieldName,
-        new FormControl(input.fieldValue, input.validators)
-      );
+      formData: this.formGroup().getRawValue() as T,
     });
   }
 }
