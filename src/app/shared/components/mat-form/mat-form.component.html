@@ -11,7 +11,9 @@
     @if (input.suffixIcon) {
     <mat-icon matSuffix>{{input.suffixIcon}}</mat-icon>
     }
-
+    @if (input.hint) {
+    <mat-hint>{{input.hint}}</mat-hint>
+    }
     @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
     <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
       <mat-icon>close</mat-icon>
@@ -31,6 +33,9 @@
     @if (input.suffixIcon) {
     <mat-icon matSuffix>{{input.suffixIcon}}</mat-icon>
     }
+    @if (input.hint) {
+    <mat-hint>{{input.hint}}</mat-hint>
+    }
     @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
     <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
       <mat-icon>close</mat-icon>
@@ -49,6 +54,9 @@
       [formControlName]="input.fieldName" [readonly]="input.readonly">
     <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="input.readonly" />
     <mat-datepicker #picker />
+    @if (input.hint) {
+    <mat-hint>{{input.hint}}</mat-hint>
+    }
     @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
     <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
       <mat-icon>close</mat-icon>
@@ -66,6 +74,9 @@
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="input.readonly" />
     <mat-date-range-picker #picker />
+    @if (input.hint) {
+    <mat-hint>{{input.hint}}</mat-hint>
+    }
     @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value &&
     formGroup().get(input.dateRangeSecondFieldName ?? '')?.value) {
     <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
