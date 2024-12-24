@@ -7,4 +7,8 @@ export const validationMessages: readonly { key: string; value: string }[] = [
     key: 'minlength',
     value: 'FORM.ERROR.minLength',
   },
+  {
+    key: 'incorrectColorPattern',
+    value: 'FORM.ERROR.incorrectColorPattern',
+  },
 ];

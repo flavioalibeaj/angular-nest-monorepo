@@ -12,4 +12,6 @@ export type FieldType =
   | 'slider'
   | 'timePicker'
   | 'chips'
-  | 'dateRange';
+  | 'dateRange'
+  | 'color'
+  | 'file';

@@ -7,7 +7,12 @@ import {
   output,
 } from '@angular/core';
 import { IFormModel } from '../../model/i-form-model.interface';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +26,7 @@ import { validationMessages } from './validators/validation-messages';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
+import { FieldType } from '../../model/field-type';
 
 @Component({
   selector: 'app-mat-form',
@@ -75,6 +81,17 @@ export class MatFormComponent<T> {
         );
         return;
       }
+
+      if (input.fieldType === 'color') {
+        fg.addControl(
+          input.fieldName,
+          new FormControl(input.fieldValue, [
+            ...(input.validators ?? []),
+            Validators.pattern(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/),
+          ])
+        );
+      }
+
       fg.addControl(
         input.fieldName,
         new FormControl(input.fieldValue, input.validators)
@@ -101,16 +118,20 @@ export class MatFormComponent<T> {
     this.hidePassword = !this.hidePassword;
   }
 
-  handleErrors(inputName: string): Observable<string> {
+  handleErrors(inputName: string, inputType?: FieldType): Observable<string> {
     const control = this.formGroup().get(inputName);
     if (!control) return of('');
 
-    const error = validationMessages.find((vm) => control.hasError(vm.key));
-    return error
-      ? this.#translateService.stream(error.value, {
-          minPasswordLength: control.errors?.['minlength']?.requiredLength,
-        })
-      : of('');
+    const message =
+      inputType === 'color' && control.hasError('pattern')
+        ? 'FORM.ERROR.incorrectColorPattern'
+        : validationMessages.find((vm) => control.hasError(vm.key))?.value;
+
+    if (!message) return of('');
+
+    return this.#translateService.stream(message, {
+      minPasswordLength: control.errors?.['minlength']?.requiredLength,
+    });
   }
 
   onSubmit(): void {
