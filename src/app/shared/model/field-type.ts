@@ -11,4 +11,5 @@ export type FieldType =
   | 'slideToggle'
   | 'slider'
   | 'timePicker'
-  | 'chips';
+  | 'chips'
+  | 'dateRange';

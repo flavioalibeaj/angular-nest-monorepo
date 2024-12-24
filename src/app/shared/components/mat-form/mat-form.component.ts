@@ -62,8 +62,15 @@ export class MatFormComponent<T> implements OnInit {
     this.#setUpForm();
   }
 
-  clearInputValue(fieldName: string, event?: Event): void {
+  clearInputValue(
+    { fieldName, fieldType, dateRangeSecondFieldName }: IFormModel,
+    event?: Event
+  ): void {
     this.formGroup.get(fieldName)?.setValue(null);
+
+    if (fieldType === 'dateRange' && dateRangeSecondFieldName) {
+      this.formGroup.get(dateRangeSecondFieldName)?.setValue(null);
+    }
     event?.stopPropagation();
   }
 
@@ -104,10 +111,24 @@ export class MatFormComponent<T> implements OnInit {
   }
 
   #setUpForm(): void {
-    this.formModel().forEach(({ fieldName, fieldValue, validators }) => {
+    this.formModel().forEach((input) => {
+      if (input.fieldType === 'dateRange') {
+        this.formGroup.addControl(
+          input.fieldName,
+          new FormControl(input.fieldValue, input.validators)
+        );
+        this.formGroup.addControl(
+          input.dateRangeSecondFieldName ?? '',
+          new FormControl(
+            input.dateRangeSecondFieldValue,
+            input.dateRangeSecondFieldValidators
+          )
+        );
+        return;
+      }
       this.formGroup.addControl(
-        fieldName,
-        new FormControl(fieldValue, validators)
+        input.fieldName,
+        new FormControl(input.fieldValue, input.validators)
       );
     });
   }

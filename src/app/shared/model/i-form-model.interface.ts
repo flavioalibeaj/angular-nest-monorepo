@@ -12,6 +12,12 @@ export interface IFormModel {
   validators?: ValidatorFn[];
   readonly?: boolean;
   clearFieldValue?: boolean; // set true for optional fields
+  minDate?: Date;
+  maxDate?: Date;
+  dateRangeSecondFieldName?: string;
+  dateRangeSecondFieldValue?: Date;
+  dateRangeSecondFieldValidators?: ValidatorFn[];
   options?: IOption[] | Observable<IOption[]>;
   observableOptions?: boolean; // set to true if the options being passed are a stream
+  multiSelect?: boolean;
 }
