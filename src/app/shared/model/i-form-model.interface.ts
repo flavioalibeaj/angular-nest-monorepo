@@ -23,4 +23,5 @@ export interface IFormModel {
   radioOptions?: IOption[];
   prefixIcon?: string;
   suffixIcon?: string;
+  hint?: string;
 }
