@@ -22,6 +22,21 @@
     <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
   </mat-form-field>
   }
+  @case ('textArea') {
+  <mat-form-field [class]="input.inputClass">
+    <mat-label> {{input.label | translate}} </mat-label>
+    <textarea matInput type="text" [formControlName]="input.fieldName" [readonly]="input.readonly"></textarea>
+    @if (input.hint) {
+    <mat-hint>{{input.hint}}</mat-hint>
+    }
+    @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
+    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+  </mat-form-field>
+  }
   @case ('number') {
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
@@ -95,7 +110,6 @@
     }
   </mat-radio-group>
   }
-  @case ('textArea') {}
   }
   }
 
