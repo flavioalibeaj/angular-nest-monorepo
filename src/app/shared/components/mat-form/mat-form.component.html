@@ -130,7 +130,8 @@
     }
     <mat-error>{{handleErrors(input.fieldName, input.fieldType) | async}}</mat-error>
   </mat-form-field>
-  <input #colorInput style="display: none;" type="color" (change)="onColorChange($event, input.fieldName)" />
+  <input #colorInput style="visibility: hidden; height: 0; width: 0;" type="color" [value]="input.fieldValue"
+    (change)="onColorChange($event, input.fieldName)">
   }
   @case ('file') {}
   @case ('slideToggle') {}
