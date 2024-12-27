@@ -128,6 +128,14 @@
   <input #colorInput style="visibility: hidden; height: 0; width: 0;" type="color"
     [value]="input.fieldValue ?? blackColor" (change)="onColorChange($event, input.fieldName)">
   }
+  @case ('checkbox') {
+  <mat-checkbox [class]="input.inputClass" [formControlName]="input.fieldName">
+    {{input.label | translate}}</mat-checkbox>
+  @if (input.hint) {
+  <mat-hint>{{input.hint}}</mat-hint>
+  }
+  <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+  }
   @case ('file') {}
   @case ('slideToggle') {}
   @case ('slider') {}
