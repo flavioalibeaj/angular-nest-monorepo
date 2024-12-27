@@ -27,6 +27,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { FieldType } from '../../model/field-type';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-mat-form',
@@ -43,6 +44,7 @@ import { FieldType } from '../../model/field-type';
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
+    MatCheckboxModule,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,37 +69,51 @@ export class MatFormComponent<T> {
     const fg = new FormGroup({});
 
     this.formModel().forEach((input) => {
-      if (input.fieldType === 'dateRange') {
-        fg.addControl(
-          input.fieldName,
-          new FormControl(input.fieldValue, input.validators)
-        );
-        fg.addControl(
-          input.dateRangeSecondFieldName ?? '',
-          new FormControl(
-            input.dateRangeSecondFieldValue,
-            input.dateRangeSecondFieldValidators
-          )
-        );
-        return;
-      }
+      switch (input.fieldType) {
+        case 'dateRange':
+          fg.addControl(
+            input.fieldName,
+            new FormControl(input.fieldValue, input.validators)
+          );
+          fg.addControl(
+            input.dateRangeSecondFieldName ?? '',
+            new FormControl(
+              input.dateRangeSecondFieldValue,
+              input.dateRangeSecondFieldValidators
+            )
+          );
+          break;
 
-      if (input.fieldType === 'color') {
-        fg.addControl(
-          input.fieldName,
-          new FormControl(input.fieldValue ?? this.blackColor, [
-            ...(input.validators ?? []),
-            Validators.required,
-            Validators.pattern(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/),
-          ])
-        );
-      }
+        case 'color':
+          fg.addControl(
+            input.fieldName,
+            new FormControl(input.fieldValue ?? this.blackColor, [
+              ...(input.validators ?? []),
+              Validators.required,
+              Validators.pattern(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/),
+            ])
+          );
+          break;
 
-      fg.addControl(
-        input.fieldName,
-        new FormControl(input.fieldValue, input.validators)
-      );
+        case 'checkbox':
+          fg.addControl(
+            input.fieldName,
+            new FormControl({
+              disabled: input.readonly,
+              value: input.fieldValue ?? false,
+            })
+          );
+          break;
+
+        default:
+          fg.addControl(
+            input.fieldName,
+            new FormControl(input.fieldValue, input.validators)
+          );
+          break;
+      }
     });
+
     return fg;
   });
   hidePassword: boolean = true;
@@ -151,6 +167,7 @@ export class MatFormComponent<T> {
             throw new Error(msg);
           },
         });
+      this.formGroup().markAllAsTouched();
       return;
     }
 
