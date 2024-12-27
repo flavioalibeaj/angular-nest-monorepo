@@ -28,6 +28,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { FieldType } from '../../model/field-type';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-mat-form',
@@ -45,6 +46,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatNativeDateModule,
     MatRadioModule,
     MatCheckboxModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,6 +98,7 @@ export class MatFormComponent<T> {
           break;
 
         case 'checkbox':
+        case 'slideToggle':
           fg.addControl(
             input.fieldName,
             new FormControl({
