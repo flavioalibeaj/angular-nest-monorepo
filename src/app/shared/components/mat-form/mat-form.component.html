@@ -2,6 +2,8 @@
   @for (input of formModel(); track input) {
   @switch (input.fieldType) {
   @case ('text') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
     <input matInput type="text" [formControlName]="input.fieldName" [readonly]="input.readonly" />
@@ -19,10 +21,14 @@
       <mat-icon>close</mat-icon>
     </button>
     }
-    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+    @if(errorMessage){
+    <mat-error>{{errorMessage}}</mat-error>
+    }
   </mat-form-field>
   }
   @case ('textArea') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
     <textarea matInput type="text" [formControlName]="input.fieldName" [readonly]="input.readonly"></textarea>
@@ -34,10 +40,14 @@
       <mat-icon>close</mat-icon>
     </button>
     }
-    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+    @if(errorMessage){
+    <mat-error>{{errorMessage}}</mat-error>
+    }
   </mat-form-field>
   }
   @case ('number') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
     <input matInput type="number" inputmode="numeric" pattern="[0-9]*" [formControlName]="input.fieldName"
@@ -56,13 +66,17 @@
       <mat-icon>close</mat-icon>
     </button>
     }
-    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+    @if(errorMessage){
+    <mat-error>{{errorMessage}}</mat-error>
+    }
   </mat-form-field>
   }
   @case ('password') {
   <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input}" />
   }
   @case ('datePicker') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
     <input matInput [min]="input.minDate" [max]="input.maxDate" [matDatepicker]="picker"
@@ -77,10 +91,16 @@
       <mat-icon>close</mat-icon>
     </button>
     }
-    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+    @if(errorMessage){
+    <mat-error>{{errorMessage}}</mat-error>
+    }
   </mat-form-field>
   }
   @case('dateRange') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+  @let isClearValueShown = !input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value &&
+  formGroup().get(input.dateRangeSecondFieldName ?? '')?.value;
+
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
     <mat-date-range-input [min]="input.minDate" [max]="input.maxDate" [rangePicker]="picker">
@@ -92,16 +112,19 @@
     @if (input.hint) {
     <mat-hint>{{input.hint}}</mat-hint>
     }
-    @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value &&
-    formGroup().get(input.dateRangeSecondFieldName ?? '')?.value) {
+    @if (isClearValueShown) {
     <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
       <mat-icon>close</mat-icon>
     </button>
     }
-    <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+    @if(errorMessage){
+    <mat-error>{{errorMessage}}</mat-error>
+    }
   </mat-form-field>
   }
   @case ('radio') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+
   <label [id]="'radio-group-label'+input.label">{{input.label | translate}}</label>
   <mat-radio-group [attr.aria-labelledby]="'radio-group-label'+input.label" [class]="input.inputClass"
     [formControlName]="input.fieldName">
@@ -109,8 +132,16 @@
     <mat-radio-button [value]="opt.key" [disabled]="input.readonly">{{opt.value}}</mat-radio-button>
     }
   </mat-radio-group>
+  @if (input.hint) {
+  <mat-hint>{{input.hint}}</mat-hint>
+  }
+  @if(errorMessage){
+  <mat-error>{{errorMessage}}</mat-error>
+  }
   }
   @case ('color') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+
   <mat-form-field [class]="input.inputClass">
     <mat-label> {{input.label | translate}} </mat-label>
     <input type="text" matInput readonly [formControlName]="input.fieldName"
@@ -123,18 +154,24 @@
     @if (input.hint) {
     <mat-hint>{{input.hint}}</mat-hint>
     }
-    <mat-error>{{handleErrors(input.fieldName, input.fieldType) | async}}</mat-error>
+    @if(errorMessage){
+    <mat-error>{{errorMessage}}</mat-error>
+    }
   </mat-form-field>
   <input #colorInput style="visibility: hidden; height: 0; width: 0;" type="color"
     [value]="input.fieldValue ?? blackColor" (change)="onColorChange($event, input.fieldName)">
   }
   @case ('checkbox') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+
   <mat-checkbox [class]="input.inputClass" [formControlName]="input.fieldName">
     {{input.label | translate}}</mat-checkbox>
   @if (input.hint) {
   <mat-hint>{{input.hint}}</mat-hint>
   }
-  <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+  @if(errorMessage){
+  <mat-error>{{errorMessage}}</mat-error>
+  }
   }
   @case ('slideToggle') {
   @let errorMessage = handleErrors(input.fieldName) | async;
@@ -157,6 +194,7 @@
   }
 
   <ng-template #password let-input="input">
+    @let errorMessage = handleErrors(input.fieldName) | async;
     <mat-form-field [class]="input.inputClass">
       <mat-label> {{input.label | translate}} </mat-label>
       <input matInput [type]="hidePassword ? 'password' : 'text'" [formControlName]="input.fieldName">
@@ -164,7 +202,9 @@
         [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <mat-error>{{handleErrors(input.fieldName) | async}}</mat-error>
+      @if (errorMessage) {
+      <mat-error>{{errorMessage}}</mat-error>
+      }
     </mat-form-field>
   </ng-template>
 
