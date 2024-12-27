@@ -85,8 +85,9 @@ export class MatFormComponent<T> {
       if (input.fieldType === 'color') {
         fg.addControl(
           input.fieldName,
-          new FormControl(input.fieldValue, [
+          new FormControl(input.fieldValue ?? this.blackColor, [
             ...(input.validators ?? []),
+            Validators.required,
             Validators.pattern(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/),
           ])
         );
@@ -100,6 +101,7 @@ export class MatFormComponent<T> {
     return fg;
   });
   hidePassword: boolean = true;
+  protected blackColor: string = '#000000';
 
   clearInputValue(
     { fieldName, fieldType, dateRangeSecondFieldName }: IFormModel,

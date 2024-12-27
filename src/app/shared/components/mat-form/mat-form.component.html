@@ -123,15 +123,10 @@
     @if (input.hint) {
     <mat-hint>{{input.hint}}</mat-hint>
     }
-    @if (!input.readonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
-    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
-      <mat-icon>close</mat-icon>
-    </button>
-    }
     <mat-error>{{handleErrors(input.fieldName, input.fieldType) | async}}</mat-error>
   </mat-form-field>
-  <input #colorInput style="visibility: hidden; height: 0; width: 0;" type="color" [value]="input.fieldValue"
-    (change)="onColorChange($event, input.fieldName)">
+  <input #colorInput style="visibility: hidden; height: 0; width: 0;" type="color"
+    [value]="input.fieldValue ?? blackColor" (change)="onColorChange($event, input.fieldName)">
   }
   @case ('file') {}
   @case ('slideToggle') {}
