@@ -29,6 +29,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FieldType } from '../../model/field-type';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
 
 @Component({
   selector: 'app-mat-form',
@@ -47,6 +48,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatRadioModule,
     MatCheckboxModule,
     MatSlideToggleModule,
+    MatSliderModule,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,10 +104,31 @@ export class MatFormComponent<T> {
           fg.addControl(
             input.fieldName,
             new FormControl({
-              disabled: input.readonly,
+              disabled: input.isReadonly,
               value: input.fieldValue ?? false,
             })
           );
+          break;
+
+        case 'slider':
+          fg.addControl(
+            input.fieldName,
+            new FormControl(input.fieldValue, [
+              ...(input.validators ?? []),
+              Validators.max(input.maxValue ?? 100),
+              Validators.min(input.minValue ?? 0),
+            ])
+          );
+          if (input.rangeSliderFieldName) {
+            fg.addControl(
+              input.rangeSliderFieldName,
+              new FormControl(input.rangeSliderFieldValue, [
+                ...(input.validators ?? []),
+                Validators.max(input.maxValue ?? 100),
+                Validators.min(input.minValue ?? 0),
+              ])
+            );
+          }
           break;
 
         default:
@@ -179,4 +202,12 @@ export class MatFormComponent<T> {
       formData: this.formGroup().getRawValue() as T,
     });
   }
+
+  // TODO
+  // selectedFile: any = null;
+
+  // onFileSelected(event: any): void {
+  //   this.selectedFile = event.target.files;
+  //   console.log(this.selectedFile);
+  // }
 }

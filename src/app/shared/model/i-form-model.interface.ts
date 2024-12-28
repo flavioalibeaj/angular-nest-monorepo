@@ -10,7 +10,7 @@ export interface IFormModel {
   fieldValue?: unknown;
   inputClass?: string;
   validators?: ValidatorFn[];
-  readonly?: boolean;
+  isReadonly?: boolean;
   clearFieldValue?: boolean; // set true for optional fields
   minDate?: Date;
   maxDate?: Date;
@@ -18,10 +18,15 @@ export interface IFormModel {
   dateRangeSecondFieldValue?: Date;
   dateRangeSecondFieldValidators?: ValidatorFn[];
   options?: IOption[] | Observable<IOption[]>;
-  observableOptions?: boolean; // set to true if the options being passed are a stream
-  multiSelect?: boolean;
+  areObservableOptions?: boolean; // set to true if the options being passed are a stream
+  isMultiSelect?: boolean;
   radioOptions?: IOption[];
   prefixIcon?: string;
   suffixIcon?: string;
   hint?: string;
+  maxValue?: number;
+  minValue?: number;
+  stepValue?: number;
+  rangeSliderFieldName?: string;
+  rangeSliderFieldValue?: unknown;
 }
