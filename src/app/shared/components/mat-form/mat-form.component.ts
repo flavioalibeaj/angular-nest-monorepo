@@ -32,6 +32,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { IOption } from '../../model/i-option.interface';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-mat-form',
@@ -52,6 +53,7 @@ import { IOption } from '../../model/i-option.interface';
     MatSlideToggleModule,
     MatSliderModule,
     MatAutocompleteModule,
+    MatSelectModule,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -237,6 +239,23 @@ export class MatFormComponent<T> {
     const options = formInput.options as IOption[];
     return of(this.#filterOptions(options, inputValue));
   }
+
+  // TODO
+  // onSelectAllToggle(
+  //   fieldName: string,
+  //   allSelected: boolean,
+  //   options: IOption[]
+  // ) {
+  //   console.log(options);
+  //   // this.formGroup
+  //   //   .get(fieldName)
+  //   //   ?.setValue(allSelected ? [...options.map((o) => o.key)] : []);
+  // }
+
+  // // TODO
+  // onSelectionChange(x: any) {
+  //   console.log(x);
+  // }
 
   #filterOptions(options: IOption[], inputValue?: string): IOption[] {
     if (!inputValue?.trim()) return options;

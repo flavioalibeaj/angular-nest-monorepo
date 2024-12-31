@@ -14,4 +14,5 @@ export enum FieldType {
   DATERANGE,
   COLOR,
   FILE,
+  MULTISELECTAUTOCOMPLETE,
 }
