@@ -26,7 +26,7 @@ import { validationMessages } from './validators/validation-messages';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
-import { FieldType } from '../../model/field-type';
+import { FieldType } from '../../model/field-type.enum';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
@@ -77,7 +77,7 @@ export class MatFormComponent<T> {
 
     this.formModel().forEach((input) => {
       switch (input.fieldType) {
-        case 'dateRange':
+        case FieldType.DATERANGE:
           fg.addControl(
             input.fieldName,
             new FormControl(input.fieldValue, input.validators)
@@ -91,7 +91,7 @@ export class MatFormComponent<T> {
           );
           break;
 
-        case 'color':
+        case FieldType.COLOR:
           fg.addControl(
             input.fieldName,
             new FormControl(input.fieldValue ?? this.blackColor, [
@@ -102,8 +102,8 @@ export class MatFormComponent<T> {
           );
           break;
 
-        case 'checkbox':
-        case 'slideToggle':
+        case FieldType.CHECKBOX:
+        case FieldType.SLIDETOGGLE:
           fg.addControl(
             input.fieldName,
             new FormControl({
@@ -113,7 +113,7 @@ export class MatFormComponent<T> {
           );
           break;
 
-        case 'slider':
+        case FieldType.SLIDER:
           fg.addControl(
             input.fieldName,
             new FormControl(input.fieldValue, [
@@ -147,6 +147,7 @@ export class MatFormComponent<T> {
   });
   hidePassword: boolean = true;
   protected blackColor: string = '#000000';
+  protected readonly FieldType: typeof FieldType = FieldType;
 
   clearInputValue(
     { fieldName, fieldType, dateRangeSecondFieldName }: IFormModel,
@@ -154,7 +155,7 @@ export class MatFormComponent<T> {
   ): void {
     this.formGroup().get(fieldName)?.setValue(null);
 
-    if (fieldType === 'dateRange' && dateRangeSecondFieldName) {
+    if (fieldType === FieldType.DATERANGE && dateRangeSecondFieldName) {
       this.formGroup().get(dateRangeSecondFieldName)?.setValue(null);
     }
     event?.stopPropagation();
@@ -170,7 +171,7 @@ export class MatFormComponent<T> {
     if (!control) return of('');
 
     const message =
-      inputType === 'color' && control.hasError('pattern')
+      inputType === FieldType.COLOR && control.hasError('pattern')
         ? 'FORM.ERROR.incorrectColorPattern'
         : validationMessages.find((vm) => control.hasError(vm.key))?.value;
 

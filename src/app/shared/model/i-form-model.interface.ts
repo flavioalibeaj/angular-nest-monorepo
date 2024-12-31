@@ -1,5 +1,5 @@
 import { ValidatorFn } from '@angular/forms';
-import { FieldType } from './field-type';
+import { FieldType } from './field-type.enum';
 import { IOption } from './i-option.interface';
 import { Observable } from 'rxjs';
 

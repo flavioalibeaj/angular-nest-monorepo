@@ -1,7 +1,7 @@
 <form [formGroup]="formGroup()" [class]="formClass()">
   @for (input of formModel(); track input.fieldName) {
   @switch (input.fieldType) {
-  @case ('text') {
+  @case (FieldType.TEXT) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <mat-form-field [class]="input.inputClass">
@@ -26,7 +26,7 @@
     }
   </mat-form-field>
   }
-  @case ('textArea') {
+  @case (FieldType.TEXTAREA) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <mat-form-field [class]="input.inputClass">
@@ -45,7 +45,7 @@
     }
   </mat-form-field>
   }
-  @case ('number') {
+  @case (FieldType.NUMBER) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <mat-form-field [class]="input.inputClass">
@@ -71,10 +71,10 @@
     }
   </mat-form-field>
   }
-  @case ('password') {
+  @case (FieldType.PASSWORD) {
   <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input}" />
   }
-  @case ('datePicker') {
+  @case (FieldType.DATEPICKER) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <mat-form-field [class]="input.inputClass">
@@ -96,7 +96,7 @@
     }
   </mat-form-field>
   }
-  @case('dateRange') {
+  @case(FieldType.DATERANGE) {
   @let errorMessage = handleErrors(input.fieldName) | async;
   @let isClearValueShown = !input.isReadonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value &&
   formGroup().get(input.dateRangeSecondFieldName ?? '')?.value;
@@ -122,7 +122,7 @@
     }
   </mat-form-field>
   }
-  @case ('radio') {
+  @case (FieldType.RADIO) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <label [id]="'radio-group-label'+input.label">{{input.label | translate}}</label>
@@ -139,7 +139,7 @@
   <mat-error>{{errorMessage}}</mat-error>
   }
   }
-  @case ('color') {
+  @case (FieldType.COLOR) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <mat-form-field [class]="input.inputClass">
@@ -161,7 +161,7 @@
   <input #colorInput style="visibility: hidden; height: 0; width: 0;" type="color"
     [value]="input.fieldValue ?? blackColor" (change)="onColorChange($event, input.fieldName)">
   }
-  @case ('checkbox') {
+  @case (FieldType.CHECKBOX) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <mat-checkbox [class]="input.inputClass" [formControlName]="input.fieldName">
@@ -173,7 +173,7 @@
   <mat-error>{{errorMessage}}</mat-error>
   }
   }
-  @case ('slideToggle') {
+  @case (FieldType.SLIDETOGGLE) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <mat-slide-toggle [class]="input.inputClass" [formControlName]="input.fieldName">
@@ -187,12 +187,12 @@
   }
   }
   <!-- TODO -->
-  @case ('file') {
+  @case (FieldType.FILE) {
   <!-- <button type="button" mat-raised-button (click)="fileInput.click()">{{"FORM.chooseFile" | translate}}</button>
   <input hidden (change)="onFileSelected($event)" #fileInput type="file">
   <span class="ms-3">{{selectedFile?.name}}</span> -->
   }
-  @case ('slider') {
+  @case (FieldType.SLIDER) {
   @let errorMessage = handleErrors(input.fieldName) | async;
 
   <label [id]="'slider-label'+input.label">{{input.label | translate}}</label>
@@ -213,7 +213,7 @@
   <mat-error>{{errorMessage}}</mat-error>
   }
   }
-  @case ('autocomplete') {
+  @case (FieldType.AUTOCOMPLETE) {
   @let errorMessage = handleErrors(input.fieldName) | async;
   @let options = getSelectOptions(input, inputRef.value) | async;
 
@@ -247,8 +247,7 @@
     }
   </mat-form-field>
   }
-  @case ('timePicker') {}
-  @case ('chips') {}
+  @case (FieldType.TIMEPICKER) {}
   }
   }
 
