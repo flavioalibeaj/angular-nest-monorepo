@@ -22,7 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { map, Observable, of, take } from 'rxjs';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { validationMessages } from './validators/validation-messages';
+import { validationMessages } from '../validators/validation-messages';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
@@ -33,6 +33,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { IOption } from '../../model/i-option.interface';
 import { MatSelectModule } from '@angular/material/select';
+import { TextInputComponent } from '../text-input/text-input.component';
+import { FormControlPipe } from '../../pipes/form-control.pipe';
 
 @Component({
   selector: 'app-mat-form',
@@ -54,6 +56,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatSliderModule,
     MatAutocompleteModule,
     MatSelectModule,
+    TextInputComponent,
+    FormControlPipe,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
