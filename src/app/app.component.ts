@@ -91,9 +91,13 @@ export class AppComponent implements OnInit, OnDestroy {
   #setUpAppLanguage() {
     this.#translateService.addLangs(['en', 'al']);
 
-    const lang = localStorage.getItem('language') ?? 'en';
-    this.#translateService.setDefaultLang(lang);
-    if (!lang) localStorage.setItem('languge', lang);
-    this.#translateService.use(lang);
+    const lang =
+      localStorage.getItem('language') ??
+      this.#translateService.getBrowserLang();
+    const selectedLang = lang?.match(/al|en/) ? lang : 'en';
+
+    this.#translateService.setDefaultLang(selectedLang);
+    localStorage.setItem('languge', selectedLang);
+    this.#translateService.use(selectedLang);
   }
 }
