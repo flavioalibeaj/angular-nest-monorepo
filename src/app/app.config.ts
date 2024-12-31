@@ -21,6 +21,7 @@ import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MAT_AUTOCOMPLETE_DEFAULT_OPTIONS } from '@angular/material/autocomplete';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
   http: HttpClient
@@ -67,6 +68,14 @@ export const appConfig: ApplicationConfig = {
         exitAnimationDuration: 200,
         // height: '200px',
         width: '400px',
+      },
+    },
+    {
+      provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
+      useValue: {
+        autoActiveFirstOption: false,
+        requireSelection: true,
+        hideSingleSelectionIndicator: true,
       },
     },
   ],
