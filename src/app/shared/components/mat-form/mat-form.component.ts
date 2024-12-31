@@ -20,7 +20,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IFormResponse } from '../../model/i-form-response.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Observable, of, take } from 'rxjs';
+import { map, Observable, of, take } from 'rxjs';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { validationMessages } from './validators/validation-messages';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -30,6 +30,8 @@ import { FieldType } from '../../model/field-type';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { IOption } from '../../model/i-option.interface';
 
 @Component({
   selector: 'app-mat-form',
@@ -49,6 +51,7 @@ import { MatSliderModule } from '@angular/material/slider';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatSliderModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -210,4 +213,36 @@ export class MatFormComponent<T> {
   //   this.selectedFile = event.target.files;
   //   console.log(this.selectedFile);
   // }
+
+  displayFn(option?: IOption): string {
+    return option?.value ? String(option.value) : '';
+  }
+
+  getSelectOptions(
+    formInput: IFormModel,
+    inputValue?: string
+  ): Observable<IOption[]> {
+    if (!formInput.options) return of([]);
+
+    if (formInput.areObservableOptions) {
+      const options = formInput.options as Observable<IOption[]>;
+      return options.pipe(
+        map((options) =>
+          options.length ? this.#filterOptions(options, inputValue) : []
+        )
+      );
+    }
+
+    const options = formInput.options as IOption[];
+    return of(this.#filterOptions(options, inputValue));
+  }
+
+  #filterOptions(options: IOption[], inputValue?: string): IOption[] {
+    if (!inputValue?.trim()) return options;
+
+    const lowerCaseValue = inputValue.toLowerCase();
+    return options.filter((option) =>
+      option.value.toLowerCase().includes(lowerCaseValue)
+    );
+  }
 }

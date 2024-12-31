@@ -1,5 +1,5 @@
 <form [formGroup]="formGroup()" [class]="formClass()">
-  @for (input of formModel(); track input) {
+  @for (input of formModel(); track input.fieldName) {
   @switch (input.fieldType) {
   @case ('text') {
   @let errorMessage = handleErrors(input.fieldName) | async;
@@ -128,7 +128,7 @@
   <label [id]="'radio-group-label'+input.label">{{input.label | translate}}</label>
   <mat-radio-group [attr.aria-labelledby]="'radio-group-label'+input.label" [class]="input.inputClass"
     [formControlName]="input.fieldName">
-    @for (opt of input.radioOptions; track opt) {
+    @for (opt of input.radioOptions; track opt.key) {
     <mat-radio-button [value]="opt.key" [disabled]="input.isReadonly">{{opt.value}}</mat-radio-button>
     }
   </mat-radio-group>
@@ -212,6 +212,40 @@
   @if(errorMessage){
   <mat-error>{{errorMessage}}</mat-error>
   }
+  }
+  @case ('autocomplete') {
+  @let errorMessage = handleErrors(input.fieldName) | async;
+  @let options = getSelectOptions(input, inputRef.value) | async;
+
+  <mat-form-field [class]="input.inputClass">
+    <mat-label>{{input.label | translate}}</mat-label>
+    <input #inputRef type="text" matInput [matAutocomplete]="auto" [formControlName]="input.fieldName"
+      [readonly]="input.isReadonly">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      @for (opt of options; track opt.key) {
+      <mat-option [value]="opt">
+        <span>{{opt.value}}</span>
+      </mat-option>
+      }
+    </mat-autocomplete>
+    @if (input.prefixIcon) {
+    <mat-icon matPrefix>{{input.prefixIcon}}</mat-icon>
+    }
+    @if (input.suffixIcon) {
+    <mat-icon matSuffix>{{input.suffixIcon}}</mat-icon>
+    }
+    @if (input.hint) {
+    <mat-hint>{{input.hint}}</mat-hint>
+    }
+    @if (!input.isReadonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
+    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+    @if(errorMessage){
+    <mat-error>{{errorMessage}}</mat-error>
+    }
+  </mat-form-field>
   }
   @case ('timePicker') {}
   @case ('chips') {}
