@@ -10,30 +10,7 @@
   <text-area-input [input]="input" [control]="control" />
   }
   @case (FieldType.NUMBER) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <mat-form-field [class]="input.inputClass">
-    <mat-label> {{input.label | translate}} </mat-label>
-    <input matInput type="number" inputmode="numeric" pattern="[0-9]*" [formControlName]="input.fieldName"
-      [readonly]="input.isReadonly" />
-    @if (input.prefixIcon) {
-    <mat-icon matPrefix>{{input.prefixIcon}}</mat-icon>
-    }
-    @if (input.suffixIcon) {
-    <mat-icon matSuffix>{{input.suffixIcon}}</mat-icon>
-    }
-    @if (input.hint) {
-    <mat-hint>{{input.hint}}</mat-hint>
-    }
-    @if (!input.isReadonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
-    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
-      <mat-icon>close</mat-icon>
-    </button>
-    }
-    @if(errorMessage){
-    <mat-error>{{errorMessage}}</mat-error>
-    }
-  </mat-form-field>
+  <number-input [input]="input" [control]="control" />
   }
   @case (FieldType.PASSWORD) {
   <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input}" />
