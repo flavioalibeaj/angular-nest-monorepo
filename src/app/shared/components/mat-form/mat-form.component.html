@@ -1,27 +1,13 @@
 <form [formGroup]="formGroup()" [class]="formClass()">
   @for (input of formModel(); track input.fieldName) {
+  @let control = formGroup().get(input.fieldName) | formControl;
+
   @switch (input.fieldType) {
   @case (FieldType.TEXT) {
-  <app-text-input [input]="input" [control]="formGroup().get(input.fieldName) | formControl" />
+  <text-input [input]="input" [control]="control" />
   }
   @case (FieldType.TEXTAREA) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <mat-form-field [class]="input.inputClass">
-    <mat-label> {{input.label | translate}} </mat-label>
-    <textarea matInput type="text" [formControlName]="input.fieldName" [readonly]="input.isReadonly"></textarea>
-    @if (input.hint) {
-    <mat-hint>{{input.hint}}</mat-hint>
-    }
-    @if (!input.isReadonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
-    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
-      <mat-icon>close</mat-icon>
-    </button>
-    }
-    @if(errorMessage){
-    <mat-error>{{errorMessage}}</mat-error>
-    }
-  </mat-form-field>
+  <text-area-input [input]="input" [control]="control" />
   }
   @case (FieldType.NUMBER) {
   @let errorMessage = handleErrors(input.fieldName) | async;

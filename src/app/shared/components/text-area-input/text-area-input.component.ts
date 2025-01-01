@@ -1,41 +1,37 @@
 import { Component, inject, input } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { IFormModel } from '../../model/i-form-model.interface';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { IFormModel } from '../../model/i-form-model.interface';
 import { AsyncPipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GenericService } from '../../services/generic.service';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'text-input',
+  selector: 'text-area-input',
   imports: [
     MatFormFieldModule,
     MatInputModule,
+    TranslatePipe,
+    AsyncPipe,
     MatButtonModule,
     MatIconModule,
-    TranslatePipe,
     ReactiveFormsModule,
-    AsyncPipe,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
     <mat-form-field [class]="input().inputClass">
       <mat-label> {{ input().label | translate }} </mat-label>
-      <input
+      <textarea
         matInput
         type="text"
         [formControl]="control()"
         [readonly]="input().isReadonly"
-      />
-      @if (input().prefixIcon) {
-      <mat-icon matPrefix>{{ input().prefixIcon }}</mat-icon>
-      } @if (input().suffixIcon) {
-      <mat-icon matSuffix>{{ input().suffixIcon }}</mat-icon>
-      } @if (input().hint) {
+      ></textarea>
+      @if (input().hint) {
       <mat-hint>{{ input().hint }}</mat-hint>
       } @if (!input().isReadonly && input().clearFieldValue && control().value)
       {
@@ -54,7 +50,7 @@ import { GenericService } from '../../services/generic.service';
     </mat-form-field>
   `,
 })
-export class TextInputComponent {
+export class TextAreaInputComponent {
   protected readonly genericService = inject(GenericService);
 
   readonly input = input.required<IFormModel>();

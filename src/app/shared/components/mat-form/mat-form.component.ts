@@ -35,6 +35,7 @@ import { IOption } from '../../model/i-option.interface';
 import { MatSelectModule } from '@angular/material/select';
 import { TextInputComponent } from '../text-input/text-input.component';
 import { FormControlPipe } from '../../pipes/form-control.pipe';
+import { TextAreaInputComponent } from '../text-area-input/text-area-input.component';
 
 @Component({
   selector: 'app-mat-form',
@@ -58,6 +59,7 @@ import { FormControlPipe } from '../../pipes/form-control.pipe';
     MatSelectModule,
     TextInputComponent,
     FormControlPipe,
+    TextAreaInputComponent,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
