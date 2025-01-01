@@ -30,13 +30,11 @@ import { FieldType } from '../../model/field-type.enum';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { IOption } from '../../model/i-option.interface';
-import { MatSelectModule } from '@angular/material/select';
 import { TextInputComponent } from '../text-input/text-input.component';
 import { FormControlPipe } from '../../pipes/form-control.pipe';
 import { TextAreaInputComponent } from '../text-area-input/text-area-input.component';
 import { NumberInputComponent } from '../number-input/number-input.component';
+import { AutocompleteInputComponent } from '../autocomplete-input/autocomplete-input.component';
 
 @Component({
   selector: 'app-mat-form',
@@ -56,12 +54,11 @@ import { NumberInputComponent } from '../number-input/number-input.component';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatSliderModule,
-    MatAutocompleteModule,
-    MatSelectModule,
-    TextInputComponent,
     FormControlPipe,
+    TextInputComponent,
     TextAreaInputComponent,
     NumberInputComponent,
+    AutocompleteInputComponent,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -225,29 +222,6 @@ export class MatFormComponent<T> {
   //   console.log(this.selectedFile);
   // }
 
-  displayFn(option?: IOption): string {
-    return option?.value ? String(option.value) : '';
-  }
-
-  getSelectOptions(
-    formInput: IFormModel,
-    inputValue?: string
-  ): Observable<IOption[]> {
-    if (!formInput.options) return of([]);
-
-    if (formInput.areObservableOptions) {
-      const options = formInput.options as Observable<IOption[]>;
-      return options.pipe(
-        map((options) =>
-          options.length ? this.#filterOptions(options, inputValue) : []
-        )
-      );
-    }
-
-    const options = formInput.options as IOption[];
-    return of(this.#filterOptions(options, inputValue));
-  }
-
   // TODO
   // onSelectAllToggle(
   //   fieldName: string,
@@ -264,13 +238,4 @@ export class MatFormComponent<T> {
   // onSelectionChange(x: any) {
   //   console.log(x);
   // }
-
-  #filterOptions(options: IOption[], inputValue?: string): IOption[] {
-    if (!inputValue?.trim()) return options;
-
-    const lowerCaseValue = inputValue.toLowerCase();
-    return options.filter((option) =>
-      option.value.toLowerCase().includes(lowerCaseValue)
-    );
-  }
 }
