@@ -35,6 +35,7 @@ import { FormControlPipe } from '../../pipes/form-control.pipe';
 import { TextAreaInputComponent } from '../text-area-input/text-area-input.component';
 import { NumberInputComponent } from '../number-input/number-input.component';
 import { AutocompleteInputComponent } from '../autocomplete-input/autocomplete-input.component';
+import { PasswordInputComponent } from '../password-input/password-input.component';
 
 @Component({
   selector: 'app-mat-form',
@@ -59,6 +60,7 @@ import { AutocompleteInputComponent } from '../autocomplete-input/autocomplete-i
     TextAreaInputComponent,
     NumberInputComponent,
     AutocompleteInputComponent,
+    PasswordInputComponent,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -152,7 +154,6 @@ export class MatFormComponent<T> {
 
     return fg;
   });
-  hidePassword: boolean = true;
   protected blackColor: string = '#000000';
   protected readonly FieldType: typeof FieldType = FieldType;
 
@@ -166,11 +167,6 @@ export class MatFormComponent<T> {
       this.formGroup().get(dateRangeSecondFieldName)?.setValue(null);
     }
     event?.stopPropagation();
-  }
-
-  toggleVisibility(event: MouseEvent): void {
-    event.stopPropagation();
-    this.hidePassword = !this.hidePassword;
   }
 
   handleErrors(inputName: string, inputType?: FieldType): Observable<string> {

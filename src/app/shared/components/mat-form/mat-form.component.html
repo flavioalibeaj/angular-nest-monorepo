@@ -13,7 +13,7 @@
   <number-input [input]="input" [control]="control" />
   }
   @case (FieldType.PASSWORD) {
-  <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input}" />
+  <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input, control}" />
   }
   @case (FieldType.DATEPICKER) {
   @let errorMessage = handleErrors(input.fieldName) | async;
@@ -192,19 +192,8 @@
   }
   }
 
-  <ng-template #password let-input="input">
-    @let errorMessage = handleErrors(input.fieldName) | async;
-    <mat-form-field [class]="input.inputClass">
-      <mat-label> {{input.label | translate}} </mat-label>
-      <input matInput [type]="hidePassword ? 'password' : 'text'" [formControlName]="input.fieldName">
-      <button mat-icon-button matSuffix type="button" (click)="toggleVisibility($event)"
-        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-      @if (errorMessage) {
-      <mat-error>{{errorMessage}}</mat-error>
-      }
-    </mat-form-field>
+  <ng-template #password let-input="input" let-control="control">
+    <password-input [input]="input" [control]="control" />
   </ng-template>
 
   <mat-divider />
