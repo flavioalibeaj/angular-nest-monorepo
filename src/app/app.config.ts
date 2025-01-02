@@ -22,6 +22,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_AUTOCOMPLETE_DEFAULT_OPTIONS } from '@angular/material/autocomplete';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
   http: HttpClient
@@ -32,10 +33,11 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([httpInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideAnimationsAsync(),
+    provideNativeDateAdapter(),
     importProvidersFrom(
       NgxSpinnerModule.forRoot({ type: 'ball-triangle-path' })
     ),
-    provideAnimationsAsync(),
     provideTranslateService({
       loader: {
         provide: TranslateLoader,
