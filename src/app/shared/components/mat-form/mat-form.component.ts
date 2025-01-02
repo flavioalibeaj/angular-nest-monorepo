@@ -80,7 +80,7 @@ export class MatFormComponent<T> {
   readonly formClass = input<string>();
   readonly actionsClass = input<string>('mt-1 w-100 d-flex gap-3');
   readonly submitButtonClass = input<string>();
-  readonly hideCancelBtn = input<boolean>();
+  readonly showCancelBtn = input<boolean>();
   readonly hideSubmitBtn = input<boolean>();
   readonly contentProjection = input<boolean>();
 

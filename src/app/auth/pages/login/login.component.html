@@ -3,10 +3,9 @@
     <mat-card-header class="justify-content-center">
       <mat-card-title>{{'AUTH.LOGIN' | translate}}</mat-card-title>
     </mat-card-header>
-    <app-mat-form [formModel]="formModel" [hideCancelBtn]="true"
-      formClass="px-3 mt-4 d-flex flex-column justify-content-center" actionsClass="flex-column gap-3"
-      submitButtonText="AUTH.LOGIN" submitButtonIcon="login" submitButtonClass="w-100" [contentProjection]="true"
-      (formSubmit)="login($event)">
+    <app-mat-form [formModel]="formModel" formClass="px-3 mt-4 d-flex flex-column justify-content-center"
+      actionsClass="flex-column gap-3" submitButtonText="AUTH.LOGIN" submitButtonIcon="login" submitButtonClass="w-100"
+      [contentProjection]="true" (formSubmit)="login($event)">
       <span class="text-danger" role="button" routerLink="../register">
         <a> {{"AUTH.NO_ACC_REGISTER" | translate}} <b class="text-decoration-underline">{{"AUTH.HERE" |
             translate}}</b></a>

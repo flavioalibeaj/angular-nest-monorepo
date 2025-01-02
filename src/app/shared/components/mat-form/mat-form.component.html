@@ -42,7 +42,7 @@
     <ng-content />
     }
 
-    @if (!hideCancelBtn()) {
+    @if (showCancelBtn()) {
     <button mat-raised-button [disabled]="!formGroup().valid" color="warn">
       <mat-icon>{{cancelButtonIcon()}}</mat-icon>
       {{cancelButtonText() | translate}}
