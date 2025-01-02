@@ -29,6 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
         [type]="hidePassword ? 'password' : 'text'"
         [formControl]="control()"
       />
+      @if (!input().hidePasswordToggle) {
       <button
         mat-icon-button
         matSuffix
@@ -41,7 +42,7 @@ import { MatIconModule } from '@angular/material/icon';
           hidePassword ? 'visibility_off' : 'visibility'
         }}</mat-icon>
       </button>
-      @if (errorMessage) {
+      } @if (errorMessage) {
       <mat-error>{{ errorMessage }}</mat-error>
       }
     </mat-form-field>

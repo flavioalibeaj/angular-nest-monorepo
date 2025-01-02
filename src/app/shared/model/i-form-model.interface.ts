@@ -29,4 +29,5 @@ export interface IFormModel {
   stepValue?: number;
   rangeSliderFieldName?: string;
   rangeSliderFieldValue?: unknown;
+  hidePasswordToggle?: boolean;
 }
