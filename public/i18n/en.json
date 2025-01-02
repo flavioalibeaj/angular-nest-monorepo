@@ -14,7 +14,13 @@
   },
   "FORM": {
     "FILL_VALID_VALUES": "Fill form with valid values",
-    "SUBMIT": "Submit"
+    "SUBMIT": "Submit",
+    "chooseFile": "Choose file",
+    "ERROR": {
+      "required": "Field is required",
+      "minLength": "Field must have more than {{minPasswordLength}} characters",
+      "incorrectColorPattern": "Field must be a valid color"
+    }
   },
   "TOOLBAR": {
     "PROFILE": "Profile",
@@ -43,7 +49,8 @@
   },
   "GENERAL": {
     "CLOSE": "Close",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "SELECT_ALL": "Select all options"
   },
   "PAGINATOR": {
     "firstPageLabel": "First page",

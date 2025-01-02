@@ -14,7 +14,13 @@
   },
   "FORM": {
     "FILL_VALID_VALUES": "Plotësoni formularin me vlera të vlefshme",
-    "SUBMIT": "Dërgo"
+    "SUBMIT": "Dërgo",
+    "chooseFile": "Zgjidhni dokumentin",
+    "ERROR": {
+      "required": "Fusha është e kërkuar",
+      "minLength": "Fusha duhet të ketë më shumë se {{minPasswordLength}} karaktere",
+      "incorrectColorPattern": "Fusha duhet të jetë një ngjyrë e vlefshme"
+    }
   },
   "TOOLBAR": {
     "PROFILE": "Profili",
@@ -43,7 +49,8 @@
   },
   "GENERAL": {
     "CLOSE": "Mbyll",
-    "SAVE": "Ruaj"
+    "SAVE": "Ruaj",
+    "SELECT_ALL": "Selekto të gjitha opsionet"
   },
   "PAGINATOR": {
     "firstPageLabel": "Faqja e parë",
