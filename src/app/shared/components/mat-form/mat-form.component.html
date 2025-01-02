@@ -43,7 +43,7 @@
     }
 
     @if (showCancelBtn()) {
-    <button mat-raised-button [disabled]="!formGroup().valid" color="warn">
+    <button mat-raised-button color="warn" mat-dialog-close>
       <mat-icon>{{cancelButtonIcon()}}</mat-icon>
       {{cancelButtonText() | translate}}
     </button>

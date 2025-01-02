@@ -38,6 +38,7 @@ import { TimePickerInputComponent } from '../time-picker-input/time-picker-input
 import { SelectInputComponent } from '../select-input/select-input.component';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { MultiSelectAutoCompleteInputComponent } from '../multi-select-auto-complete-input/multi-select-auto-complete-input.component';
+import { MatDialogClose } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-mat-form',
@@ -65,6 +66,7 @@ import { MultiSelectAutoCompleteInputComponent } from '../multi-select-auto-comp
     SelectInputComponent,
     FileInputComponent,
     MultiSelectAutoCompleteInputComponent,
+    MatDialogClose,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,7 +80,7 @@ export class MatFormComponent<T> {
   readonly cancelButtonText = input<string>('GENERAL.CLOSE');
   readonly submitButtonText = input<string>('GENERAL.SAVE');
   readonly formClass = input<string>();
-  readonly actionsClass = input<string>('mt-1 w-100 d-flex gap-3');
+  readonly actionsClass = input<string>('w-100 d-flex gap-3');
   readonly submitButtonClass = input<string>();
   readonly showCancelBtn = input<boolean>();
   readonly hideSubmitBtn = input<boolean>();
