@@ -1,18 +1,42 @@
 import { Component, inject } from '@angular/core';
-import { Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatFormComponent } from '../../../shared/components/mat-form/mat-form.component';
-import { IFormModel } from '../../../shared/model/i-form-model.interface';
-import { IFormResponse } from '../../../shared/model/i-form-response.interface';
-import { FieldType } from '../../../shared/model/field-type.enum';
+import { RegisterService } from '../../services/register.service';
 
 @Component({
   selector: 'app-register',
   imports: [MatCardModule, RouterLink, TranslatePipe, MatFormComponent],
-  templateUrl: './register.component.html',
+  providers: [RegisterService],
+  template: `
+    <div class="h-100 d-flex justify-content-center align-items-center">
+      <mat-card appearance="outlined">
+        <mat-card-header class="justify-content-center">
+          <mat-card-title>{{ 'AUTH.REGISTER' | translate }}</mat-card-title>
+        </mat-card-header>
+        <app-mat-form
+          [formModel]="registerService.formModel"
+          formClass="px-3 mt-4 d-flex flex-column justify-content-center"
+          actionsClass="flex-column gap-3"
+          submitButtonText="AUTH.REGISTER"
+          submitButtonIcon="add"
+          submitButtonClass="w-100"
+          [contentProjection]="true"
+          (formSubmit)="registerService.register($event)"
+        >
+          <span class="text-danger" role="button" routerLink="../login">
+            <a
+              >{{ 'AUTH.ACC_LOGIN' | translate }}
+              <b class="text-decoration-underline">{{
+                'AUTH.HERE' | translate
+              }}</b></a
+            >
+          </span>
+        </app-mat-form>
+      </mat-card>
+    </div>
+  `,
   styles: [
     `
       mat-card {
@@ -24,48 +48,5 @@ import { FieldType } from '../../../shared/model/field-type.enum';
   ],
 })
 export class RegisterComponent {
-  readonly #authService = inject(AuthService);
-  readonly formModel: IFormModel[] = [
-    {
-      fieldType: FieldType.TEXT,
-      fieldName: 'username',
-      label: 'AUTH.USERNAME',
-      validators: [Validators.required],
-      inputClass: 'w-100',
-    },
-    {
-      fieldType: FieldType.PASSWORD,
-      fieldName: 'password',
-      label: 'AUTH.PASSWORD',
-      validators: [Validators.required, Validators.minLength(8)],
-      inputClass: 'w-100',
-    },
-    {
-      fieldType: FieldType.PASSWORD,
-      fieldName: 'confirmPassword',
-      label: 'AUTH.CONFIRM_PASSWORD',
-      validators: [Validators.required, Validators.minLength(8)],
-      inputClass: 'w-100',
-      hidePasswordToggle: true,
-    },
-  ];
-
-  register({
-    formData,
-  }: IFormResponse<{
-    username: string;
-    password: string;
-    confirmPassword: string;
-  }>) {
-    if (!formData) return;
-    const { confirmPassword, password, username } = formData;
-
-    this.#authService
-      .register({
-        confirmPassword,
-        password,
-        username,
-      })
-      ?.subscribe();
-  }
+  readonly registerService = inject(RegisterService);
 }
