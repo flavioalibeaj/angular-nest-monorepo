@@ -18,24 +18,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IFormResponse } from '../../model/i-form-response.interface';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { map, Observable, of, take } from 'rxjs';
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { validationMessages } from '../validators/validation-messages';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatRadioModule } from '@angular/material/radio';
+import { take } from 'rxjs';
+import { NgTemplateOutlet } from '@angular/common';
 import { FieldType } from '../../model/field-type.enum';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSliderModule } from '@angular/material/slider';
 import { TextInputComponent } from '../text-input/text-input.component';
 import { FormControlPipe } from '../../pipes/form-control.pipe';
 import { TextAreaInputComponent } from '../text-area-input/text-area-input.component';
 import { NumberInputComponent } from '../number-input/number-input.component';
 import { AutocompleteInputComponent } from '../autocomplete-input/autocomplete-input.component';
 import { PasswordInputComponent } from '../password-input/password-input.component';
+import { SliderInputComponent } from '../slider-input/slider-input.component';
+import { CheckboxInputComponent } from '../checkbox-input/checkbox-input.component';
+import { SlideToggleInputComponent } from '../slide-toggle-input/slide-toggle-input.component';
+import { ColorInputComponent } from '../color-input/color-input.component';
+import { RadioInputComponent } from '../radio-input/radio-input.component';
+import { DateRangeInputComponent } from '../date-range-input/date-range-input.component';
+import { DatePickerInputComponent } from '../date-picker-input/date-picker-input.component';
+import { TimePickerInputComponent } from '../time-picker-input/time-picker-input.component';
+import { SelectInputComponent } from '../select-input/select-input.component';
+import { FileInputComponent } from '../file-input/file-input.component';
+import { MultiSelectAutoCompleteInputComponent } from '../multi-select-auto-complete-input/multi-select-auto-complete-input.component';
 
 @Component({
   selector: 'app-mat-form',
@@ -45,22 +47,24 @@ import { PasswordInputComponent } from '../password-input/password-input.compone
     MatButtonModule,
     MatIconModule,
     TranslatePipe,
-    MatFormFieldModule,
-    MatInputModule,
     NgTemplateOutlet,
-    AsyncPipe,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatRadioModule,
-    MatCheckboxModule,
-    MatSlideToggleModule,
-    MatSliderModule,
     FormControlPipe,
     TextInputComponent,
     TextAreaInputComponent,
     NumberInputComponent,
     AutocompleteInputComponent,
     PasswordInputComponent,
+    SliderInputComponent,
+    CheckboxInputComponent,
+    SlideToggleInputComponent,
+    ColorInputComponent,
+    RadioInputComponent,
+    DateRangeInputComponent,
+    DatePickerInputComponent,
+    TimePickerInputComponent,
+    SelectInputComponent,
+    FileInputComponent,
+    MultiSelectAutoCompleteInputComponent,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,7 +107,7 @@ export class MatFormComponent<T> {
         case FieldType.COLOR:
           fg.addControl(
             input.fieldName,
-            new FormControl(input.fieldValue ?? this.blackColor, [
+            new FormControl(input.fieldValue ?? this.#blackColor, [
               ...(input.validators ?? []),
               Validators.required,
               Validators.pattern(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/),
@@ -125,7 +129,7 @@ export class MatFormComponent<T> {
         case FieldType.SLIDER:
           fg.addControl(
             input.fieldName,
-            new FormControl(input.fieldValue, [
+            new FormControl(input.fieldValue ?? 0, [
               ...(input.validators ?? []),
               Validators.max(input.maxValue ?? 100),
               Validators.min(input.minValue ?? 0),
@@ -134,7 +138,7 @@ export class MatFormComponent<T> {
           if (input.rangeSliderFieldName) {
             fg.addControl(
               input.rangeSliderFieldName,
-              new FormControl(input.rangeSliderFieldValue, [
+              new FormControl(input.rangeSliderFieldValue ?? 100, [
                 ...(input.validators ?? []),
                 Validators.max(input.maxValue ?? 100),
                 Validators.min(input.minValue ?? 0),
@@ -154,41 +158,8 @@ export class MatFormComponent<T> {
 
     return fg;
   });
-  protected blackColor: string = '#000000';
+  readonly #blackColor: string = '#000000';
   protected readonly FieldType: typeof FieldType = FieldType;
-
-  clearInputValue(
-    { fieldName, fieldType, dateRangeSecondFieldName }: IFormModel,
-    event?: Event
-  ): void {
-    this.formGroup().get(fieldName)?.setValue(null);
-
-    if (fieldType === FieldType.DATERANGE && dateRangeSecondFieldName) {
-      this.formGroup().get(dateRangeSecondFieldName)?.setValue(null);
-    }
-    event?.stopPropagation();
-  }
-
-  handleErrors(inputName: string, inputType?: FieldType): Observable<string> {
-    const control = this.formGroup().get(inputName);
-    if (!control) return of('');
-
-    const message =
-      inputType === FieldType.COLOR && control.hasError('pattern')
-        ? 'FORM.ERROR.incorrectColorPattern'
-        : validationMessages.find((vm) => control.hasError(vm.key))?.value;
-
-    if (!message) return of('');
-
-    return this.#translateService.stream(message, {
-      minPasswordLength: control.errors?.['minlength']?.requiredLength,
-    });
-  }
-
-  onColorChange(event: Event, fieldName: string): void {
-    const inputValue = (event.target as HTMLInputElement).value;
-    this.formGroup().get(fieldName)?.setValue(inputValue);
-  }
 
   onSubmit(): void {
     if (this.formGroup().invalid) {
@@ -209,29 +180,4 @@ export class MatFormComponent<T> {
       formData: this.formGroup().getRawValue() as T,
     });
   }
-
-  // TODO
-  // selectedFile: any = null;
-
-  // onFileSelected(event: any): void {
-  //   this.selectedFile = event.target.files;
-  //   console.log(this.selectedFile);
-  // }
-
-  // TODO
-  // onSelectAllToggle(
-  //   fieldName: string,
-  //   allSelected: boolean,
-  //   options: IOption[]
-  // ) {
-  //   console.log(options);
-  //   // this.formGroup
-  //   //   .get(fieldName)
-  //   //   ?.setValue(allSelected ? [...options.map((o) => o.key)] : []);
-  // }
-
-  // // TODO
-  // onSelectionChange(x: any) {
-  //   console.log(x);
-  // }
 }

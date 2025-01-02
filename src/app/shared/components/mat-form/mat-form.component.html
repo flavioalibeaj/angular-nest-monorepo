@@ -3,192 +3,32 @@
   @let control = formGroup().get(input.fieldName) | formControl;
 
   @switch (input.fieldType) {
-  @case (FieldType.TEXT) {
-  <text-input [input]="input" [control]="control" />
-  }
-  @case (FieldType.TEXTAREA) {
-  <text-area-input [input]="input" [control]="control" />
-  }
-  @case (FieldType.NUMBER) {
-  <number-input [input]="input" [control]="control" />
-  }
+  @case (FieldType.TEXT) { <text-input [input]="input" [control]="control" /> }
+  @case (FieldType.TEXTAREA) { <text-area-input [input]="input" [control]="control" /> }
+  @case (FieldType.NUMBER) { <number-input [input]="input" [control]="control" /> }
   @case (FieldType.PASSWORD) {
   <ng-container [ngTemplateOutlet]="password" [ngTemplateOutletContext]="{input, control}" />
   }
-  @case (FieldType.DATEPICKER) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <mat-form-field [class]="input.inputClass">
-    <mat-label> {{input.label | translate}} </mat-label>
-    <input matInput [min]="input.minDate" [max]="input.maxDate" [matDatepicker]="picker"
-      [formControlName]="input.fieldName" [readonly]="input.isReadonly">
-    <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="input.isReadonly" />
-    <mat-datepicker #picker />
-    @if (input.hint) {
-    <mat-hint>{{input.hint}}</mat-hint>
-    }
-    @if (!input.isReadonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value) {
-    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
-      <mat-icon>close</mat-icon>
-    </button>
-    }
-    @if(errorMessage){
-    <mat-error>{{errorMessage}}</mat-error>
-    }
-  </mat-form-field>
+  @case (FieldType.DATEPICKER) { <date-picker-input [control]="control" [input]="input" /> }
+  @case (FieldType.DATERANGE) {
+  @let rangeControl = formGroup().get(input.dateRangeSecondFieldName ?? '') | formControl;
+  <date-range-input [control]="control" [input]="input" [rangeControl]="rangeControl" />
   }
-  @case(FieldType.DATERANGE) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-  @let isClearValueShown = !input.isReadonly && input.clearFieldValue && formGroup().get(input.fieldName)?.value &&
-  formGroup().get(input.dateRangeSecondFieldName ?? '')?.value;
-
-  <mat-form-field [class]="input.inputClass">
-    <mat-label> {{input.label | translate}} </mat-label>
-    <mat-date-range-input [min]="input.minDate" [max]="input.maxDate" [rangePicker]="picker">
-      <input matStartDate [formControlName]="input.fieldName" [readonly]="input.isReadonly">
-      <input matEndDate [formControlName]="input.dateRangeSecondFieldName ?? ''" [readonly]="input.isReadonly">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="input.isReadonly" />
-    <mat-date-range-picker #picker />
-    @if (input.hint) {
-    <mat-hint>{{input.hint}}</mat-hint>
-    }
-    @if (isClearValueShown) {
-    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
-      <mat-icon>close</mat-icon>
-    </button>
-    }
-    @if(errorMessage){
-    <mat-error>{{errorMessage}}</mat-error>
-    }
-  </mat-form-field>
-  }
-  @case (FieldType.RADIO) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <label [id]="'radio-group-label'+input.label">{{input.label | translate}}</label>
-  <mat-radio-group [attr.aria-labelledby]="'radio-group-label'+input.label" [class]="input.inputClass"
-    [formControlName]="input.fieldName">
-    @for (opt of input.radioOptions; track opt.key) {
-    <mat-radio-button [value]="opt.key" [disabled]="input.isReadonly">{{opt.value}}</mat-radio-button>
-    }
-  </mat-radio-group>
-  @if (input.hint) {
-  <mat-hint>{{input.hint}}</mat-hint>
-  }
-  @if(errorMessage){
-  <mat-error>{{errorMessage}}</mat-error>
-  }
-  }
-  @case (FieldType.COLOR) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <mat-form-field [class]="input.inputClass">
-    <mat-label> {{input.label | translate}} </mat-label>
-    <input type="text" matInput readonly [formControlName]="input.fieldName"
-      (click)="colorInput.click(); $event.stopImmediatePropagation()" />
-    @if (!input.isReadonly) {
-    <button mat-icon-button matSuffix (click)="colorInput.click(); $event.stopPropagation()">
-      <mat-icon>palette</mat-icon>
-    </button>
-    }
-    @if (input.hint) {
-    <mat-hint>{{input.hint}}</mat-hint>
-    }
-    @if(errorMessage){
-    <mat-error>{{errorMessage}}</mat-error>
-    }
-  </mat-form-field>
-  <input #colorInput style="visibility: hidden; height: 0; width: 0;" type="color"
-    [value]="input.fieldValue ?? blackColor" (change)="onColorChange($event, input.fieldName)">
-  }
-  @case (FieldType.CHECKBOX) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <mat-checkbox [class]="input.inputClass" [formControlName]="input.fieldName">
-    {{input.label | translate}}</mat-checkbox>
-  @if (input.hint) {
-  <mat-hint>{{input.hint}}</mat-hint>
-  }
-  @if(errorMessage){
-  <mat-error>{{errorMessage}}</mat-error>
-  }
-  }
-  @case (FieldType.SLIDETOGGLE) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <mat-slide-toggle [class]="input.inputClass" [formControlName]="input.fieldName">
-    {{input.label | translate}}
-  </mat-slide-toggle>
-  @if (input.hint) {
-  <mat-hint>{{input.hint}}</mat-hint>
-  }
-  @if(errorMessage){
-  <mat-error>{{errorMessage}}</mat-error>
-  }
-  }
-  <!-- TODO -->
-  @case (FieldType.FILE) {
-  <!-- <button type="button" mat-raised-button (click)="fileInput.click()">{{"FORM.chooseFile" | translate}}</button>
-  <input hidden (change)="onFileSelected($event)" #fileInput type="file">
-  <span class="ms-3">{{selectedFile?.name}}</span> -->
-  }
+  @case (FieldType.RADIO) { <radio-input [control]="control" [input]="input" /> }
+  @case (FieldType.COLOR) { <color-input [control]="control" [input]="input" /> }
+  @case (FieldType.CHECKBOX) { <checkbox-input [input]="input" [control]="control" /> }
+  @case (FieldType.SLIDETOGGLE) { <slide-toggle-input [input]="input" [control]="control" /> }
+  @case (FieldType.FILE) { <file-input /> }
   @case (FieldType.SLIDER) {
-  @let errorMessage = handleErrors(input.fieldName) | async;
-
-  <label [id]="'slider-label'+input.label">{{input.label | translate}}</label>
-  <mat-slider [class]="input.inputClass" [attr.aria-labelledby]="'slider-label'+input.label" discrete
-    [max]="input.maxValue ?? 100" [min]="input.minValue ?? 0" [step]="input.stepValue ?? 1"
-    [disabled]="input.isReadonly">
-    @if(input.rangeSliderFieldName){
-    <input [formControlName]="input.fieldName" matSliderStartThumb>
-    <input [formControlName]="input.rangeSliderFieldName" matSliderEndThumb>
-    } @else {
-    <input matSliderThumb [formControlName]="input.fieldName">
-    }
-  </mat-slider>
-  @if (input.hint) {
-  <mat-hint>{{input.hint}}</mat-hint>
+  @let rangeControl = input.rangeSliderFieldName
+  ? (formGroup().get(input.rangeSliderFieldName) | formControl)
+  : undefined;
+  <slider-input [input]="input" [control]="control" [rangeControl]="rangeControl" />
   }
-  @if(errorMessage){
-  <mat-error>{{errorMessage}}</mat-error>
-  }
-  }
-  @case (FieldType.AUTOCOMPLETE) {
-  <autocomplete-input [input]="input" [control]="control" />
-  }
-  <!-- TODO -->
-  @case (FieldType.SELECT) {
-  <!-- @let options = (getSelectOptions(input) | async) ?? [];
-
-  <mat-form-field [class]="input.inputClass">
-    <mat-label>{{input.label | translate}}</mat-label>
-    <mat-select [formControlName]="input.fieldName" [multiple]="input.isMultiSelect">
-      @if (input.isMultiSelect) {
-      <mat-option #allSelected (onSelectionChange)="onSelectAllToggle(input.fieldName, allSelected.selected, options)">
-        {{"GENERAL.SELECT_ALL" | translate}}</mat-option>
-      @for (option of options; track option) {
-      <mat-option [value]="option.key" [disabled]="input.isReadonly"
-        (onSelectionChange)="onSelectionChange(allSelected.selected)">{{option.value}}</mat-option>
-      }
-      } @else {
-      @for (option of options; track option) {
-      <mat-option [value]="option.key" [disabled]="input.isReadonly">{{option.value}}</mat-option>
-      }
-      }
-    </mat-select>
-    @if (input.clearFieldValue && (input.isMultiSelect ? formGroup().get(input.fieldName)?.value?.length :
-    formGroup().get(input.fieldName)?.value)) {
-    <button matSuffix type="button" mat-icon-button aria-label="Clear" (click)="clearInputValue(input, $event)">
-      <mat-icon>close</mat-icon>
-    </button>
-    }
-  </mat-form-field> -->
-  }
-  <!-- TODO -->
-  @case (FieldType.MULTISELECTAUTOCOMPLETE) {}
-  <!-- TODO -->
-  @case (FieldType.TIMEPICKER) {}
+  @case (FieldType.AUTOCOMPLETE) { <autocomplete-input [input]="input" [control]="control" /> }
+  @case (FieldType.SELECT) { <select-input /> }
+  @case (FieldType.MULTISELECTAUTOCOMPLETE) { <multi-select-auto-complete-input /> }
+  @case (FieldType.TIMEPICKER) { <time-picker-input /> }
   }
   }
 
