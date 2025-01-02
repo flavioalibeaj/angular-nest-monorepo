@@ -36,7 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
           </mat-card-title>
         </div>
         <span class="spacer"></span>
-        <button mat-icon-button mat-dialog-close class="close-button">
+        <button mat-icon-button mat-dialog-close class="dialog-close-button">
           <mat-icon> close </mat-icon>
         </button>
       </mat-card-header>
@@ -65,13 +65,6 @@ import { TranslatePipe } from '@ngx-translate/core';
       </mat-card-actions>
     </mat-card>
   `,
-  styles: [
-    `
-      .close-button {
-        margin-top: -0.5rem;
-      }
-    `,
-  ],
 })
 export class InformationDialogComponent {
   readonly dialogData: IInformationDialogData = inject(MAT_DIALOG_DATA);
