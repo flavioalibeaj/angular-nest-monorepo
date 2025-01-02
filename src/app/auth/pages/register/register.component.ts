@@ -1,32 +1,17 @@
-import { Component, inject, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, inject } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { take } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatFormComponent } from '../../../shared/components/mat-form/mat-form.component';
+import { IFormModel } from '../../../shared/model/i-form-model.interface';
+import { IFormResponse } from '../../../shared/model/i-form-response.interface';
+import { FieldType } from '../../../shared/model/field-type.enum';
 
 @Component({
   selector: 'app-register',
-  imports: [
-    MatCardModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    RouterLink,
-    TranslatePipe,
-  ],
+  imports: [MatCardModule, RouterLink, TranslatePipe, MatFormComponent],
   templateUrl: './register.component.html',
   styles: [
     `
@@ -40,49 +25,47 @@ import { take } from 'rxjs';
 })
 export class RegisterComponent {
   readonly #authService = inject(AuthService);
-  readonly #translateService = inject(TranslateService);
+  readonly formModel: IFormModel[] = [
+    {
+      fieldType: FieldType.TEXT,
+      fieldName: 'username',
+      label: 'AUTH.USERNAME',
+      validators: [Validators.required],
+      inputClass: 'w-100',
+    },
+    {
+      fieldType: FieldType.PASSWORD,
+      fieldName: 'password',
+      label: 'AUTH.PASSWORD',
+      validators: [Validators.required, Validators.minLength(8)],
+      inputClass: 'w-100',
+    },
+    {
+      fieldType: FieldType.PASSWORD,
+      fieldName: 'confirmPassword',
+      label: 'AUTH.CONFIRM_PASSWORD',
+      validators: [Validators.required, Validators.minLength(8)],
+      inputClass: 'w-100',
+      hidePasswordToggle: true,
+    },
+  ];
 
-  readonly registerForm = new FormGroup({
-    username: new FormControl<string | null>(null, Validators.required),
-    password: new FormControl<string | null>(null, [
-      Validators.required,
-      Validators.minLength(8),
-    ]),
-    confirmPassword: new FormControl<string | null>(null, [
-      Validators.required,
-      Validators.minLength(8),
-    ]),
-  });
-  readonly hidePassword = signal<boolean>(true);
-
-  register() {
-    if (!this.registerForm.valid) {
-      this.#translateService
-        .stream('FORM.FILL_VALID_VALUES')
-        .pipe(take(1))
-        .subscribe({
-          next: (msg) => {
-            throw new Error(msg);
-          },
-        });
-
-      return;
-    }
-
-    const { confirmPassword, password, username } =
-      this.registerForm.getRawValue();
+  register({
+    formData,
+  }: IFormResponse<{
+    username: string;
+    password: string;
+    confirmPassword: string;
+  }>) {
+    if (!formData) return;
+    const { confirmPassword, password, username } = formData;
 
     this.#authService
       .register({
-        confirmPassword: confirmPassword!,
-        password: password!,
-        username: username!,
+        confirmPassword,
+        password,
+        username,
       })
       ?.subscribe();
-  }
-
-  toggleVisibility(event: MouseEvent) {
-    event.stopPropagation();
-    this.hidePassword.update((hide) => !hide);
   }
 }
