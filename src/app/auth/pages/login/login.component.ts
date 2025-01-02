@@ -8,13 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { EMPTY, of, switchMap, take, tap } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 import { IFormModel } from '../../../shared/model/i-form-model.interface';
 import { MatFormComponent } from '../../../shared/components/mat-form/mat-form.component';
 import { IFormResponse } from '../../../shared/model/i-form-response.interface';
-import { FieldType } from '../../../shared/model/field-type.enum';
-import { HttpClient } from '@angular/common/http';
-import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-login',
@@ -39,75 +36,46 @@ import { provideNativeDateAdapter } from '@angular/material/core';
       }
     `,
   ],
-  providers: [provideNativeDateAdapter()],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  readonly #authService = inject(AuthService);
+  readonly matFormComponent = viewChild.required(MatFormComponent);
+
   readonly formModel: IFormModel[] = [
     {
-      fieldName: 'thoughts',
-      fieldType: FieldType.DATEPICKER,
-      label: 'thoughts',
+      fieldType: 'text',
+      fieldName: 'username',
+      label: 'AUTH.USERNAME',
       inputClass: 'w-100',
-      clearFieldValue: true,
-      // fieldValue: '004080',
-      rangeSliderFieldName: 'onMe',
-      // validators: [Validators.required],
+      validators: [Validators.required],
     },
-    // {
-    //   fieldType: FieldType.MULTISELECTAUTOCOMPLETE,
-    //   inputClass: 'w-100',
-    //   label: 'Users',
-    //   validators: [Validators.required],
-    //   fieldName: 'users',
-    //   isMultiSelect: true,
-    //   prefixIcon: 'mood',
-    //   hint: 'just a hint',
-    //   // fieldValue: {
-    //   //   key: 13,
-    //   //   value: 'john',
-    //   // },
-    //   clearFieldValue: true,
-    //   isReadonly: false,
-    //   areObservableOptions: true,
-    //   options: of([
-    //     {
-    //       key: 13,
-    //       value: 'john',
-    //     },
-    //     {
-    //       key: 1,
-    //       value: 'jason',
-    //     },
-    //   ]),
-    // },
-    // // {
-    // //   fieldType: 'select',
-    // //   fieldName: 'roomTypes',
-    // //   label: 'Room types',
-    // //   inputClass: 'w-full',
-    // //   clearFieldValue: true,
-    // //   multiSelect: true,
-    // //   fieldValue: [
-    // //     {
-    // //       key: 13,
-    // //       value: 'john',
-    // //     },
-    // //   ],
-    // //   // observableOptions: true,
-    // //   // options: of([
-    // //   //   {
-    // //   //     key: 13,
-    // //   //     value: 'john',
-    // //   //   },
-    // //   //   {
-    // //   //     key: 1,
-    // //   //     value: 'jason',
-    // //   //   },
-    // //   // ]),
-    // // },
+    {
+      fieldType: 'password',
+      fieldName: 'password',
+      label: 'AUTH.PASSWORD',
+      inputClass: 'w-100',
+      validators: [Validators.required, Validators.minLength(8)],
+    },
   ];
 
+  ngOnInit(): void {
+    this.#authService
+      .getUsernameFromCache()
+      .pipe(take(1))
+      .subscribe((username) => {
+        this.matFormComponent()
+          .formGroup.get(this.formModel[0].fieldName)
+          ?.setValue(username);
+      });
+  }
+
   login({ formData }: IFormResponse<{ password: string; username: string }>) {
-    console.log(formData);
+    if (!formData) return;
+    const { password, username } = formData;
+
+    this.#authService
+      .login({ password: password, username: username })
+      .pipe(switchMap(() => this.#authService.setUsernameInCache(username)))
+      .subscribe();
   }
 }
