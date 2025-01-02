@@ -1,4 +1,10 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   NavigationEnd,
   NavigationError,
@@ -10,6 +16,7 @@ import { EMPTY, filter, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -35,13 +42,16 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly #router = inject(Router);
   readonly #translateService = inject(TranslateService);
   readonly #spinnerService = inject(NgxSpinnerService);
+  readonly #titleService = inject(Title);
 
   readonly #unSub = new Subject<void>();
-  // // Listen on document visibility
-  // @HostListener('document:visibilitychange', ['$event'])
-  // appVisibility() {
-  //   console.log(document.hidden);
-  // }
+
+  // Listen on document visibility
+  @HostListener('document:visibilitychange')
+  appVisibility = () =>
+    this.#titleService.setTitle(
+      document.hidden ? 'Get back here' : 'AngularApp'
+    );
 
   ngOnInit(): void {
     this.#listenToRouteEvents();
