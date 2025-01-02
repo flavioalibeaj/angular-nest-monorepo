@@ -23,6 +23,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_AUTOCOMPLETE_DEFAULT_OPTIONS } from '@angular/material/autocomplete';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_CARD_CONFIG } from '@angular/material/card';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
   http: HttpClient
@@ -78,6 +79,12 @@ export const appConfig: ApplicationConfig = {
         autoActiveFirstOption: false,
         requireSelection: true,
         hideSingleSelectionIndicator: true,
+      },
+    },
+    {
+      provide: MAT_CARD_CONFIG,
+      useValue: {
+        appearance: 'outlined',
       },
     },
   ],
