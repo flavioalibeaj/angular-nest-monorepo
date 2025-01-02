@@ -10,4 +10,11 @@ import { Component } from '@angular/core';
   <span class="ms-3">{{selectedFile?.name}}</span> -->
   `,
 })
-export class FileInputComponent {}
+export class FileInputComponent {
+  // TODO
+  // selectedFile: any = null;
+  // onFileSelected(event: any): void {
+  //   this.selectedFile = event.target.files;
+  //   console.log(this.selectedFile);
+  // }
+}
