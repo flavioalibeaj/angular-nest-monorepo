@@ -15,4 +15,5 @@ export enum FieldType {
   COLOR,
   FILE,
   MULTISELECTAUTOCOMPLETE,
+  PHONENUMBER,
 }

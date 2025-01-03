@@ -39,6 +39,7 @@ import { SelectInputComponent } from '../select-input/select-input.component';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { MultiSelectAutoCompleteInputComponent } from '../multi-select-auto-complete-input/multi-select-auto-complete-input.component';
 import { MatDialogClose } from '@angular/material/dialog';
+import { PhoneNumberInputComponent } from '../phone-number-input/phone-number-input.component';
 
 @Component({
   selector: 'app-mat-form',
@@ -67,6 +68,7 @@ import { MatDialogClose } from '@angular/material/dialog';
     FileInputComponent,
     MultiSelectAutoCompleteInputComponent,
     MatDialogClose,
+    PhoneNumberInputComponent,
   ],
   templateUrl: './mat-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
