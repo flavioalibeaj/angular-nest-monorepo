@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { FieldType } from '../model/field-type.enum';
 import { Observable, of } from 'rxjs';
-import { validationMessages } from '../components/validators/validation-messages';
+import { validationMessages } from '../validators/validation-messages';
 import { TranslateService } from '@ngx-translate/core';
 import { FormControl } from '@angular/forms';
 

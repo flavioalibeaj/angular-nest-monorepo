@@ -27,46 +27,48 @@ import { IFormModel } from '../../model/i-form-model.interface';
     isClearValueShown = !input().isReadonly && input().clearFieldValue &&
     control().value && rangeControl().value;
 
-    <mat-form-field [class]="input().inputClass">
-      <mat-label> {{ input().label | translate }} </mat-label>
-      <mat-date-range-input
-        [min]="input().minDate"
-        [max]="input().maxDate"
-        [rangePicker]="picker"
-      >
-        <input
-          matStartDate
-          [formControl]="control()"
-          [readonly]="input().isReadonly"
+    <div [class]="input().containerClass">
+      <mat-form-field [class]="input().inputClass">
+        <mat-label> {{ input().label | translate }} </mat-label>
+        <mat-date-range-input
+          [min]="input().minDate"
+          [max]="input().maxDate"
+          [rangePicker]="picker"
+        >
+          <input
+            matStartDate
+            [formControl]="control()"
+            [readonly]="input().isReadonly"
+          />
+          <input
+            matEndDate
+            [formControl]="rangeControl()"
+            [readonly]="input().isReadonly"
+          />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+          [disabled]="input().isReadonly"
         />
-        <input
-          matEndDate
-          [formControl]="rangeControl()"
-          [readonly]="input().isReadonly"
-        />
-      </mat-date-range-input>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-        [disabled]="input().isReadonly"
-      />
-      <mat-date-range-picker #picker />
-      @if (input().hint) {
-      <mat-hint>{{ input().hint }}</mat-hint>
-      } @if (isClearValueShown) {
-      <button
-        matSuffix
-        type="button"
-        mat-icon-button
-        aria-label="Clear"
-        (click)="clearInputValue($event)"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-      } @if(errorMessage){
-      <mat-error>{{ errorMessage }}</mat-error>
-      }
-    </mat-form-field>
+        <mat-date-range-picker #picker />
+        @if (input().hint) {
+        <mat-hint>{{ input().hint }}</mat-hint>
+        } @if (isClearValueShown) {
+        <button
+          matSuffix
+          type="button"
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clearInputValue($event)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        } @if(errorMessage){
+        <mat-error>{{ errorMessage }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
   `,
 })
 export class DateRangeInputComponent {

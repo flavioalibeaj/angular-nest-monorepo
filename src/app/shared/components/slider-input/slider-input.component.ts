@@ -20,30 +20,32 @@ import { MatError, MatHint } from '@angular/material/form-field';
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
-    <label [id]="'slider-label' + input().label">{{
-      input().label | translate
-    }}</label>
-    <mat-slider
-      [class]="input().inputClass"
-      [attr.aria-labelledby]="'slider-label' + input().label"
-      discrete
-      [max]="input().maxValue ?? 100"
-      [min]="input().minValue ?? 0"
-      [step]="input().stepValue ?? 1"
-      [disabled]="input().isReadonly"
-    >
-      @if(input().rangeSliderFieldName){
-      <input [formControl]="control()" matSliderStartThumb />
-      <input [formControl]="rangeControl()!" matSliderEndThumb />
-      } @else {
-      <input matSliderThumb [formControl]="control()" />
+    <div [class]="input().containerClass">
+      <label [id]="'slider-label' + input().label">{{
+        input().label | translate
+      }}</label>
+      <mat-slider
+        [class]="input().inputClass"
+        [attr.aria-labelledby]="'slider-label' + input().label"
+        discrete
+        [max]="input().maxValue ?? 100"
+        [min]="input().minValue ?? 0"
+        [step]="input().stepValue ?? 1"
+        [disabled]="input().isReadonly"
+      >
+        @if(input().rangeSliderFieldName){
+        <input [formControl]="control()" matSliderStartThumb />
+        <input [formControl]="rangeControl()!" matSliderEndThumb />
+        } @else {
+        <input matSliderThumb [formControl]="control()" />
+        }
+      </mat-slider>
+      @if (input().hint) {
+      <mat-hint>{{ input().hint }}</mat-hint>
+      } @if(errorMessage){
+      <mat-error>{{ errorMessage }}</mat-error>
       }
-    </mat-slider>
-    @if (input().hint) {
-    <mat-hint>{{ input().hint }}</mat-hint>
-    } @if(errorMessage){
-    <mat-error>{{ errorMessage }}</mat-error>
-    }
+    </div>
   `,
 })
 export class SliderInputComponent {

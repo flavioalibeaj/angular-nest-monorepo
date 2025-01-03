@@ -25,39 +25,41 @@ import { IFormModel } from '../../model/i-form-model.interface';
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
-    <mat-form-field [class]="input().inputClass">
-      <mat-label> {{ input().label | translate }} </mat-label>
-      <input
-        matInput
-        [min]="input().minDate"
-        [max]="input().maxDate"
-        [matDatepicker]="picker"
-        [formControl]="control()"
-        [readonly]="input().isReadonly"
-      />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-        [disabled]="input().isReadonly"
-      />
-      <mat-datepicker #picker />
-      @if (input().hint) {
-      <mat-hint>{{ input().hint }}</mat-hint>
-      } @if (!input().isReadonly && input().clearFieldValue && control().value)
-      {
-      <button
-        matSuffix
-        type="button"
-        mat-icon-button
-        aria-label="Clear"
-        (click)="genericService.clearInputValue(control(), $event)"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-      } @if(errorMessage){
-      <mat-error>{{ errorMessage }}</mat-error>
-      }
-    </mat-form-field>
+    <div [class]="input().containerClass">
+      <mat-form-field [class]="input().inputClass">
+        <mat-label> {{ input().label | translate }} </mat-label>
+        <input
+          matInput
+          [min]="input().minDate"
+          [max]="input().maxDate"
+          [matDatepicker]="picker"
+          [formControl]="control()"
+          [readonly]="input().isReadonly"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+          [disabled]="input().isReadonly"
+        />
+        <mat-datepicker #picker />
+        @if (input().hint) {
+        <mat-hint>{{ input().hint }}</mat-hint>
+        } @if (!input().isReadonly && input().clearFieldValue &&
+        control().value) {
+        <button
+          matSuffix
+          type="button"
+          mat-icon-button
+          aria-label="Clear"
+          (click)="genericService.clearInputValue(control(), $event)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        } @if(errorMessage){
+        <mat-error>{{ errorMessage }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
   `,
 })
 export class DatePickerInputComponent {
