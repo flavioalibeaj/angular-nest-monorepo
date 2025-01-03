@@ -12,6 +12,7 @@ import { switchMap, take } from 'rxjs';
 import { IFormModel } from '../../../shared/model/i-form-model.interface';
 import { MatFormComponent } from '../../../shared/components/mat-form/mat-form.component';
 import { IFormResponse } from '../../../shared/model/i-form-response.interface';
+import { FieldType } from '../../../shared/model/field-type.enum';
 
 @Component({
   selector: 'app-login',
@@ -43,14 +44,14 @@ export class LoginComponent implements OnInit {
 
   readonly formModel: IFormModel[] = [
     {
-      fieldType: 'text',
+      fieldType: FieldType.TEXT,
       fieldName: 'username',
       label: 'AUTH.USERNAME',
       inputClass: 'w-100',
       validators: [Validators.required],
     },
     {
-      fieldType: 'password',
+      fieldType: FieldType.PASSWORD,
       fieldName: 'password',
       label: 'AUTH.PASSWORD',
       inputClass: 'w-100',
@@ -64,7 +65,8 @@ export class LoginComponent implements OnInit {
       .pipe(take(1))
       .subscribe((username) => {
         this.matFormComponent()
-          .formGroup.get(this.formModel[0].fieldName)
+          .formGroup()
+          .get(this.formModel[0].fieldName)
           ?.setValue(username);
       });
   }
