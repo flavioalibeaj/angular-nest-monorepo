@@ -27,7 +27,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
     catchError(({ error }: HttpErrorResponse) =>
       throwError(() => {
         if (!navigator.onLine) throw new Error('No access to the internet');
-        throw new Error(error.error.message);
+        throw new Error(error.error?.message);
       })
     ),
     finalize(() => spinnerService.hide())
