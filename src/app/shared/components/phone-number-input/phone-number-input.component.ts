@@ -23,8 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
-    <div [class]="input().inputClass">
-      <mat-form-field class="w-100">
+    <div [class]="input().containerClass">
+      <mat-form-field [class]="input().inputClass">
         <mat-label> {{ input().label | translate }} </mat-label>
         @if (mobilePrefix()) {
         <span matTextPrefix> {{ mobilePrefix() }} &nbsp;</span>
