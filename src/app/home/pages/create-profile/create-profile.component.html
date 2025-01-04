@@ -6,43 +6,37 @@
       <mat-card-subtitle> {{"PROFILE.CREATE" | translate}} </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <form [formGroup]="createProfileFG">
+      <form [formGroup]="createProfileService.fg">
         <div class="row">
-          <mat-form-field class="col-md-6">
-            <mat-label>{{"PROFILE.FIRST_NAME" | translate}}</mat-label>
-            <input type="text" matInput formControlName="firstName">
-          </mat-form-field>
-          <mat-form-field class="col-md-6">
-            <mat-label>{{"PROFILE.LAST_NAME" | translate}}</mat-label>
-            <input type="text" matInput formControlName="lastName">
-          </mat-form-field>
+          <text-input class="col-md-6" [input]="createProfileService.firstNameInput"
+            [control]="createProfileService.fg.get(createProfileService.firstNameInput.fieldName) | formControl" />
+          <text-input class="col-md-6" [input]="createProfileService.lastNameInput"
+            [control]="createProfileService.fg.get(createProfileService.lastNameInput.fieldName) | formControl" />
         </div>
         <div class="row">
-          <!-- TODO fix input height -->
-          <mat-form-field class="col">
-            <mat-label>{{"PROFILE.PHONE_NUMBER" | translate}}</mat-label>
-            <span matTextPrefix>+355 &nbsp;</span> <!--TODO needs to be selected from form-->
-            <input type="tel" matInput formControlName="phoneNumber">
-          </mat-form-field>
+          <phone-number-input class="col"
+            [control]="createProfileService.fg.get(createProfileService.phoneNumberInput.fieldName) | formControl"
+            [input]="createProfileService.phoneNumberInput" />
+          <!-- TODO -->
           <!-- <mat-form-field class="col">
-            <mat-label>Profile photo</mat-label>
-            <input matInput formControlName="profilePicture" />
-            <button mat-icon-button matSuffix (click)="fileInput.click()">
-              <mat-icon>add_photo_alternate</mat-icon>
-            </button>
-          </mat-form-field>
-          <input type="file" #fileInput style="display: none" (change)="onFileChange($event)" /> -->
+              <mat-label>Profile photo</mat-label>
+              <input matInput formControlName="profilePicture" />
+              <button mat-icon-button matSuffix (click)="fileInput.click()">
+                <mat-icon>add_photo_alternate</mat-icon>
+              </button>
+            </mat-form-field>
+            <input type="file" #fileInput style="display: none" (change)="onFileChange($event)" /> -->
         </div>
         <div class="row">
-          <mat-form-field>
-            <mat-label>{{"PROFILE.BIOGRAPHY" | translate}}</mat-label>
-            <textarea type="text" matInput formControlName="bio"></textarea>
-          </mat-form-field>
+          <text-area-input
+            [control]="createProfileService.fg.get(createProfileService.textAreaInput.fieldName) | formControl"
+            [input]="createProfileService.textAreaInput" />
         </div>
       </form>
     </mat-card-content>
     <mat-card-actions align="end">
-      <button mat-raised-button color="primary" [disabled]="!createProfileFG.valid" (click)="createProfile()">
+      <button mat-raised-button color="primary" [disabled]="!createProfileService.fg.valid"
+        (click)="createProfileService.createProfile()">
         <mat-icon>check</mat-icon>
         {{"FORM.SUBMIT" | translate}}
       </button>
