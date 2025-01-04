@@ -22,32 +22,30 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
-    <div [class]="input().containerClass">
-      <mat-form-field [class]="input().inputClass">
-        <mat-label> {{ input().label | translate }} </mat-label>
-        <input
-          matInput
-          [type]="hidePassword ? 'password' : 'text'"
-          [formControl]="control()"
-        />
-        @if (!input().hidePasswordToggle) {
-        <button
-          mat-icon-button
-          matSuffix
-          type="button"
-          (click)="toggleVisibility($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hidePassword"
-        >
-          <mat-icon>{{
-            hidePassword ? 'visibility_off' : 'visibility'
-          }}</mat-icon>
-        </button>
-        } @if (errorMessage) {
-        <mat-error>{{ errorMessage }}</mat-error>
-        }
-      </mat-form-field>
-    </div>
+    <mat-form-field [class]="input().inputClass">
+      <mat-label> {{ input().label | translate }} </mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        [formControl]="control()"
+      />
+      @if (!input().hidePasswordToggle) {
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="toggleVisibility($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? 'visibility_off' : 'visibility'
+        }}</mat-icon>
+      </button>
+      } @if (errorMessage) {
+      <mat-error>{{ errorMessage }}</mat-error>
+      }
+    </mat-form-field>
   `,
 })
 export class PasswordInputComponent {

@@ -23,38 +23,36 @@ import { MatButtonModule } from '@angular/material/button';
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
-    <div [class]="input().containerClass">
-      <mat-form-field [class]="input().inputClass">
-        <mat-label> {{ input().label | translate }} </mat-label>
-        @if (mobilePrefix()) {
-        <span matTextPrefix> {{ mobilePrefix() }} &nbsp;</span>
-        } @else {
-        <mat-icon matPrefix>call</mat-icon>
-        }
-        <input
-          type="tel"
-          matInput
-          [formControl]="control()"
-          [readonly]="input().isReadonly"
-        />
-        @if (input().hint) {
-        <mat-hint>{{ input().hint }}</mat-hint>
-        } @if (!input().isReadonly && input().clearFieldValue &&
-        control().value) {
-        <button
-          matSuffix
-          type="button"
-          mat-icon-button
-          aria-label="Clear"
-          (click)="genericService.clearInputValue(control(), $event)"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-        } @if(errorMessage){
-        <mat-error>{{ errorMessage }}</mat-error>
-        }
-      </mat-form-field>
-    </div>
+    <mat-form-field [class]="input().inputClass">
+      <mat-label> {{ input().label | translate }} </mat-label>
+      @if (mobilePrefix()) {
+      <span matTextPrefix> {{ mobilePrefix() }} &nbsp;</span>
+      } @else {
+      <mat-icon matPrefix>call</mat-icon>
+      }
+      <input
+        type="tel"
+        matInput
+        [formControl]="control()"
+        [readonly]="input().isReadonly"
+      />
+      @if (input().hint) {
+      <mat-hint>{{ input().hint }}</mat-hint>
+      } @if (!input().isReadonly && input().clearFieldValue && control().value)
+      {
+      <button
+        matSuffix
+        type="button"
+        mat-icon-button
+        aria-label="Clear"
+        (click)="genericService.clearInputValue(control(), $event)"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      } @if(errorMessage){
+      <mat-error>{{ errorMessage }}</mat-error>
+      }
+    </mat-form-field>
   `,
 })
 export class PhoneNumberInputComponent {

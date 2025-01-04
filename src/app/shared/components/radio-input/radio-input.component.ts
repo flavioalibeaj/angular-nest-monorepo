@@ -20,27 +20,25 @@ import { MatError, MatHint } from '@angular/material/form-field';
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
-    <div [class]="input().containerClass">
-      <label [id]="'radio-group-label' + input().label">{{
-        input().label | translate
-      }}</label>
-      <mat-radio-group
-        [attr.aria-labelledby]="'radio-group-label' + input().label"
-        [class]="input().inputClass"
-        [formControl]="control()"
-      >
-        @for (opt of input().radioOptions; track opt.key) {
-        <mat-radio-button [value]="opt.key" [disabled]="input().isReadonly">{{
-          opt.value
-        }}</mat-radio-button>
-        }
-      </mat-radio-group>
-      @if (input().hint) {
-      <mat-hint>{{ input().hint }}</mat-hint>
-      } @if(errorMessage){
-      <mat-error>{{ errorMessage }}</mat-error>
+    <label [id]="'radio-group-label' + input().label">{{
+      input().label | translate
+    }}</label>
+    <mat-radio-group
+      [attr.aria-labelledby]="'radio-group-label' + input().label"
+      [class]="input().inputClass"
+      [formControl]="control()"
+    >
+      @for (opt of input().radioOptions; track opt.key) {
+      <mat-radio-button [value]="opt.key" [disabled]="input().isReadonly">{{
+        opt.value
+      }}</mat-radio-button>
       }
-    </div>
+    </mat-radio-group>
+    @if (input().hint) {
+    <mat-hint>{{ input().hint }}</mat-hint>
+    } @if(errorMessage){
+    <mat-error>{{ errorMessage }}</mat-error>
+    }
   `,
 })
 export class RadioInputComponent {

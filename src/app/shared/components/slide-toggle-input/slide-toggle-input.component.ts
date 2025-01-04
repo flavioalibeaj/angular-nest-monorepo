@@ -20,16 +20,14 @@ import { MatError, MatHint } from '@angular/material/form-field';
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
-    <div [class]="input().containerClass">
-      <mat-slide-toggle [class]="input().inputClass" [formControl]="control()">
-        {{ input().label | translate }}
-      </mat-slide-toggle>
-      @if (input().hint) {
-      <mat-hint>{{ input().hint }}</mat-hint>
-      } @if(errorMessage){
-      <mat-error>{{ errorMessage }}</mat-error>
-      }
-    </div>
+    <mat-slide-toggle [class]="input().inputClass" [formControl]="control()">
+      {{ input().label | translate }}
+    </mat-slide-toggle>
+    @if (input().hint) {
+    <mat-hint>{{ input().hint }}</mat-hint>
+    } @if(errorMessage){
+    <mat-error>{{ errorMessage }}</mat-error>
+    }
   `,
 })
 export class SlideToggleInputComponent {

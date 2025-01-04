@@ -28,46 +28,44 @@ import { map, Observable, of } from 'rxjs';
     @let options = getSelectOptions( inputRef.value) | async; @let errorMessage
     = genericService.handleErrors(control()) | async;
 
-    <div [class]="input().containerClass">
-      <mat-form-field [class]="input().inputClass">
-        <mat-label>{{ input().label | translate }}</mat-label>
-        <input
-          #inputRef
-          type="text"
-          matInput
-          [matAutocomplete]="auto"
-          [formControl]="control()"
-          [readonly]="input().isReadonly"
-        />
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-          @for (opt of options; track opt.key) {
-          <mat-option [value]="opt">
-            <span>{{ opt.value }}</span>
-          </mat-option>
-          }
-        </mat-autocomplete>
-        @if (input().prefixIcon) {
-        <mat-icon matPrefix>{{ input().prefixIcon }}</mat-icon>
-        } @if (input().suffixIcon) {
-        <mat-icon matSuffix>{{ input().suffixIcon }}</mat-icon>
-        } @if (input().hint) {
-        <mat-hint>{{ input().hint }}</mat-hint>
-        } @if (!input().isReadonly && input().clearFieldValue &&
-        control().value) {
-        <button
-          matSuffix
-          type="button"
-          mat-icon-button
-          aria-label="Clear"
-          (click)="genericService.clearInputValue(control(), $event)"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-        } @if(errorMessage){
-        <mat-error>{{ errorMessage }}</mat-error>
+    <mat-form-field [class]="input().inputClass">
+      <mat-label>{{ input().label | translate }}</mat-label>
+      <input
+        #inputRef
+        type="text"
+        matInput
+        [matAutocomplete]="auto"
+        [formControl]="control()"
+        [readonly]="input().isReadonly"
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        @for (opt of options; track opt.key) {
+        <mat-option [value]="opt">
+          <span>{{ opt.value }}</span>
+        </mat-option>
         }
-      </mat-form-field>
-    </div>
+      </mat-autocomplete>
+      @if (input().prefixIcon) {
+      <mat-icon matPrefix>{{ input().prefixIcon }}</mat-icon>
+      } @if (input().suffixIcon) {
+      <mat-icon matSuffix>{{ input().suffixIcon }}</mat-icon>
+      } @if (input().hint) {
+      <mat-hint>{{ input().hint }}</mat-hint>
+      } @if (!input().isReadonly && input().clearFieldValue && control().value)
+      {
+      <button
+        matSuffix
+        type="button"
+        mat-icon-button
+        aria-label="Clear"
+        (click)="genericService.clearInputValue(control(), $event)"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      } @if(errorMessage){
+      <mat-error>{{ errorMessage }}</mat-error>
+      }
+    </mat-form-field>
   `,
 })
 export class AutocompleteInputComponent {

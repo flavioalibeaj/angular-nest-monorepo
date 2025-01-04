@@ -9,7 +9,6 @@ export interface IFormModel {
   label: string;
   fieldValue?: unknown;
   inputClass?: string;
-  containerClass?: string;
   validators?: ValidatorFn[];
   isReadonly?: boolean;
   clearFieldValue?: boolean; // set true for optional fields

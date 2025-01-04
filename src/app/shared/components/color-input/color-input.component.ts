@@ -23,39 +23,37 @@ import { MatIconModule } from '@angular/material/icon';
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
 
-    <div [class]="input().containerClass">
-      <mat-form-field [class]="input().inputClass">
-        <mat-label> {{ input().label | translate }} </mat-label>
-        <input
-          type="text"
-          matInput
-          readonly
-          [formControl]="control()"
-          (click)="colorInput.click(); $event.stopImmediatePropagation()"
-        />
-        @if (!input().isReadonly) {
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="colorInput.click(); $event.stopPropagation()"
-        >
-          <mat-icon>palette</mat-icon>
-        </button>
-        } @if (input().hint) {
-        <mat-hint>{{ input().hint }}</mat-hint>
-        } @if(errorMessage){
-        <mat-error>{{ errorMessage }}</mat-error>
-        }
-      </mat-form-field>
+    <mat-form-field [class]="input().inputClass">
+      <mat-label> {{ input().label | translate }} </mat-label>
       <input
-        #colorInput
-        style="visibility: hidden; height: 0; width: 0;"
-        type="color"
-        pattern="^#[0-9A-Fa-f]{6}$"
-        [value]="control().value"
-        (change)="onColorChange($event)"
+        type="text"
+        matInput
+        readonly
+        [formControl]="control()"
+        (click)="colorInput.click(); $event.stopImmediatePropagation()"
       />
-    </div>
+      @if (!input().isReadonly) {
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="colorInput.click(); $event.stopPropagation()"
+      >
+        <mat-icon>palette</mat-icon>
+      </button>
+      } @if (input().hint) {
+      <mat-hint>{{ input().hint }}</mat-hint>
+      } @if(errorMessage){
+      <mat-error>{{ errorMessage }}</mat-error>
+      }
+    </mat-form-field>
+    <input
+      #colorInput
+      style="visibility: hidden; height: 0; width: 0;"
+      type="color"
+      pattern="^#[0-9A-Fa-f]{6}$"
+      [value]="control().value"
+      (change)="onColorChange($event)"
+    />
   `,
 })
 export class ColorInputComponent {
