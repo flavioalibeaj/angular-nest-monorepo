@@ -8,6 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { GenericService } from '../../services/generic.service';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'text-input',
@@ -19,6 +20,7 @@ import { GenericService } from '../../services/generic.service';
     TranslatePipe,
     ReactiveFormsModule,
     AsyncPipe,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
@@ -44,7 +46,8 @@ import { GenericService } from '../../services/generic.service';
         type="button"
         mat-icon-button
         aria-label="Clear"
-        (click)="genericService.clearInputValue(control(), $event)"
+        click-stop-propagation
+        (click)="control().setValue(null)"
       >
         <mat-icon>close</mat-icon>
       </button>

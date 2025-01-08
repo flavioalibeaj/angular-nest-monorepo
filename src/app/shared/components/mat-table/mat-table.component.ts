@@ -40,6 +40,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PaginatorI18N } from '../../services/paginator-i18n.service';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'app-mat-table',
@@ -62,6 +63,7 @@ import { PaginatorI18N } from '../../services/paginator-i18n.service';
     ReactiveFormsModule,
     TranslatePipe,
     AsyncPipe,
+    ClickStopPropagationDirective,
   ],
   templateUrl: './mat-table.component.html',
   styleUrl: './mat-table.component.scss',
@@ -215,8 +217,7 @@ export class MatTableComponent<T extends { id: number | string }>
     this.selectionChange.emit(this.selectionModel()?.selected ?? []);
   }
 
-  toggleRowExpansion(element: T, event?: Event): void {
-    event?.stopPropagation();
+  toggleRowExpansion(element: T): void {
     this.expandedElement.update((expandedElement) =>
       expandedElement === element ? undefined : element
     );

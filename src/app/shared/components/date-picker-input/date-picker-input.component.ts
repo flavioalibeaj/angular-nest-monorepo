@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { GenericService } from '../../services/generic.service';
 import { IFormModel } from '../../model/i-form-model.interface';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'date-picker-input',
@@ -21,6 +22,7 @@ import { IFormModel } from '../../model/i-form-model.interface';
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
@@ -50,7 +52,8 @@ import { IFormModel } from '../../model/i-form-model.interface';
         type="button"
         mat-icon-button
         aria-label="Clear"
-        (click)="genericService.clearInputValue(control(), $event)"
+        click-stop-propagation
+        (click)="control().setValue(null)"
       >
         <mat-icon>close</mat-icon>
       </button>

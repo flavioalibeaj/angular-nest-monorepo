@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'color-input',
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
@@ -36,7 +38,8 @@ import { MatIconModule } from '@angular/material/icon';
       <button
         mat-icon-button
         matSuffix
-        (click)="colorInput.click(); $event.stopPropagation()"
+        click-stop-propagation
+        (click)="colorInput.click()"
       >
         <mat-icon>palette</mat-icon>
       </button>

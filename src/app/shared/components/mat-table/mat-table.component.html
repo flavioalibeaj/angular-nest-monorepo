@@ -39,8 +39,7 @@
           }
         </th>
         <td style="width: 40px;" class="border-dotted" matRipple mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleRow(row)"
-            [checked]="selectionModel()?.isSelected(row)">
+          <mat-checkbox click-stop-propagation (change)="toggleRow(row)" [checked]="selectionModel()?.isSelected(row)">
           </mat-checkbox>
         </td>
       </ng-container>
@@ -74,7 +73,8 @@
         <td class="border-dotted" mat-cell matRipple *matCellDef="let element">
           <div class="d-flex align-items-center">
             @if (isExpandable() && expandableRowTemplate() && first) {
-            <button mat-icon-button aria-label="expand row" (click)="toggleRowExpansion(element, $event)">
+            <button mat-icon-button click-stop-propagation aria-label="expand row"
+              (click)="toggleRowExpansion(element)">
               @if (expandedElement() === element) {
               <mat-icon>keyboard_arrow_up</mat-icon>
               } @else {
@@ -98,11 +98,11 @@
           </div>
         </td>
         } @else {
-        <td (click)="$event.stopPropagation()" class="border-dotted" mat-cell *matCellDef="let element">
+        <td click-stop-propagation class="border-dotted" mat-cell *matCellDef="let element">
           @if (column.actions.isMenu) {
           <button mat-mini-fab matTooltip="Actions" [color]="column.actions.menuButtonColor"
             [matMenuTriggerFor]="rowActions" [matMenuTriggerData]="{buttons: column.actions.buttons, element}"
-            (click)="$event.stopPropagation()">
+            click-stop-propagation>
             <mat-icon [color]="column.actions.menuIconColor">menu</mat-icon>
           </button>
           } @else {

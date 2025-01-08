@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GenericService } from '../../services/generic.service';
 import { IFormModel } from '../../model/i-form-model.interface';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'date-range-input',
@@ -21,6 +22,7 @@ import { IFormModel } from '../../model/i-form-model.interface';
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async; @let
@@ -59,7 +61,8 @@ import { IFormModel } from '../../model/i-form-model.interface';
         type="button"
         mat-icon-button
         aria-label="Clear"
-        (click)="clearInputValue($event)"
+        click-stop-propagation
+        (click)="clearInputValue()"
       >
         <mat-icon>close</mat-icon>
       </button>
@@ -76,8 +79,8 @@ export class DateRangeInputComponent {
   readonly rangeControl = input.required<FormControl>();
   readonly input = input.required<IFormModel>();
 
-  clearInputValue(event: Event) {
+  clearInputValue() {
     this.rangeControl().setValue(null);
-    this.genericService.clearInputValue(this.control(), event);
+    this.control().setValue(null);
   }
 }

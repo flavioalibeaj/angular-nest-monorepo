@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GenericService } from '../../services/generic.service';
 import { MatInputModule } from '@angular/material/input';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'text-area-input',
@@ -19,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
@@ -40,7 +42,8 @@ import { MatInputModule } from '@angular/material/input';
         type="button"
         mat-icon-button
         aria-label="Clear"
-        (click)="genericService.clearInputValue(control(), $event)"
+        click-stop-propagation
+        (click)="control().setValue(null)"
       >
         <mat-icon>close</mat-icon>
       </button>

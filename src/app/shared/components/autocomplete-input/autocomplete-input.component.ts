@@ -11,6 +11,7 @@ import { GenericService } from '../../services/generic.service';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { IOption } from '../../model/i-option.interface';
 import { map, Observable, of } from 'rxjs';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'autocomplete-input',
@@ -23,6 +24,7 @@ import { map, Observable, of } from 'rxjs';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let options = getSelectOptions( inputRef.value) | async; @let errorMessage
@@ -58,7 +60,8 @@ import { map, Observable, of } from 'rxjs';
         type="button"
         mat-icon-button
         aria-label="Clear"
-        (click)="genericService.clearInputValue(control(), $event)"
+        click-stop-propagation
+        (click)="control().setValue(null)"
       >
         <mat-icon>close</mat-icon>
       </button>

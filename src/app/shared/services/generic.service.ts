@@ -26,9 +26,4 @@ export class GenericService {
       minPasswordLength: control.errors?.['minlength']?.requiredLength,
     });
   }
-
-  clearInputValue(control: FormControl, event: Event): void {
-    control.setValue(null);
-    event?.stopPropagation();
-  }
 }

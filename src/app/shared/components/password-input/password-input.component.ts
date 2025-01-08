@@ -8,6 +8,7 @@ import { IFormModel } from '../../model/i-form-model.interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'password-input',
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
@@ -34,7 +36,8 @@ import { MatIconModule } from '@angular/material/icon';
         mat-icon-button
         matSuffix
         type="button"
-        (click)="toggleVisibility($event)"
+        click-stop-propagation
+        (click)="hidePassword = !hidePassword"
         [attr.aria-label]="'Hide password'"
         [attr.aria-pressed]="hidePassword"
       >
@@ -55,9 +58,4 @@ export class PasswordInputComponent {
   readonly control = input.required<FormControl>();
 
   protected hidePassword: boolean = true;
-
-  toggleVisibility(event: MouseEvent): void {
-    event.stopPropagation();
-    this.hidePassword = !this.hidePassword;
-  }
 }

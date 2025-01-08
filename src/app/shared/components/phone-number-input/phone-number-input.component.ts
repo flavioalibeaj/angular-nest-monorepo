@@ -8,6 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { GenericService } from '../../services/generic.service';
 import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 
 @Component({
   selector: 'phone-number-input',
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
     TranslatePipe,
     ReactiveFormsModule,
     AsyncPipe,
+    ClickStopPropagationDirective,
   ],
   template: `
     @let errorMessage = genericService.handleErrors(control()) | async;
@@ -45,7 +47,8 @@ import { MatButtonModule } from '@angular/material/button';
         type="button"
         mat-icon-button
         aria-label="Clear"
-        (click)="genericService.clearInputValue(control(), $event)"
+        click-stop-propagation
+        (click)="control().setValue(null)"
       >
         <mat-icon>close</mat-icon>
       </button>
