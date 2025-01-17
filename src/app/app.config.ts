@@ -6,6 +6,8 @@ import {
 } from '@angular/core';
 import {
   provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
   withPreloading,
   withViewTransitions,
 } from '@angular/router';
@@ -41,7 +43,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withViewTransitions(),
-      withPreloading(PreloadingService)
+      withPreloading(PreloadingService),
+      withComponentInputBinding(),
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled', // TODO add custom scroll restoration
+      })
     ),
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
