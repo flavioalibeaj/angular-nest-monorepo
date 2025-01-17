@@ -4,7 +4,11 @@ import {
   importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  provideRouter,
+  withPreloading,
+  withViewTransitions,
+} from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -24,6 +28,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_AUTOCOMPLETE_DEFAULT_OPTIONS } from '@angular/material/autocomplete';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MAT_CARD_CONFIG } from '@angular/material/card';
+import { PreloadingService } from './shared/services/preloading.service';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
   http: HttpClient
@@ -33,7 +38,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([httpInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withViewTransitions(),
+      withPreloading(PreloadingService)
+    ),
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
     importProvidersFrom(
