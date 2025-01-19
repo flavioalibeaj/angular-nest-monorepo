@@ -18,6 +18,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import {
   HttpClient,
   provideHttpClient,
+  withFetch,
   withInterceptors,
 } from '@angular/common/http';
 import { httpInterceptor } from './core/interceptors/http.interceptor';
@@ -38,7 +39,7 @@ const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([httpInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([httpInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
