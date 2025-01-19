@@ -15,12 +15,14 @@ export class CreateProfileService {
     fieldName: 'firstName',
     fieldType: FieldType.TEXT,
     label: 'PROFILE.FIRST_NAME',
+    inputClass: 'w-100',
   };
 
   readonly lastNameInput: IFormModel = {
     fieldName: 'lastName',
     fieldType: FieldType.TEXT,
     label: 'PROFILE.LAST_NAME',
+    inputClass: 'w-100',
   };
 
   readonly phoneNumberInput: IFormModel = {
