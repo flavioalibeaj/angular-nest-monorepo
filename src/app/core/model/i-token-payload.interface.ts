@@ -7,4 +7,5 @@ export interface ITokenPayload {
   role: UserRole;
   sub: string;
   username: string;
+  permissions?: string[];
 }

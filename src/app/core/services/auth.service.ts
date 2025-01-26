@@ -12,6 +12,7 @@ import { IViewUser } from '../model/i-view-user.interface';
 import { jwtDecode } from 'jwt-decode';
 import { ITokenPayload } from '../model/i-token-payload.interface';
 import { TranslateService } from '@ngx-translate/core';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class AuthService {
   readonly #httpService = inject(HttpService);
   readonly #userService = inject(UserService);
   readonly #translateService = inject(TranslateService);
+  readonly #ngxPermissions = inject(NgxPermissionsService);
 
   // Reactive signal to hold the access token, initialized with a value from localStorage.
   readonly #token = signal<string | null>(localStorage.getItem('access_token'));
@@ -38,11 +40,18 @@ export class AuthService {
     effect(() => {
       const token = this.#token();
 
+      let permissions: string[] = [];
+
       if (token) {
         localStorage.setItem('access_token', token);
+
+        const parsedToken = this.#parseToken();
+        permissions = !parsedToken?.permissions ? [] : parsedToken.permissions;
       } else {
         localStorage.removeItem('access_token');
       }
+
+      this.#ngxPermissions.loadPermissions(permissions);
     });
   }
 

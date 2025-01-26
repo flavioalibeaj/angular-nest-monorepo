@@ -32,6 +32,7 @@ import { MAT_AUTOCOMPLETE_DEFAULT_OPTIONS } from '@angular/material/autocomplete
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MAT_CARD_CONFIG } from '@angular/material/card';
 import { PreloadingService } from './shared/services/preloading.service';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
   http: HttpClient
@@ -53,7 +54,8 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
     importProvidersFrom(
-      NgxSpinnerModule.forRoot({ type: 'ball-triangle-path' })
+      NgxSpinnerModule.forRoot({ type: 'ball-triangle-path' }),
+      NgxPermissionsModule.forRoot()
     ),
     provideTranslateService({
       loader: {
