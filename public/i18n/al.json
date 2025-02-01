@@ -60,5 +60,9 @@
     "itemsPerPageLabel": "Artikuj per faqe:",
     "page": "Faqja",
     "of": "nga"
+  },
+  "PAGES": {
+    "dashboard": "Paneli",
+    "settings": "Cilësimet"
   }
 }

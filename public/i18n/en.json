@@ -60,5 +60,9 @@
     "itemsPerPageLabel": "Items per page:",
     "page": "Page",
     "of": "of"
+  },
+  "PAGES": {
+    "dashboard": "Dashboard",
+    "settings": "Settings"
   }
 }
