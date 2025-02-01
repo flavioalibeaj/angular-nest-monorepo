@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { createProfileGuard } from './home/guards/create-profile.guard';
 
 export const routes: Routes = [
   {
@@ -10,9 +11,26 @@ export const routes: Routes = [
   },
   {
     path: '',
-    data: { openWhenAuthenticated: true },
-    canActivate: [authGuard],
+    data: {
+      openWhenAuthenticated: true,
+      openWithProfileId: true,
+    },
+    canActivate: [authGuard, createProfileGuard],
+    loadComponent: () =>
+      import('./home/home.component').then((c) => c.HomeComponent),
     loadChildren: () => import('./home/home.routes').then((r) => r.homeRoutes),
+  },
+  {
+    path: 'create-profile',
+    canActivate: [authGuard, createProfileGuard],
+    data: {
+      openWhenAuthenticated: true,
+      openWithProfileId: false,
+    },
+    loadComponent: () =>
+      import('./create-profile/create-profile.component').then(
+        (c) => c.CreateProfileComponent
+      ),
   },
   {
     path: 'not-found',

@@ -1,26 +1,11 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home.component';
-import { createProfileGuard } from './guards/create-profile.guard';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 export const homeRoutes: Routes = [
   {
     path: '',
-    component: HomeComponent,
-    canActivate: [createProfileGuard],
-    data: {
-      openWithProfileId: true,
-    },
-    children: [],
+    component: DashboardComponent,
   },
-  {
-    path: 'create-profile',
-    canActivate: [createProfileGuard],
-    data: {
-      openWithProfileId: false,
-    },
-    loadComponent: () =>
-      import('./pages/create-profile/create-profile.component').then(
-        (c) => c.CreateProfileComponent
-      ),
-  },
+  { path: 'settings', component: SettingsComponent },
 ];
