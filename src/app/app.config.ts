@@ -107,3 +107,5 @@ export const appConfig: ApplicationConfig = {
     },
   ],
 };
+
+// TODO change translations to be lowercase
