@@ -13,8 +13,8 @@ export class SidenavService {
   }
 
   readonly menuElements: readonly IMenuElement[] = [
-    { name: 'PAGES.dashboard', url: 'dashboard', icon: 'dashboard' },
-    { name: 'PAGES.settings', url: 'settings', icon: 'gear' },
+    { name: 'PAGES.dashboard', url: '', icon: 'dashboard' },
+    { name: 'PAGES.settings', url: 'settings', icon: 'settings' },
   ];
 
   toggleSidenav(): void {
