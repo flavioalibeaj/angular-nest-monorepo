@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -7,9 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GenericService } from '../../services/generic.service';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'date-range-input',
@@ -23,10 +23,11 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
     MatButtonModule,
     MatIconModule,
     ClickStopPropagationDirective,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async; @let
-    isClearValueShown = !input().isReadonly && input().clearFieldValue &&
+    @let errorMessage = control() | handleFieldError| async; 
+    @let isClearValueShown = !input().isReadonly && input().clearFieldValue &&
     control().value && rangeControl().value;
 
     <mat-form-field [class]="input().inputClass">
@@ -73,8 +74,6 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
   `,
 })
 export class DateRangeInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly control = input.required<FormControl>();
   readonly rangeControl = input.required<FormControl>();
   readonly input = input.required<IFormModel>();

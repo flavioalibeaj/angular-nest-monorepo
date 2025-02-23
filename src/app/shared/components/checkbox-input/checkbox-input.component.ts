@@ -1,11 +1,11 @@
-import { Component, inject, input } from '@angular/core';
-import { GenericService } from '../../services/generic.service';
+import { Component, input } from '@angular/core';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatError, MatHint } from '@angular/material/form-field';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'checkbox-input',
@@ -16,23 +16,23 @@ import { MatError, MatHint } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatHint,
     MatError,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async;
-
     <mat-checkbox [class]="input().inputClass" [formControl]="control()">
       {{ input().label | translate }}</mat-checkbox
     >
     @if (input().hint) {
     <mat-hint>{{ input().hint }}</mat-hint>
-    } @if(errorMessage){
+    }
+
+    @let errorMessage = control() | handleFieldError| async;
+    @if(errorMessage){
     <mat-error>{{ errorMessage }}</mat-error>
     }
   `,
 })
 export class CheckboxInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly input = input.required<IFormModel>();
   readonly control = input.required<FormControl>();
 }

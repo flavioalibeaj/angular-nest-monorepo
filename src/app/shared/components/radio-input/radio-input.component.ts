@@ -1,11 +1,11 @@
-import { Component, inject, input } from '@angular/core';
-import { GenericService } from '../../services/generic.service';
+import { Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatError, MatHint } from '@angular/material/form-field';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'radio-input',
@@ -16,9 +16,10 @@ import { MatError, MatHint } from '@angular/material/form-field';
     MatHint,
     MatError,
     ReactiveFormsModule,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async;
+    @let errorMessage = control() | handleFieldError| async;
 
     <label [id]="'radio-group-label' + input().label">{{
       input().label | translate
@@ -42,8 +43,6 @@ import { MatError, MatHint } from '@angular/material/form-field';
   `,
 })
 export class RadioInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly control = input.required<FormControl>();
   readonly input = input.required<IFormModel>();
 }

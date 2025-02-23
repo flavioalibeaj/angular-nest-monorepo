@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,11 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GenericService } from '../../services/generic.service';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { IOption } from '../../model/i-option.interface';
 import { map, Observable, of } from 'rxjs';
 import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'autocomplete-input',
@@ -25,10 +25,11 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
     MatIconModule,
     ReactiveFormsModule,
     ClickStopPropagationDirective,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let options = getSelectOptions( inputRef.value) | async; @let errorMessage
-    = genericService.handleErrors(control()) | async;
+    @let options = getSelectOptions( inputRef.value) | async;
+    @let errorMessage = control() | handleFieldError| async;
 
     <mat-form-field [class]="input().inputClass">
       <mat-label>{{ input().label | translate }}</mat-label>
@@ -72,8 +73,6 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
   `,
 })
 export class AutocompleteInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly input = input.required<IFormModel>();
   readonly control = input.required<FormControl>();
 

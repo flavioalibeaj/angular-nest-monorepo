@@ -1,11 +1,11 @@
-import { Component, inject, input } from '@angular/core';
-import { GenericService } from '../../services/generic.service';
+import { Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatError, MatHint } from '@angular/material/form-field';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'slide-toggle-input',
@@ -16,9 +16,10 @@ import { MatError, MatHint } from '@angular/material/form-field';
     MatHint,
     MatError,
     ReactiveFormsModule,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async;
+    @let errorMessage = control() | handleFieldError| async;
 
     <mat-slide-toggle [class]="input().inputClass" [formControl]="control()">
       {{ input().label | translate }}
@@ -31,8 +32,6 @@ import { MatError, MatHint } from '@angular/material/form-field';
   `,
 })
 export class SlideToggleInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly control = input.required<FormControl>();
   readonly input = input.required<IFormModel>();
 }

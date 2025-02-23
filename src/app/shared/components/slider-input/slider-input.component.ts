@@ -1,11 +1,11 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
-import { GenericService } from '../../services/generic.service';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { MatError, MatHint } from '@angular/material/form-field';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'slider-input',
@@ -16,9 +16,10 @@ import { MatError, MatHint } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatHint,
     MatError,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async;
+    @let errorMessage = control() | handleFieldError | async;
 
     <label [id]="'slider-label' + input().label">{{
       input().label | translate
@@ -47,8 +48,6 @@ import { MatError, MatHint } from '@angular/material/form-field';
   `,
 })
 export class SliderInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly input = input.required<IFormModel>();
   readonly control = input.required<FormControl>();
   readonly rangeControl = input<FormControl>();

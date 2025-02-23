@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,8 +7,8 @@ import { IFormModel } from '../../model/i-form-model.interface';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { GenericService } from '../../services/generic.service';
 import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'text-input',
@@ -21,9 +21,10 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
     ReactiveFormsModule,
     AsyncPipe,
     ClickStopPropagationDirective,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async;
+    @let errorMessage = control() | handleFieldError | async;
 
     <mat-form-field [class]="input().inputClass">
       <mat-label> {{ input().label | translate }} </mat-label>
@@ -58,8 +59,6 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
   `,
 })
 export class TextInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly input = input.required<IFormModel>();
   readonly control = input.required<FormControl>();
 }

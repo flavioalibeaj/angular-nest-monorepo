@@ -1,7 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
-import { GenericService } from '../../services/generic.service';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'color-input',
@@ -21,9 +21,10 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
     MatButtonModule,
     MatIconModule,
     ClickStopPropagationDirective,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async;
+    @let errorMessage = control() | handleFieldError| async;
 
     <mat-form-field [class]="input().inputClass">
       <mat-label> {{ input().label | translate }} </mat-label>
@@ -60,8 +61,6 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
   `,
 })
 export class ColorInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly input = input.required<IFormModel>();
   readonly control = input.required<FormControl>();
 

@@ -9,6 +9,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GenericService } from '../../services/generic.service';
 import { MatInputModule } from '@angular/material/input';
 import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
+import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
 
 @Component({
   selector: 'text-area-input',
@@ -21,9 +22,10 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
     MatIconModule,
     ReactiveFormsModule,
     ClickStopPropagationDirective,
+    HandleFieldErrorPipe,
   ],
   template: `
-    @let errorMessage = genericService.handleErrors(control()) | async;
+    @let errorMessage = control() | handleFieldError | async;
 
     <mat-form-field [class]="input().inputClass">
       <mat-label> {{ input().label | translate }} </mat-label>
@@ -54,8 +56,6 @@ import { ClickStopPropagationDirective } from '../../directives/click-stop-propa
   `,
 })
 export class TextAreaInputComponent {
-  protected readonly genericService = inject(GenericService);
-
   readonly input = input.required<IFormModel>();
   readonly control = input.required<FormControl>();
 }
