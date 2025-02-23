@@ -9,9 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IFormModel } from '../../model/i-form-model.interface';
 import { IOption } from '../../model/i-option.interface';
-import { map, Observable, of } from 'rxjs';
 import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
+import { InputOptionsPipe } from '../../pipes/input-options.pipe';
 
 @Component({
   selector: 'autocomplete-input',
@@ -26,9 +26,9 @@ import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
     ReactiveFormsModule,
     ClickStopPropagationDirective,
     HandleFieldErrorPipe,
+    InputOptionsPipe,
   ],
   template: `
-    @let options = getSelectOptions( inputRef.value) | async;
     @let errorMessage = control() | handleFieldError| async;
 
     <mat-form-field [class]="input().inputClass">
@@ -42,7 +42,8 @@ import { HandleFieldErrorPipe } from '../../pipes/handle-field-error.pipe';
         [readonly]="input().isReadonly"
       />
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-        @for (opt of options; track opt.key) {
+        @for (opt of input() | inputOptions: inputRef.value | async; track
+        opt.key) {
         <mat-option [value]="opt">
           <span>{{ opt.value }}</span>
         </mat-option>
@@ -78,30 +79,5 @@ export class AutocompleteInputComponent {
 
   displayFn(option?: IOption): string {
     return option?.value ? String(option.value) : '';
-  }
-
-  getSelectOptions(inputValue?: string): Observable<IOption[]> {
-    if (!this.input().options) return of([]);
-
-    if (this.input().areObservableOptions) {
-      const options = this.input().options as Observable<IOption[]>;
-      return options.pipe(
-        map((options) =>
-          options.length ? this.#filterOptions(options, inputValue) : []
-        )
-      );
-    }
-
-    const options = this.input().options as IOption[];
-    return of(this.#filterOptions(options, inputValue));
-  }
-
-  #filterOptions(options: IOption[], inputValue?: string): IOption[] {
-    if (!inputValue?.trim()) return options;
-
-    const lowerCaseValue = inputValue.toLowerCase();
-    return options.filter((option) =>
-      option.value.toLowerCase().includes(lowerCaseValue)
-    );
   }
 }
